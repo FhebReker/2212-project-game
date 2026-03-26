@@ -1,8 +1,6 @@
-package accounts;
-
-public class ac {
-    private char[] pass;
+public class Account {
     private String username;
+    private char[] pass;
     private LevelStatistic levelStats;
     public PlayerProgress playerProgress;
     public int coins;
@@ -10,7 +8,7 @@ public class ac {
     public Powerup[] powerups;
     public Cosmetic[] cosmetics;
 
-    public ac (String username, char[] pass) {
+    public Account (String username, char[] pass) {
         this.username = username;
         this.pass = pass;
     }
