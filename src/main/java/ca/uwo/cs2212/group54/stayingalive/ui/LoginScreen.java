@@ -1,59 +1,37 @@
-/**
- * MainMenuScreen class represents the main menu screen of Staying Alive.
- * <p>
- * MainMenuScreen implements the Screen interface, 
- * so it has methods to show the screen, move to the next screen, 
- * and get the class' frame.
- * Since Screen implements ActionListener, it also has a method to handle button clicks.
- * 
- * @author Fardin Abbassi
- */
-
+import java.awt.event.*;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;;
 
-
-public class MainMenuScreen implements Screen {
-    // Main Menu Frame
-    static JFrame mainMenuFrame = new JFrame("Staying Alive - Main Menu");
+public class LoginScreen implements Screen{
+    // Login Frame
+    static JFrame loginFrame = new JFrame("Staying Alive - Login");
 
     // UI Colours
-    final static Color backgroundPurple = new Color(106, 69, 156);
-    static Color titleTextColour = new Color(255, 73, 164);
-    static Color buttonBackground = new Color(0, 140, 255);
+    final static Color backgroundDeepPurple = new Color(80, 52, 117);
+    static Color textColor = Color.white;
+    static Color textFieldColor = new Color(224, 224, 224);
+    static Color buttonBackground = new Color(102, 187, 255);
     static Color buttonTextColor = Color.black;
 
-    // Navigation Buttons
-    private JButton loginButton = new JButton("Login");
-    private JButton tutorialButton = new JButton("Tutorial");
-    private JButton parentalControlButton = new JButton("Parental Controls");
+    // Navigation Buttons (forgot password? sign up?)
+    private JButton signInButton = new JButton("Login");    
 
-    // Labels
-    private JLabel title = new JLabel();
-    private JLabel subLabel = new JLabel();
-    private JLabel credits = new JLabel();
-    
+    // Labels and Fields
+    private JLabel usernameLabel = new JLabel();
+	private JTextField usernameField = new JTextField();
+    private JLabel passwordLabel = new JLabel();
+	private JPasswordField userPasswordField = new JPasswordField();
+	private JLabel messageLabel = new JLabel();
 
-    /** ADD DESCRIPTION HERE
-     * Handle button clicks on main menu
-     * <p>
-     * Exit button exits application, login button moves to login screen, 
-     * tutorial button moves to tutorial screen, and 
-     * parental control button moves to parental control screen.
-     * <p>
+    /**ADD DESCRIPTION HERE
      * 
-     * @param e
      */
-    // 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-        // Switch to login screen if login button is pressed
-        if (e.getSource() == loginButton) {this.moveToNextScreen("login");}
-        // Switch to tutorial screen if tutorial button is pressed
-        else if (e.getSource() == tutorialButton) {this.moveToNextScreen("tutorial");}
-        // Switch to parental control screen if parental control button is pressed
-        else if (e.getSource() == parentalControlButton) {this.moveToNextScreen("parental control");}
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        // TODO Auto-generated method stub
+        // Check CSV file if in database, either move to player screen or show error message
+
+        
     }
 
     /** ADD DESCRIPTION HERE
@@ -61,15 +39,15 @@ public class MainMenuScreen implements Screen {
      */
     @Override
     public void showScreen() {
-        // Title
+        /* * Title
 		title.setText("Staying Alive");
 		title.setFont(new Font("Helvetica", Font.PLAIN, 60)); // adjust as needed
 		title.setForeground(titleTextColour);
-		title.setBounds(225, 20, 400, 80); // adjust as needed
+		title.setBounds(200, 20, 400, 80); // adjust as needed
         subLabel.setText("A Shebab Kebab Creation");
         subLabel.setFont(new Font("Helvetica", Font.PLAIN, 20)); // adjust as needed
         subLabel.setForeground(titleTextColour);
-        subLabel.setBounds(285, 100, 300, 20); // adjust as needed
+        subLabel.setBounds(275, 100, 300, 20); // adjust as needed
 
         // TODO: Add Logo in the middle of the frame(?)
 
@@ -117,25 +95,20 @@ public class MainMenuScreen implements Screen {
 		mainMenuFrame.setBackground(backgroundPurple); // adjust as needed
         mainMenuFrame.setForeground(backgroundPurple);
 		mainMenuFrame.setVisible(true);
+        */
     }
 
-    /** ADD DESCRIPTION HERE
-     * @param screenToMoveTo
-     * @return Screen
-     */
-    @Override
-    public void moveToNextScreen(String screenToMoveTo) {
-        // Open login screen as a pop-up
-        if (screenToMoveTo.equals("login")) {NavigationControl.setCurrentScreen(1);}
-        // Open tutorial screen
-        else if (screenToMoveTo.equals("tutorial")) {NavigationControl.setCurrentScreen(2);}
-        // Open parental control screen
-        else if (screenToMoveTo.equals("parental control")) {NavigationControl.setCurrentScreen(3);}
-    }
-
-    /** ADD DESCRIPTION HERE
+    /**ADD DESCRIPTION HERE
      * 
      */
     @Override
-    public JFrame getFrame() {return mainMenuFrame;}
+    public void moveToNextScreen(String screenToMoveTo){
+        // ADD DESCRIPTION HERE
+    }
+
+    /**ADD DESCRIPTION HERE
+     * 
+     */
+    @Override
+    public JFrame getFrame() {return loginFrame;}
 }
