@@ -1,17 +1,18 @@
-package accounts;
+import java.util.ArrayList;
 
 public class Parental {
+
     private char[] masterPass;
-    private ac[] accounts;
+    private ArrayList<Account> accounts;
 
     public Parental() {
         //initialize masterPass and accounts by getting them from the storage
+        accounts = new ArrayList<Account>();
     }
 
     public void createAccount(String username, char[] pass) {
-        ac newAccount = new ac(username, pass);
-        // test push
-        // test push #2 
+        Account newAccount = new Account(username, pass);
+        accounts.add(newAccount);
     }
 
     private void resetPassword(String username, char[] pass) {
@@ -26,10 +27,9 @@ public class Parental {
 
     private void resetHighScores() {}
 
-    public ac[] getAccounts() {
-        ac[] accounts;
+    public ArrayList<Account> getAccountsFromStorage() {
+        
         // store list of accounts from json file
         return accounts;
     }
- 
 }
