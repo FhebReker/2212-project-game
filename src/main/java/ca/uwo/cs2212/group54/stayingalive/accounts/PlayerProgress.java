@@ -3,13 +3,14 @@ package ca.uwo.cs2212.group54.stayingalive.accounts;
 import java.time.LocalDate;
 
 public class PlayerProgress {
+    public static final int MAX_LEVELS = 8;
     int currentLevel;
     boolean[] completedLevels;
     LocalDate lastSaveDate;
 
     public PlayerProgress() {
         currentLevel = 1;
-        completedLevels = new boolean[8];
+        completedLevels = new boolean[MAX_LEVELS];
         lastSaveDate = LocalDate.now();
     }
 
@@ -22,6 +23,12 @@ public class PlayerProgress {
     }
 
     public void updateSaveTime() {
+        lastSaveDate = LocalDate.now();
+    }
+
+    public void clearProgress() {
+        int currentLevel = 1;
+        completedLevels = new boolean[MAX_LEVELS];
         lastSaveDate = LocalDate.now();
     }
 
