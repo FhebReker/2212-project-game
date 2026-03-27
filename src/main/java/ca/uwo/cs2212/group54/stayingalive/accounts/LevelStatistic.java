@@ -1,3 +1,5 @@
+package ca.uwo.cs2212.group54.stayingalive.accounts;
+
 public class LevelStatistic {
 
     private LevelData levelData;

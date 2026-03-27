@@ -1,3 +1,5 @@
+package ca.uwo.cs2212.group54.stayingalive.accounts;
+
 import java.time.LocalDate;
 
 public class PlayerProgress {
