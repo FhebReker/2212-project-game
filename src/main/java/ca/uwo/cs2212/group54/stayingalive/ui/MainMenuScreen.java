@@ -11,7 +11,7 @@
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;;
+import java.awt.event.*;
 
 
 public class MainMenuScreen implements Screen {
@@ -100,7 +100,7 @@ public class MainMenuScreen implements Screen {
         credits.setForeground(Color.white);
         credits.setBounds(150, 325, 550, 50); // adjust as needed
 		
-		// add to frame
+		// Add to frame
 		mainMenuFrame.getContentPane().add(title);
 		mainMenuFrame.getContentPane().add(subLabel);
 		mainMenuFrame.getContentPane().add(loginButton);
@@ -108,15 +108,16 @@ public class MainMenuScreen implements Screen {
 		mainMenuFrame.getContentPane().add(parentalControlButton);
 		mainMenuFrame.getContentPane().add(credits);
 		
-		// set frame
+		// Set frame
 		mainMenuFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		mainMenuFrame.setSize(420, 420);
 		mainMenuFrame.getContentPane().setLayout(null);
 		mainMenuFrame.getContentPane().setBackground(backgroundPurple);
 		//mainMenuFrame.setIconImage(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/shebab_icon.png"))); // Shebab Kebab logo without text, adjust as needed
 		mainMenuFrame.setBackground(backgroundPurple); // adjust as needed
         mainMenuFrame.setForeground(backgroundPurple);
 		mainMenuFrame.setVisible(true);
+        mainMenuFrame.setLocationRelativeTo(null);
+
     }
 
     /** ADD DESCRIPTION HERE
