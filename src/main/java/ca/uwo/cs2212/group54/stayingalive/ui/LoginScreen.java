@@ -14,13 +14,13 @@ public class LoginScreen implements Screen{
     static Color buttonTextColor = Color.black;
 
     // Navigation Buttons (forgot password? sign up?)
-    private JButton signInButton = new JButton("Login");    
+    private JButton loginButton = new JButton("Login");    
 
     // Labels and Fields
     private JLabel usernameLabel = new JLabel();
 	private JTextField usernameField = new JTextField();
     private JLabel passwordLabel = new JLabel();
-	private JPasswordField userPasswordField = new JPasswordField();
+	private JPasswordField passwordField = new JPasswordField();
 	private JLabel messageLabel = new JLabel();
 
     /**ADD DESCRIPTION HERE
@@ -28,10 +28,12 @@ public class LoginScreen implements Screen{
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-        // TODO Auto-generated method stub
-        // Check CSV file if in database, either move to player screen or show error message
-
-        
+        // TODO Check CSV file if in database, either move to player screen or show error message (currently just moves to player screen for sake of tests)
+        // Only close login screen if exitbutton or proper login
+        if(e.getSource() == loginButton) {
+            // Until proper implementation of login, just move to player menu screen
+            this.moveToNextScreen("Player"); // test with player screen later
+        }
     }
 
     /** ADD DESCRIPTION HERE
@@ -39,63 +41,57 @@ public class LoginScreen implements Screen{
      */
     @Override
     public void showScreen() {
-        /* * Title
-		title.setText("Staying Alive");
-		title.setFont(new Font("Helvetica", Font.PLAIN, 60)); // adjust as needed
-		title.setForeground(titleTextColour);
-		title.setBounds(200, 20, 400, 80); // adjust as needed
-        subLabel.setText("A Shebab Kebab Creation");
-        subLabel.setFont(new Font("Helvetica", Font.PLAIN, 20)); // adjust as needed
-        subLabel.setForeground(titleTextColour);
-        subLabel.setBounds(275, 100, 300, 20); // adjust as needed
+        // Set up labels and fields
+        usernameLabel.setText("User Name:");
+        usernameLabel.setFont(new Font("Helvetica", Font.PLAIN, 15)); // adjust as needed
+        usernameLabel.setForeground(textColor);
+        usernameLabel.setBounds(50, 100, 100, 25);
+        passwordLabel.setText("Password:");
+        passwordLabel.setFont(new Font("Helvetica", Font.PLAIN, 15)); // adjust as needed
+        passwordLabel.setForeground(textColor);
+		passwordLabel.setBounds(50, 150, 100, 25);
 
-        // TODO: Add Logo in the middle of the frame(?)
+        // TODO: Adjust error message label once user login is fully implemented
+		messageLabel.setBounds(125, 260, 250, 35);
+		messageLabel.setFont(new Font(null, Font.BOLD, 15));
 
-		// Set Up Login Button
-		loginButton.setFont(new Font("Helvetica", Font.PLAIN, 20)); // adjust as needed
-        loginButton.setForeground(buttonTextColor);
+        // Set up text fields
+        // TODO: Adjust texxt field properties (i.e. boldness) as needed
+        usernameField.setBackground(textFieldColor);
+        usernameField.setForeground(buttonTextColor);
+        usernameField.setFont(new Font("Helvetica", Font.BOLD, 15)); // adjust as needed
+		usernameField.setBounds(175, 100, 200, 25);
+        passwordField.setBackground(textFieldColor);
+        passwordField.setForeground(buttonTextColor);
+        passwordField.setFont(new Font("Helvetica", Font.BOLD, 15)); // adjust as needed
+		passwordField.setBounds(175, 150, 200, 25);
+
+		// Set up login button
+        // TODO: adjust button properties (i.e. size, position) as needed
+		loginButton.setFont(new Font("Helvetica", Font.PLAIN, 16));
+		loginButton.setForeground(buttonTextColor);
 		loginButton.setBackground(buttonBackground);
-		loginButton.setBounds(300, 250, 200, 30); // adjust as needed
-		loginButton.addActionListener(this);
-	
-		// Set Up Tutorial Button
-		tutorialButton.setFont(new Font("Helvetica", Font.PLAIN, 20)); // adjust as needed
-		tutorialButton.setForeground(buttonTextColor);
-		tutorialButton.setBackground(buttonBackground);
-		tutorialButton.setBounds(50, 250, 200, 30); // adjust as needed
-		tutorialButton.addActionListener(this);
+		loginButton.setBounds(125, 200, 100, 25);
+        loginButton.addActionListener(this);
 
-        // Set Up Parental Control Button
-        parentalControlButton.setFont(new Font("Helvetica", Font.PLAIN, 20)); // adjust as needed
-		parentalControlButton.setForeground(buttonTextColor);
-		parentalControlButton.setBackground(buttonBackground);
-		parentalControlButton.setBounds(550, 250, 200, 30); // adjust as needed
-		parentalControlButton.addActionListener(this);
+        // Add to frame
+		loginFrame.getContentPane().add(usernameLabel);
+		loginFrame.getContentPane().add(passwordLabel);
+		loginFrame.getContentPane().add(messageLabel);
+		loginFrame.getContentPane().add(usernameField);
+		loginFrame.getContentPane().add(passwordField);
+		loginFrame.getContentPane().add(loginButton);
 
-        // Set Up Credits
-        credits.setText("<html>Created by Omar Soliman, Osman Idris, Mohamed Ahmed, Malik Alghneimin, and Fardin Abbassi as Group 54 for the CS 2212 course in the Winter 2026 term.</html>");
-        credits.setFont(new Font("Helvetica", Font.PLAIN, 15)); // adjust as needed
-        credits.setForeground(Color.white);
-        credits.setBounds(150, 325, 550, 50); // adjust as needed
 		
-		// add to frame
-		mainMenuFrame.getContentPane().add(title);
-		mainMenuFrame.getContentPane().add(subLabel);
-		mainMenuFrame.getContentPane().add(loginButton);
-		mainMenuFrame.getContentPane().add(tutorialButton);
-		mainMenuFrame.getContentPane().add(parentalControlButton);
-		mainMenuFrame.getContentPane().add(credits);
-		
-		// set frame
-		mainMenuFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		mainMenuFrame.setSize(420, 420);
-		mainMenuFrame.getContentPane().setLayout(null);
-		mainMenuFrame.getContentPane().setBackground(backgroundPurple);
-		//mainMenuFrame.setIconImage(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/shebab_icon.png"))); // Shebab Kebab logo without text, adjust as needed
-		mainMenuFrame.setBackground(backgroundPurple); // adjust as needed
-        mainMenuFrame.setForeground(backgroundPurple);
-		mainMenuFrame.setVisible(true);
-        */
+		// Set frame
+		loginFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // only close login screen, not whole app
+		loginFrame.setSize(NavigationControl.screenW / 2, NavigationControl.screenH / 2 + 100);
+		loginFrame.getContentPane().setLayout(null);
+		loginFrame.getContentPane().setBackground(backgroundDeepPurple);
+		//loginFrame.setIconImage(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/shebab_icon.png"))); // Shebab Kebab logo without text, adjust as needed
+		loginFrame.setBackground(backgroundDeepPurple); // adjust as needed
+        loginFrame.setForeground(backgroundDeepPurple);
+		loginFrame.setVisible(true);
     }
 
     /**ADD DESCRIPTION HERE
@@ -104,6 +100,9 @@ public class LoginScreen implements Screen{
     @Override
     public void moveToNextScreen(String screenToMoveTo){
         // ADD DESCRIPTION HERE
+        if (screenToMoveTo.equals("Player")) {
+            NavigationControl.setCurrentScreen(3);
+        }
     }
 
     /**ADD DESCRIPTION HERE
