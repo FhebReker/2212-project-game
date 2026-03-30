@@ -1,5 +1,4 @@
-package ca.uwo.cs2212.group54.stayingalive.ui;
-
+// FA: Added implementation of screen interface, will need to connect to nav control and properly integrate class with interfacce methods.
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -20,7 +19,7 @@ import java.net.URL;
  * Navigation callbacks are supplied via a {@link Navigator} interface so this
  * class stays decoupled from whatever navigation controller the project uses.
  */
-public class PlayerScreen extends JPanel {
+public class PlayerScreen extends JPanel implements Screen {
 
     // ── Colour palette ────────────────────────────────────────────────────
     private static final Color BG_COLOR      = new Color(0x6A, 0x5A, 0xCD); // medium-purple
@@ -283,3 +282,4 @@ public class PlayerScreen extends JPanel {
         });
     }
 }
+>>>>>>> 190b1cfd4dfaab550e5efc474150db47f5c611fa
