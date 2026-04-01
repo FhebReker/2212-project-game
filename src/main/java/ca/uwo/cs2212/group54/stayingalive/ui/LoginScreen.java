@@ -4,24 +4,24 @@ import java.awt.*;
 
 public class LoginScreen implements Screen{
     // Login Frame
-    static JFrame loginFrame = new JFrame("Staying Alive - Login");
+    private JFrame loginFrame = new JFrame("Staying Alive - Login");
 
     // UI Colours
-    final static Color backgroundDeepPurple = new Color(80, 52, 117);
-    static Color textColor = Color.white;
-    static Color textFieldColor = new Color(224, 224, 224);
-    static Color buttonBackground = new Color(102, 187, 255);
-    static Color buttonTextColor = Color.black;
+    private final static Color backgroundDeepPurple = new Color(80, 52, 117);
+    private final static Color textColor = Color.white;
+    private final static Color textFieldColor = new Color(224, 224, 224);
+    private final static Color buttonBackground = new Color(102, 187, 255);
+    private final static Color buttonTextColor = Color.black;
 
     // Navigation Buttons (forgot password? sign up?)
-    private JButton loginButton = new JButton("Login");    
+    private JButton loginButton;   
 
     // Labels and Fields
-    private JLabel usernameLabel = new JLabel();
-	private JTextField usernameField = new JTextField();
-    private JLabel passwordLabel = new JLabel();
-	private JPasswordField passwordField = new JPasswordField();
-	private JLabel messageLabel = new JLabel();
+    private JLabel usernameLabel;
+	private JTextField usernameField;
+    private JLabel passwordLabel;
+	private JPasswordField passwordField;
+	private JLabel messageLabel;
 
     /**ADD DESCRIPTION HERE
      * 
@@ -32,6 +32,7 @@ public class LoginScreen implements Screen{
         // Only close login screen if exitbutton or proper login
         if(e.getSource() == loginButton) {
             // Until proper implementation of login, just move to player menu screen
+
             this.moveToNextScreen("Player"); // test with player screen later
         }
     }
@@ -41,26 +42,35 @@ public class LoginScreen implements Screen{
      */
     @Override
     public void showScreen() {
+        // Clear frame
+        loginFrame.getContentPane().removeAll();
+        loginFrame.getContentPane().setLayout(null);
+
         // Set up labels and fields
-        usernameLabel.setText("User Name:");
+        usernameLabel = new JLabel("User Name:");
         usernameLabel.setFont(new Font("Helvetica", Font.PLAIN, 15)); // adjust as needed
         usernameLabel.setForeground(textColor);
         usernameLabel.setBounds(50, 100, 100, 25);
-        passwordLabel.setText("Password:");
+        
+        passwordLabel = new JLabel("Password:");
         passwordLabel.setFont(new Font("Helvetica", Font.PLAIN, 15)); // adjust as needed
         passwordLabel.setForeground(textColor);
 		passwordLabel.setBounds(50, 150, 100, 25);
 
         // TODO: Adjust error message label once user login is fully implemented
+        messageLabel = new JLabel(""); // add text later
 		messageLabel.setBounds(125, 260, 250, 35);
 		messageLabel.setFont(new Font(null, Font.BOLD, 15));
 
         // Set up text fields
-        // TODO: Adjust texxt field properties (i.e. boldness) as needed
+        // TODO: Adjust text field properties (i.e. boldness) as needed
+        usernameField = new JTextField();
         usernameField.setBackground(textFieldColor);
         usernameField.setForeground(buttonTextColor);
         usernameField.setFont(new Font("Helvetica", Font.BOLD, 15)); // adjust as needed
 		usernameField.setBounds(175, 100, 200, 25);
+        
+        passwordField = new JPasswordField();
         passwordField.setBackground(textFieldColor);
         passwordField.setForeground(buttonTextColor);
         passwordField.setFont(new Font("Helvetica", Font.BOLD, 15)); // adjust as needed
@@ -68,12 +78,14 @@ public class LoginScreen implements Screen{
 
 		// Set up login button
         // TODO: adjust button properties (i.e. size, position) as needed
+        loginButton = new JButton("Login");
 		loginButton.setFont(new Font("Helvetica", Font.PLAIN, 16));
 		loginButton.setForeground(buttonTextColor);
 		loginButton.setBackground(buttonBackground);
 		loginButton.setBounds(125, 200, 100, 25);
+        //for (ActionListener al : loginButton.getActionListeners()) {loginButton.removeActionListener(al);}
         loginButton.addActionListener(this);
-
+        
         // Add to frame
 		loginFrame.getContentPane().add(usernameLabel);
 		loginFrame.getContentPane().add(passwordLabel);
@@ -83,7 +95,7 @@ public class LoginScreen implements Screen{
 		loginFrame.getContentPane().add(loginButton);
 
 		
-		// Set frame
+		// Set up frame
 		loginFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // only close login screen, not whole app
 		loginFrame.setSize(NavigationControl.screenW / 2, NavigationControl.screenH / 2 + 100);
 		loginFrame.getContentPane().setLayout(null);
@@ -101,6 +113,8 @@ public class LoginScreen implements Screen{
     public void moveToNextScreen(String screenToMoveTo){
         // ADD DESCRIPTION HERE
         if (screenToMoveTo.equals("Player")) {
+            MainMenuScreen mainMenu = (MainMenuScreen) NavigationControl.getScreen(0);
+            if (mainMenu != null && mainMenu.getFrame() != null) mainMenu.getFrame().dispose(); // close main menu screen if open
             NavigationControl.setCurrentScreen(3);
         }
     }

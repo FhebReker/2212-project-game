@@ -14,15 +14,16 @@ import java.io.File;
  *   - Right half: player name heading + avatar image
  *   - Back button (curved arrow) in the top-right corner
  */
-public class StatsScreen extends JPanel implements Screen {
+//public class StatsScreen extends JPanel implements Screen {
+public class StatsScreen implements Screen {
 
     // Colours 
     private static final Color BG_COLOR  = new Color(106, 69, 156);
     private static final Color FIELD_BG  = new Color(215, 215, 215);
     // Data
     private final String   playerName;
-    private final Runnable onBack;
     private Image avatarImage;
+    private JFrame statsFrame;
 
     // Default / placeholder values — replace with real data from the stats system
     private int    highScore    = 0;
@@ -35,11 +36,10 @@ public class StatsScreen extends JPanel implements Screen {
     private int    wordsTyped   = 0;
 
     // Constructor
-    public StatsScreen(String playerName, Runnable onBack) {
+    public StatsScreen(String playerName) {
         this.playerName = playerName;
-        this.onBack     = onBack;
         loadAvatar("global/download.png");
-        buildUI();
+//        buildUI();
     }
 
     // Setters for live data 
@@ -54,10 +54,11 @@ public class StatsScreen extends JPanel implements Screen {
 
     // UI construction
     private void buildUI() {
-        setBackground(BG_COLOR);
-        setLayout(new BorderLayout());
-        add(buildTopBar(), BorderLayout.NORTH);
-        add(buildBody(),   BorderLayout.CENTER);
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        mainPanel.setBackground(BG_COLOR);
+        mainPanel.add(buildTopBar(), BorderLayout.NORTH);
+        mainPanel.add(buildBody(),   BorderLayout.CENTER);
+        statsFrame.setContentPane(mainPanel);
     }
 
     private JPanel buildTopBar() {
@@ -85,7 +86,8 @@ public class StatsScreen extends JPanel implements Screen {
         btn.setFocusPainted(false);
         btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btn.setToolTipText("Back");
-        btn.addActionListener(e -> { if (onBack != null) onBack.run(); });
+        btn.setActionCommand("Back");
+        btn.addActionListener(this); // handle back button click in actionPerformed
         return btn;
     }
 
@@ -200,27 +202,41 @@ public class StatsScreen extends JPanel implements Screen {
         }
     }
 
-    // Standalone test entry point 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            JFrame frame = new JFrame("Stats Screen");
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setSize(760, 450);
-            frame.setLocationRelativeTo(null);
-
-            StatsScreen screen = new StatsScreen("Omar", () -> System.out.println("→ Back"));
-            // Populate with sample data
-            screen.setHighScore(12345);
-            screen.setAvgWpm(42);
-            screen.setPeakWpm(64);
-            screen.setAccuracy(85.4);
-            screen.setErrorCount(54);
-            screen.setTimePlayed("1 hour, 15 minutes");
-            screen.setCurrentLevel(5);
-            screen.setWordsTyped(157);
-
-            frame.setContentPane(screen);
-            frame.setVisible(true);
-        });
+// SCREEN INTERGACE METHODS -----------------------------------------------
+    // TODO: Action listener
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getActionCommand() != null) {
+            // move from this class to the next screen based on the button clicked
+            System.out.println("→ " + e.getActionCommand());
+            this.moveToNextScreen(e.getActionCommand());
+        }
     }
+    //TODO: public showScreen
+    @Override
+    public void showScreen() {
+        if (statsFrame == null) {
+            statsFrame = new JFrame("Staying Alive - Player Menu");
+            statsFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        }
+        statsFrame.setSize(NavigationControl.screenW, NavigationControl.screenH);
+        statsFrame.getContentPane().removeAll();
+        
+        loadAvatar("global/download.png");
+        buildUI();
+        //gameStoreFrame.setContentPane(screen);
+        statsFrame.setLocationRelativeTo(null);
+        statsFrame.setVisible(true);
+    }
+    // TODO: public moveToNextScreen
+    @Override
+    public void moveToNextScreen(String screenToMoveTo) {
+        if (screenToMoveTo.equals("Back")) {
+            System.out.println("stats back to player");
+            NavigationControl.setCurrentScreen(3); // TODO: change to previous screen instead of player screen
+        }
+    }
+    // TODO: public getFrame
+    @Override
+    public JFrame getFrame() {return this.statsFrame;}
 }

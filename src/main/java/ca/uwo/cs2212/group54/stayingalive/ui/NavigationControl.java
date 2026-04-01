@@ -41,6 +41,10 @@ public class NavigationControl {
         currentScreen = listOfScreens[screenToSet];
         updateScreen();
     }
+    /**
+     * Get screen at the index of the screen list.
+     */
+    public static Screen getScreen(int index) {return listOfScreens[index];}
     
     /**
      * Constructor for NavigationControl. Initializes screens, then starts at the main menu screen.
@@ -50,23 +54,24 @@ public class NavigationControl {
         // Initialize screens (add as screens are implemented)
         MainMenuScreen mainMenu = new MainMenuScreen();
         LoginScreen loginScreen = new LoginScreen();
-        // tutorial
-        PlayerScreen playerScreen = new PlayerScreen(null); // placeholder constructor
-        StatsScreen statsScreen = new StatsScreen(null, null); // placeholder constructor
-        GameStoreScreen gameStoreScreen = new GameStoreScreen(null);
+        TutorialScreen tutorialScreen = new TutorialScreen();
+        PlayerScreen playerScreen = new PlayerScreen(null); // TODO: replace placeholder constructor
+        StatsScreen statsScreen = new StatsScreen("Placeholder"); // TODO: Replace placeholder constructor
+        GameStoreScreen gameStoreScreen = new GameStoreScreen(3000);        // GameStoreScreen gameStoreScreen = new GameStoreScreen(null);
 
         // Add screens to list of screens (add as screens are implemented)
         listOfScreens[0] = mainMenu;
         listOfScreens[1] = loginScreen;         // might not be necessary due to implementation as a pop-up
-        listOfScreens[2] = null;                // tutorial
+        listOfScreens[2] = tutorialScreen;      // tutorial
         listOfScreens[3] = playerScreen;        // player
         listOfScreens[4] = statsScreen;         // stats
-        listOfScreens[5] = gameStoreScreen;     // game store
+        listOfScreens[5] = gameStoreScreen;     // game store           //listOfScreens[5] = gameStoreScreen;     // game store
         listOfScreens[6] = null;                // parental control
         listOfScreens[7] = null;                // gameplay
         
 
         // Start at main menu
+//        setCurrentScreen(0);
         setCurrentScreen(0);
     }
 

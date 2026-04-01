@@ -1,4 +1,4 @@
-// FA: Added implementation of screen interface, will need to connect to nav control and properly integrate class with interfacce methods.
+// FA: Added implementation of screen interface, will need to connect to nav control and properly integrate class with interface methods.
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -19,7 +19,7 @@ import java.net.URL;
  * Navigation callbacks are supplied via a {@link Navigator} interface so this
  * class stays decoupled from whatever navigation controller the project uses.
  */
-public class PlayerScreen extends JPanel implements Screen {
+public class PlayerScreen implements Screen {
 
     // ── Colour palette ────────────────────────────────────────────────────
     private static final Color BG_COLOR      = new Color(0x6A, 0x5A, 0xCD); // medium-purple
@@ -27,20 +27,9 @@ public class PlayerScreen extends JPanel implements Screen {
     private static final Color BUTTON_HOVER  = new Color(0x00, 0x9A, 0xCD);
     private static final Color BUTTON_TEXT   = Color.WHITE;
 
-    // ── Navigation callback interface ─────────────────────────────────────
-
-    /** Implemented by the navigation controller to handle screen transitions. */
-    public interface Navigator {
-        void goToNewGame();
-        void goToContinueGame();
-        void goToGameStore();
-        void goToStats();
-        void goToMainMenu();   // logout / back
-    }
-
     // ── Fields ────────────────────────────────────────────────────────────
-    private final Navigator navigator;
     private Image avatarImage;
+    private JFrame playerFrame;
 
     // ── Constructor ───────────────────────────────────────────────────────
 
@@ -49,26 +38,26 @@ public class PlayerScreen extends JPanel implements Screen {
      * @param avatarPath resource path to the avatar image (e.g. "/assets/kitten.png"),
      *                   or {@code null} to use the built-in placeholder
      */
-    public PlayerScreen(Navigator navigator, String avatarPath) {
-        this.navigator = navigator;
+    public PlayerScreen(String avatarPath) {
+        // TODO: Move this to showScreen()
         loadAvatar(avatarPath);
-        buildUI();
+        //buildUI();
     }
-
     /** Convenience constructor that uses the default kitten placeholder. */
-    public PlayerScreen(Navigator navigator) {
-        this(navigator, "global/download.png");
+    public PlayerScreen() {
+        this("global/download.png");
     }
 
     // ── UI construction ───────────────────────────────────────────────────
 
     private void buildUI() {
-        setBackground(BG_COLOR);
-        setLayout(new BorderLayout());
-
-        add(buildTopBar(),    BorderLayout.NORTH);
-        add(buildAvatarPanel(), BorderLayout.CENTER);
-        add(buildButtonBar(), BorderLayout.SOUTH);
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        mainPanel.setBackground(BG_COLOR);
+        
+        mainPanel.add(buildTopBar(),    BorderLayout.NORTH);
+        mainPanel.add(buildAvatarPanel(), BorderLayout.CENTER);
+        mainPanel.add(buildButtonBar(), BorderLayout.SOUTH);
+        playerFrame.setContentPane(mainPanel);
     }
 
     /** Top bar: title on the left, logout arrow on the right. */
@@ -128,7 +117,8 @@ public class PlayerScreen extends JPanel implements Screen {
         btn.setFocusPainted(false);
         btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btn.setToolTipText("Logout");
-        btn.addActionListener(e -> navigator.goToMainMenu());
+        btn.setActionCommand("Logout");
+        btn.addActionListener(this);                        // call actionPerformed to logout
         return btn;
     }
 
@@ -193,16 +183,16 @@ public class PlayerScreen extends JPanel implements Screen {
         JPanel bar = new JPanel(new FlowLayout(FlowLayout.CENTER, 18, 14));
         bar.setOpaque(false);
 
-        bar.add(makeNavButton("New Game",      e -> navigator.goToNewGame()));
-        bar.add(makeNavButton("Continue Game", e -> navigator.goToContinueGame()));
-        bar.add(makeNavButton("Game Store",    e -> navigator.goToGameStore()));
-        bar.add(makeNavButton("Stats",         e -> navigator.goToStats()));
+        bar.add(makeNavButton("New Game")); // actionPerformed will make new game
+        bar.add(makeNavButton("Continue Game")); // actionPerformed will continue game
+        bar.add(makeNavButton("Game Store")); // actionPerformed will move to game store
+        bar.add(makeNavButton("Stats")); // actionPerformed will show stats
 
         return bar;
     }
 
     /** Factory for a styled navigation button. */
-    private JButton makeNavButton(String label, ActionListener action) {
+    private JButton makeNavButton(String label) {
         JButton btn = new JButton(label) {
             private boolean hovered = false;
 
@@ -236,7 +226,8 @@ public class PlayerScreen extends JPanel implements Screen {
         btn.setBorderPainted(false);
         btn.setFocusPainted(false);
         btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        btn.addActionListener(action);
+        btn.setActionCommand(label);
+        btn.addActionListener(this); // use actionPerformed to handle navigation
         return btn;
     }
 
@@ -259,27 +250,66 @@ public class PlayerScreen extends JPanel implements Screen {
         // avatarImage stays null → buildAvatarPanel draws the placeholder box
     }
 
-    // ── Standalone test entry point ───────────────────────────────────────
-
-    /** Launches the PlayerScreen in its own JFrame for visual testing. */
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            JFrame frame = new JFrame("Player Screen");
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setSize(760, 480);
-            frame.setLocationRelativeTo(null);
-
-            Navigator stub = new Navigator() {
-                public void goToNewGame()      { System.out.println("→ New Game");      }
-                public void goToContinueGame() { System.out.println("→ Continue Game"); }
-                public void goToGameStore()    { System.out.println("→ Game Store");    }
-                public void goToStats()        { System.out.println("→ Stats");         }
-                public void goToMainMenu()     { System.out.println("→ Main Menu (logout)"); }
-            };
-
-            frame.setContentPane(new PlayerScreen(stub));
-            frame.setVisible(true);
-        });
+// SCREEN INTERGACE METHODS -----------------------------------------------
+    // TODO: Action listener
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getActionCommand() != null) {
+            // move from this class to the next screen based on the button clicked
+            System.out.println("→ " + e.getActionCommand());
+            this.moveToNextScreen(e.getActionCommand());
+        }
     }
+    //TODO: public showScreen
+    @Override
+    public void showScreen() {
+        if (playerFrame == null) {
+            playerFrame = new JFrame("Staying Alive - Player Menu");
+            playerFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        }
+        playerFrame.setSize(NavigationControl.screenW, NavigationControl.screenH);
+        playerFrame.getContentPane().removeAll();
+        
+        loadAvatar("global/download.png");
+        buildUI();
+        //gameStoreFrame.setContentPane(screen);
+        playerFrame.setLocationRelativeTo(null);
+        playerFrame.setVisible(true);
+    }
+    // TODO: public moveToNextScreen
+    @Override
+    public void moveToNextScreen(String screenToMoveTo) {
+        // when integrating, move from this class to player menu when the back button is clicked
+
+/*
+        New Game
+        Continue Game
+        Game Store
+        Stats
+*/
+        if (screenToMoveTo.equals("New Game")) {
+            System.out.println("to new game");
+//            NavigationControl.setCurrentScreen(7); // Make sure to reset data when starting a new game
+        }
+        if (screenToMoveTo.equals("Continue Game")) {
+            System.out.println("to continue game");
+//            NavigationControl.setCurrentScreen(7); // Make sure to load saved data when continuing the game
+        }
+        if (screenToMoveTo.equals("Game Store")) {
+            System.out.println("to game store");
+            NavigationControl.setCurrentScreen(5);
+        }
+        if (screenToMoveTo.equals("Stats")) {
+            System.out.println("to stats");
+            NavigationControl.setCurrentScreen(4); // TODO: implement stats screen
+        }
+        if (screenToMoveTo.equals("Logout")) {
+            System.out.println("logging out");
+            NavigationControl.setCurrentScreen(0);
+        }
+    }
+    // TODO: public getFrame
+    @Override
+    public JFrame getFrame() {return this.playerFrame;}
+
 }
->>>>>>> 190b1cfd4dfaab550e5efc474150db47f5c611fa
