@@ -2,13 +2,14 @@ package ca.uwo.cs2212.group54.stayingalive.accounts;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Parental {
-
+    @JsonProperty("master_pass")
     private char[] masterPass;
     private ArrayList<Account> accounts;
 
@@ -25,12 +26,11 @@ public class Parental {
             } else {
                 accounts = new ArrayList<Account>();
             }
-
             // loading master password:
             File masterPassFile = new File("data/master.json");
             if (file.exists() && file.length() > 0) {
-                JsonNode node = objectMapper.readTree(masterPassFile);
-                masterPass = node.asText("master_pass").toCharArray();
+                Map<String,String> data = objectMapper.readValue(masterPassFile,Map.class);
+                masterPass = data.get("master_pass").toCharArray();
             } else {System.out.println("No data in " + masterPassFile.getName());}
         } catch (Exception e) {
             e.printStackTrace();
@@ -116,5 +116,9 @@ public class Parental {
             if (account.getUsername().equals(username)) return account;
         }
         return null;
+    }
+
+    protected char[] getMasterPass() {
+        return masterPass;
     }
 }
