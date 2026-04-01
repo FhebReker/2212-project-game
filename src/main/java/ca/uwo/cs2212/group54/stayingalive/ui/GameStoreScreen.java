@@ -1,4 +1,5 @@
-package ui;
+//package ui;
+// TODO: Adjust class to match Screen interface; scroll bar hides content when sized by the app, may need to resize components
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,7 +17,8 @@ import java.util.List;
  *   - Left half: player avatar centred, owned power-up badges underneath
  *   - Right half: scrollable card list of purchasable items with Buy buttons
  */
-public class GameStoreScreen extends JPanel {
+
+public class GameStoreScreen implements Screen {
 
     // ── Colours ───────────────────────────────────────────────────────────
     private static final Color BG_COLOR    = new Color(0x6A, 0x5A, 0xCD);
@@ -40,14 +42,11 @@ public class GameStoreScreen extends JPanel {
         }
     }
 
-    // ── Navigation ────────────────────────────────────────────────────────
-    public interface Navigator { void goBack(); }
-
     // ── Fields ────────────────────────────────────────────────────────────
-    private final Navigator      navigator;
     private       int            playerScore;
     private       Image          avatarImage;
     private final List<StoreItem> items = new ArrayList<>();
+    private       JFrame         gameStoreFrame;
 
     // Score pill label so we can update it after a purchase
     private JLabel scorePill;
@@ -56,16 +55,12 @@ public class GameStoreScreen extends JPanel {
     private final List<JLabel> badgeLabels = new ArrayList<>();
 
     // ── Constructors ──────────────────────────────────────────────────────
-    public GameStoreScreen(Navigator navigator, int initialScore) {
-        this.navigator   = navigator;
+    // TODO: Maybe need a way to adjust based on user score
+    public GameStoreScreen(int initialScore) {
         this.playerScore = initialScore;
-        loadAvatar("global/download.png");
-        initItems();
-        buildUI();
     }
-
-    public GameStoreScreen(Navigator navigator) {
-        this(navigator, 0);
+    public GameStoreScreen() {
+        this(0);
     }
 
     // ── Public API ────────────────────────────────────────────────────────
@@ -78,6 +73,8 @@ public class GameStoreScreen extends JPanel {
 
     // ── Default catalogue ─────────────────────────────────────────────────
     private void initItems() {
+        items.clear();
+
         items.add(new StoreItem("Time Freeze",
                 "Freeze enemies in place for 10 seconds",   500,  "powerup"));
         items.add(new StoreItem("Word Clear",
@@ -94,10 +91,12 @@ public class GameStoreScreen extends JPanel {
 
     // ── UI construction ───────────────────────────────────────────────────
     private void buildUI() {
-        setBackground(BG_COLOR);
-        setLayout(new BorderLayout());
-        add(buildTopBar(),  BorderLayout.NORTH);
-        add(buildBody(),    BorderLayout.CENTER);
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        mainPanel.setBackground(BG_COLOR);
+        mainPanel.add(buildTopBar(), BorderLayout.NORTH);
+        mainPanel.add(buildBody(), BorderLayout.CENTER);
+
+        gameStoreFrame.getContentPane().add(mainPanel);
     }
 
     // Top bar ──────────────────────────────────────────────────────────────
@@ -149,6 +148,7 @@ public class GameStoreScreen extends JPanel {
             icon = new ImageIcon(img);
         }
         JButton btn = new JButton(icon);
+        btn.setActionCommand("Back");
         btn.setPreferredSize(new Dimension(34, 34));
         btn.setOpaque(false);
         btn.setContentAreaFilled(false);
@@ -156,17 +156,29 @@ public class GameStoreScreen extends JPanel {
         btn.setFocusPainted(false);
         btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btn.setToolTipText("Back");
-        btn.addActionListener(e -> { if (navigator != null) navigator.goBack(); });
+        btn.addActionListener(this);
         return btn;
     }
 
     // Body ─────────────────────────────────────────────────────────────────
     private JPanel buildBody() {
-        JPanel body = new JPanel(new GridLayout(1, 2, 12, 0));
+        JPanel body = new JPanel(new GridBagLayout());
         body.setOpaque(false);
         body.setBorder(BorderFactory.createEmptyBorder(4, 12, 12, 12));
-        body.add(buildLeftPanel());
-        body.add(buildShopScrollPane());
+
+        // Give more space to shop panel to allow button clicking
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridy = 0;
+        gbc.weighty = 1.0;
+        gbc.fill = GridBagConstraints.BOTH;
+
+        gbc.gridx = 0;
+        gbc.weightx = 0.3;
+        body.add(buildLeftPanel(), gbc);
+
+        gbc.gridx = 1;
+        gbc.weightx = 0.6;
+        body.add(buildShopScrollPane(), gbc);
         return body;
     }
 
@@ -214,7 +226,7 @@ public class GameStoreScreen extends JPanel {
             badge.setOpaque(false);
 
             // Icon circle
-            final String n = name;
+            //final String n = name;
             JPanel iconCircle = new JPanel() {
                 @Override protected void paintComponent(Graphics g) {
                     super.paintComponent(g);
@@ -225,7 +237,7 @@ public class GameStoreScreen extends JPanel {
                     g2.setColor(new Color(255, 255, 255, 100));
                     g2.setStroke(new BasicStroke(1.5f));
                     g2.drawOval(2, 2, getWidth()-4, getHeight()-4);
-                    drawItemIcon(g2, n, getWidth()/2, getHeight()/2);
+                    drawItemIcon(g2, name, getWidth()/2, getHeight()/2);
                     g2.dispose();
                 }
             };
@@ -392,7 +404,7 @@ public class GameStoreScreen extends JPanel {
     // ── Purchase logic ────────────────────────────────────────────────────
     private void handlePurchase(StoreItem item) {
         if (playerScore < item.cost) {
-            JOptionPane.showMessageDialog(this,
+            JOptionPane.showMessageDialog(gameStoreFrame,
                     "You need " + item.cost + " points but only have " + playerScore + ".",
                     "Not Enough Points", JOptionPane.WARNING_MESSAGE);
             return;
@@ -401,7 +413,7 @@ public class GameStoreScreen extends JPanel {
         item.quantity++;
         refreshScorePill();
         refreshBadges();
-        JOptionPane.showMessageDialog(this,
+        JOptionPane.showMessageDialog(gameStoreFrame,
                 item.name + " purchased!", "Success", JOptionPane.INFORMATION_MESSAGE);
     }
 
@@ -427,18 +439,42 @@ public class GameStoreScreen extends JPanel {
         if (file.exists()) avatarImage = new ImageIcon(file.getAbsolutePath()).getImage();
     }
 
-    // ── Standalone test ───────────────────────────────────────────────────
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            JFrame frame = new JFrame("Game Store Screen");
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setSize(760, 450);
-            frame.setLocationRelativeTo(null);
-
-            GameStoreScreen screen = new GameStoreScreen(
-                    () -> System.out.println("→ Back"), 3000);
-            frame.setContentPane(screen);
-            frame.setVisible(true);
-        });
+    // TODO: Action listener
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        // move from this class to player menu when back button is clicked
+        if (e.getActionCommand() != null && e.getActionCommand().equals("Back")) {
+            System.out.println("→ Back");
+            this.moveToNextScreen("Player");
+        }
     }
+    //TODO: public showScreen
+    @Override
+    public void showScreen() {
+        if (gameStoreFrame == null) {
+            gameStoreFrame = new JFrame("Staying Alive - Game Store");
+            gameStoreFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        }
+        gameStoreFrame.setSize(NavigationControl.screenW, NavigationControl.screenH);
+        this.playerScore = 0;   //temp screen = new temp(3000); // GameStoreScreen screen = new GameStoreScreen(() -> System.out.println("→ Back"), 3000);
+        gameStoreFrame.getContentPane().removeAll();
+        loadAvatar("global/download.png");
+        initItems();
+        buildUI();
+        //gameStoreFrame.setContentPane(screen);
+        gameStoreFrame.setLocationRelativeTo(null);
+        gameStoreFrame.setVisible(true);
+    }
+    // TODO: public moveToNextScreen
+    @Override
+    public void moveToNextScreen(String screenToMoveTo) {
+        // when integrating, move from this class to player menu when the back button is clicked
+        if (screenToMoveTo.equals("Player")) {
+            System.out.println("to player menu");
+            NavigationControl.setCurrentScreen(3);
+        }
+    }
+    // TODO: public getFrame
+    @Override
+    public JFrame getFrame() {return this.gameStoreFrame;}
 }

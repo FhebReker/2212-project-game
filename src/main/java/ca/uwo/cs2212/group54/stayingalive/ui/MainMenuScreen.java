@@ -11,28 +11,28 @@
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;;
+import java.awt.event.*;
 
 
 public class MainMenuScreen implements Screen {
     // Main Menu Frame
-    static JFrame mainMenuFrame = new JFrame("Staying Alive - Main Menu");
+    private JFrame mainMenuFrame = new JFrame("Staying Alive - Main Menu");
 
     // UI Colours
-    final static Color backgroundPurple = new Color(106, 69, 156);
-    static Color titleTextColour = new Color(255, 73, 164);
-    static Color buttonBackground = new Color(0, 140, 255);
-    static Color buttonTextColor = Color.black;
+    private static final Color backgroundPurple = new Color(106, 69, 156);
+    private static final Color titleTextColour = new Color(255, 73, 164);
+    private static final Color buttonBackground = new Color(0, 140, 255);
+    private static final Color buttonTextColor = Color.black;
 
     // Navigation Buttons
-    private JButton loginButton = new JButton("Login");
-    private JButton tutorialButton = new JButton("Tutorial");
-    private JButton parentalControlButton = new JButton("Parental Controls");
+    private JButton loginButton;
+    private JButton tutorialButton;
+    private JButton parentalControlButton;
 
     // Labels
-    private JLabel title = new JLabel();
-    private JLabel subLabel = new JLabel();
-    private JLabel credits = new JLabel();
+    private JLabel title;
+    private JLabel subLabel;
+    private JLabel credits;
     
 
     /** ADD DESCRIPTION HERE
@@ -49,11 +49,11 @@ public class MainMenuScreen implements Screen {
 	@Override
 	public void actionPerformed(ActionEvent e) {
         // Switch to login screen if login button is pressed
-        if (e.getSource() == loginButton) {this.moveToNextScreen("login");}
+        if (e.getActionCommand().equals("Login")) {this.moveToNextScreen("Login");}
         // Switch to tutorial screen if tutorial button is pressed
-        else if (e.getSource() == tutorialButton) {this.moveToNextScreen("tutorial");}
+        else if (e.getActionCommand().equals("Tutorial")) {this.moveToNextScreen("Tutorial");}
         // Switch to parental control screen if parental control button is pressed
-        else if (e.getSource() == parentalControlButton) {this.moveToNextScreen("parental control");}
+        else if (e.getActionCommand().equals("Parental Controls")) {this.moveToNextScreen("Parental Controls");}
     }
 
     /** ADD DESCRIPTION HERE
@@ -62,40 +62,49 @@ public class MainMenuScreen implements Screen {
     @Override
     public void showScreen() {
         // Title
-		title.setText("Staying Alive");
+        title = new JLabel("Staying Alive");
 		title.setFont(new Font("Helvetica", Font.PLAIN, 60)); // adjust as needed
 		title.setForeground(titleTextColour);
 		title.setBounds(225, 20, 400, 80); // adjust as needed
-        subLabel.setText("A Shebab Kebab Creation");
+        
+        subLabel = new JLabel("A Shebab Kebab Creation");
         subLabel.setFont(new Font("Helvetica", Font.PLAIN, 20)); // adjust as needed
         subLabel.setForeground(titleTextColour);
         subLabel.setBounds(285, 100, 300, 20); // adjust as needed
 
+
         // TODO: Add Logo in the middle of the frame(?)
 
+
 		// Set Up Login Button
-		loginButton.setFont(new Font("Helvetica", Font.PLAIN, 20)); // adjust as needed
+		loginButton = new JButton("Login");
+        loginButton.setFont(new Font("Helvetica", Font.PLAIN, 20)); // adjust as needed
         loginButton.setForeground(buttonTextColor);
 		loginButton.setBackground(buttonBackground);
 		loginButton.setBounds(300, 250, 200, 30); // adjust as needed
+        loginButton.setActionCommand("Login");
 		loginButton.addActionListener(this);
 	
 		// Set Up Tutorial Button
+        tutorialButton = new JButton("Tutorial");
 		tutorialButton.setFont(new Font("Helvetica", Font.PLAIN, 20)); // adjust as needed
 		tutorialButton.setForeground(buttonTextColor);
 		tutorialButton.setBackground(buttonBackground);
 		tutorialButton.setBounds(50, 250, 200, 30); // adjust as needed
+        tutorialButton.setActionCommand("Tutorial");
 		tutorialButton.addActionListener(this);
 
         // Set Up Parental Control Button
+        parentalControlButton = new JButton("Parental Controls");
         parentalControlButton.setFont(new Font("Helvetica", Font.PLAIN, 20)); // adjust as needed
 		parentalControlButton.setForeground(buttonTextColor);
 		parentalControlButton.setBackground(buttonBackground);
 		parentalControlButton.setBounds(550, 250, 200, 30); // adjust as needed
+        parentalControlButton.setActionCommand("Parental Controls");
 		parentalControlButton.addActionListener(this);
 
         // Set Up Credits
-        credits.setText("<html>Created by Omar Soliman, Osman Idris, Mohamed Ahmed, Malik Alghneimin, and Fardin Abbassi as Group 54 for the CS 2212 course in the Winter 2026 term.</html>");
+        credits = new JLabel("<html>Created by Omar Soliman, Osman Idris, Mohamed Ahmed, Malik Alghneimin, and Fardin Abbassi as Group 54 for the CS 2212 course in the Winter 2026 term.</html>");
         credits.setFont(new Font("Helvetica", Font.PLAIN, 15)); // adjust as needed
         credits.setForeground(Color.white);
         credits.setBounds(150, 325, 550, 50); // adjust as needed
@@ -127,11 +136,20 @@ public class MainMenuScreen implements Screen {
     @Override
     public void moveToNextScreen(String screenToMoveTo) {
         // Open login screen as a pop-up
-        if (screenToMoveTo.equals("login")) {NavigationControl.setCurrentScreen(1);}
+        if (screenToMoveTo.equals("Login")) {
+            System.out.println("logging in");
+            NavigationControl.setCurrentScreen(1);
+        }
         // Open tutorial screen
-        else if (screenToMoveTo.equals("tutorial")) {NavigationControl.setCurrentScreen(2);}
+        else if (screenToMoveTo.equals("Tutorial")) {
+            System.out.println("reading tutorial");
+            NavigationControl.setCurrentScreen(2);
+        }
         // Open parental control screen
-        else if (screenToMoveTo.equals("parental control")) {NavigationControl.setCurrentScreen(3);}
+        else if (screenToMoveTo.equals("Parental Controls")) {
+            System.err.println("ERROR: have yet to implement parental controls");
+            //NavigationControl.setCurrentScreen(6); // TODO: implement parental controls screen
+        }
     }
 
     /** ADD DESCRIPTION HERE
