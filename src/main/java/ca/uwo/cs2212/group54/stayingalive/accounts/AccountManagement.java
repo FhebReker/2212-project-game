@@ -4,8 +4,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class AccountManagement {
-    private char[] masterPass;
-
     public AccountManagement() {}
 
     public boolean checkUserLogin(String username, String password) {
@@ -17,5 +15,10 @@ public class AccountManagement {
         return acc.getPassword().equals(password);
     }
 
-    
+    public boolean checkMasterPass(String masterPass) {
+        String pass = new String(Parental.getMasterPass());
+        return pass.equals(masterPass);
+    }
+
+
 }
