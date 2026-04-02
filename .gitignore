@@ -4,6 +4,7 @@
 /target/
 /.gradle/
 /.idea/
+*.class
 
 # VS Code / Cursor settings
 .vscode/

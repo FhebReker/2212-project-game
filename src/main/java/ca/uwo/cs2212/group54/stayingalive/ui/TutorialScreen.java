@@ -1,0 +1,270 @@
+/**
+ * TutorialScreen class represents the tutorial screen of Staying Alive.
+ * <p>
+ * TutorialScreen implements the Screen interface,
+ * so it has methods to show the screen, move to the next screen,
+ * and get the class' frame.
+ * Since Screen implements ActionListener, it also has a method to handle button clicks.
+ * <p>
+ * The tutorial cycles through multiple text-based pages explaining how to play the game.
+ * Navigation arrows let the user move forward/backward, dots show the current page,
+ * and a back button returns to the previous menu.
+ *
+ * @author Fardin Abbassi
+ */
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.Image;
+
+public class TutorialScreen implements Screen {
+    // Tutorial Frame
+    private JFrame tutorialFrame = new JFrame("Tutorial Screen");
+
+    // UI Colours
+    private final static Color BACKGROUND_PURPLE = new Color(106, 69, 156);
+    private final static Color BOX_BACKGROUND     = new Color(80, 50, 120);
+    private final static Color TEXT_WHITE          = Color.WHITE;
+    private final static Color DOT_ACTIVE          = Color.WHITE;
+    private final static Color DOT_INACTIVE        = new Color(120, 100, 150);
+    private final static Color ARROW_COLOR         = new Color(40, 40, 40);
+
+    // Tutorial pages: each entry is { title, body }
+    private final static String[][] PAGES = {
+        {
+            "Welcome to Staying Alive!",
+            "<html><div style='text-align:center;'>"
+            + "Staying Alive is a <b>typing game</b> where words hit the screen fast<br>"
+            + "and you have to type them before time runs out.<br><br>"
+            + "Type fast. Type accurate. Stay alive.<br><br>"
+            + "Hit the arrow to get started!"
+            + "</div></html>"
+        },
+        {
+            "Type to Survive",
+            "<html><div style='text-align:center;'>"
+            + "Words drop onto the screen. <b>Type them exactly</b> to destroy them.<br><br>"
+            + "Every round is on a <b>timer</b>, so hesitation will cost you.<br><br>"
+            + "Miss a word or type it wrong and you take <b>damage</b>.<br>"
+            + "Let your health hit zero and it is <b>game over</b>."
+            + "</div></html>"
+        },
+        {
+            "Level Up or Die Trying",
+            "<html><div style='text-align:center;'>"
+            + "Each level you clear ramps up the challenge.<br><br>"
+            + "Words get <b>longer</b>, more <b>complex</b>, and the clock gets<br>"
+            + "tighter with every stage.<br><br>"
+            + "Chain enough clears to push through to the next level.<br>"
+            + "Keep up or get left behind!"
+            + "</div></html>"
+        },
+        {
+            "Health, Points & Powerups",
+            "<html><div style='text-align:center;'>"
+            + "You start each run with a fixed amount of <b>health</b>.<br>"
+            + "Every mistake chips away at it, so play smart.<br><br>"
+            + "Nailing words earns you <b>points</b> and builds your score.<br><br>"
+            + "<b>Powerups</b> show up mid-game. Type them fast to grab<br>"
+            + "bonuses like extra time or health restored."
+            + "</div></html>"
+        }
+    };
+
+    // State
+    private int currentPage = 0;
+
+    // UI Components (recreated on each showScreen call)
+    private JPanel  displayBox;
+    private JLabel  pageTitle;
+    private JLabel  pageBody;
+    private JPanel  dotsPanel;
+    private JButton leftArrowButton;
+    private JButton rightArrowButton;
+    private JButton backToPreviousButton;
+
+    /**
+     * Handle button clicks on the tutorial screen.
+     * Left arrow moves to the previous page, right arrow moves to the next page,
+     * and the back button returns to the previous menu.
+     *
+     * @param e the ActionEvent triggered by a button click
+     */
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        switch (e.getActionCommand()) {
+            case "Move Left":
+                if (currentPage > 0) {
+                    currentPage--;
+                    refreshPage();
+                }
+                break;
+            case "Move Right":
+                if (currentPage < PAGES.length - 1) {
+                    currentPage++;
+                    refreshPage();
+                }
+                break;
+            case "Return":
+                this.moveToNextScreen("back");
+                break;
+        }
+    }
+
+    /**
+     * Updates the display box content and dot indicators to reflect the current page
+     * without rebuilding the entire frame.
+     */
+    private void refreshPage() {
+        pageTitle.setText(PAGES[currentPage][0]);
+        pageBody.setText(PAGES[currentPage][1]);
+
+        // Update dot colours
+        for (int i = 0; i < dotsPanel.getComponentCount(); i++) {
+            JLabel dot = (JLabel) dotsPanel.getComponent(i);
+            dot.setForeground(i == currentPage ? DOT_ACTIVE : DOT_INACTIVE);
+        }
+
+        // Show/hide arrows based on position
+        leftArrowButton.setVisible(currentPage > 0);
+        rightArrowButton.setVisible(currentPage < PAGES.length - 1);
+
+        tutorialFrame.repaint();
+    }
+
+    /**
+     * Builds and displays the tutorial screen with all components.
+     */
+    @Override
+    public void showScreen() {
+        tutorialFrame.getContentPane().removeAll();
+        currentPage = 0;
+
+        // --- Root panel ---
+        JPanel root = new JPanel(new BorderLayout());
+        root.setBackground(BACKGROUND_PURPLE);
+
+        // --- NORTH: back button pinned to top-right ---
+        Image rawBack = new ImageIcon("global/back.png").getImage()
+                            .getScaledInstance(34, 34, Image.SCALE_SMOOTH);
+        backToPreviousButton = new JButton(new ImageIcon(rawBack));
+        backToPreviousButton.setContentAreaFilled(false);
+        backToPreviousButton.setBorderPainted(false);
+        backToPreviousButton.setFocusPainted(false);
+        backToPreviousButton.setActionCommand("Return");
+        backToPreviousButton.addActionListener(this);
+
+        JPanel topBar = new JPanel(new FlowLayout(FlowLayout.RIGHT, 12, 8));
+        topBar.setOpaque(false);
+        topBar.add(backToPreviousButton);
+        root.add(topBar, BorderLayout.NORTH);
+
+        // --- CENTER: left arrow | display box | right arrow ---
+        leftArrowButton  = makeArrowButton("\u2039", "Move Left");
+        rightArrowButton = makeArrowButton("\u203a", "Move Right");
+        leftArrowButton.setVisible(false); // hidden on first page
+
+        // Arrow wrapper panels give consistent padding on each side
+        JPanel leftWrap = new JPanel(new GridBagLayout());
+        leftWrap.setOpaque(false);
+        leftWrap.setPreferredSize(new Dimension(80, 0));
+        leftWrap.add(leftArrowButton);
+
+        JPanel rightWrap = new JPanel(new GridBagLayout());
+        rightWrap.setOpaque(false);
+        rightWrap.setPreferredSize(new Dimension(80, 0));
+        rightWrap.add(rightArrowButton);
+
+        // Display box
+        displayBox = new JPanel(new BorderLayout(0, 10));
+        displayBox.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2));
+        displayBox.setBackground(BOX_BACKGROUND);
+
+        pageTitle = new JLabel(PAGES[0][0], SwingConstants.CENTER);
+        pageTitle.setFont(new Font("Helvetica", Font.BOLD, 18));
+        pageTitle.setForeground(TEXT_WHITE);
+        pageTitle.setBorder(BorderFactory.createEmptyBorder(18, 10, 0, 10));
+
+        pageBody = new JLabel(PAGES[0][1], SwingConstants.CENTER);
+        pageBody.setFont(new Font("Helvetica", Font.PLAIN, 13));
+        pageBody.setForeground(TEXT_WHITE);
+        pageBody.setVerticalAlignment(SwingConstants.TOP);
+        pageBody.setBorder(BorderFactory.createEmptyBorder(0, 18, 18, 18));
+
+        displayBox.add(pageTitle, BorderLayout.NORTH);
+        displayBox.add(pageBody,  BorderLayout.CENTER);
+
+        displayBox.setPreferredSize(new Dimension(470, 260));
+
+        JPanel centerRow = new JPanel(new BorderLayout());
+        centerRow.setOpaque(false);
+        centerRow.add(leftWrap,   BorderLayout.WEST);
+        centerRow.add(displayBox, BorderLayout.CENTER);
+        centerRow.add(rightWrap,  BorderLayout.EAST);
+
+        // Wrap in GridBagLayout so centerRow keeps its preferred size and stays centred
+        JPanel centerWrapper = new JPanel(new GridBagLayout());
+        centerWrapper.setOpaque(false);
+        centerWrapper.add(centerRow);
+        root.add(centerWrapper, BorderLayout.CENTER);
+
+        // --- SOUTH: progress dots ---
+        dotsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 8));
+        dotsPanel.setOpaque(false);
+        for (int i = 0; i < PAGES.length; i++) {
+            JLabel dot = new JLabel("\u25CF"); // ●
+            dot.setFont(new Font("Helvetica", Font.PLAIN, 16));
+            dot.setForeground(i == 0 ? DOT_ACTIVE : DOT_INACTIVE);
+            dotsPanel.add(dot);
+        }
+        root.add(dotsPanel, BorderLayout.SOUTH);
+
+        // --- Frame settings ---
+        tutorialFrame.setContentPane(root);
+        tutorialFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        tutorialFrame.setBackground(BACKGROUND_PURPLE);
+        tutorialFrame.setVisible(true);
+        tutorialFrame.setLocationRelativeTo(null);
+    }
+
+    /**
+     * Creates a styled arrow button with a Unicode chevron character.
+     *
+     * @param symbol the chevron character to display
+     * @param command the action command string
+     * @return the configured JButton
+     */
+    private JButton makeArrowButton(String symbol, String command) {
+        JButton btn = new JButton(symbol);
+        btn.setFont(new Font("Helvetica", Font.PLAIN, 48));
+        btn.setForeground(TEXT_WHITE);
+        btn.setContentAreaFilled(false);
+        btn.setBorderPainted(false);
+        btn.setFocusPainted(false);
+        btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        btn.setActionCommand(command);
+        btn.addActionListener(this);
+        return btn;
+    }
+
+    /**
+     * Moves to another screen.
+     * "back" navigates to the main menu (screen index 0).
+     *
+     * @param screenToMoveTo the target screen identifier
+     */
+    @Override
+    public void moveToNextScreen(String screenToMoveTo) {
+        if (screenToMoveTo.equals("back")) {
+            NavigationControl.goBack();
+        }
+    }
+
+    /**
+     * Returns the JFrame for this screen.
+     *
+     * @return the tutorial JFrame
+     */
+    @Override
+    public JFrame getFrame() { return tutorialFrame; }
+}

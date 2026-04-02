@@ -1,6 +1,10 @@
-import java.awt.event.ActionListener;
+// package ui;
+
+import java.awt.event.*;
+import javax.swing.*;
 
 public interface Screen extends ActionListener{
     void showScreen();
-    Screen moveToNextScreen(String screenToMoveTo);
+    void moveToNextScreen(String screenToMoveTo);
+    JFrame getFrame();
 }
