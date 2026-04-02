@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ArrayList;
 import java.awt.Point;
+import java.util.Arrays;
 import java.util.Random;
 
 enum Difficulty {
@@ -45,33 +46,29 @@ public class Gameplay {
         this.mistakes = 0;
         this.corrects = 0;
         this.time = 0;
+        this.score = 0;
         this.difficulty = difficulty;
 
         // This is for how much enemies are present in the game.
         // Maybe with the difficulty, the speed of the enemies should increase too.
         switch (difficulty) {
-            case EASY: {
+            case EASY ->  {
                 this.maxWeight = 10; 
                 this.spawnDelay = 3.0f;
-                break;
             }
-            case MEDIUM: {
+            case MEDIUM ->  {
                 this.maxWeight = 15; 
                 this.spawnDelay = 2.5f;
-                break;
             }
-            case HARD: {
+            case HARD ->  {
                 this.maxWeight = 20;
                 this.spawnDelay = 1.0f;
-                break;
             }
         }
         
         this.pendingEnemies = new LinkedList<>();
         if (levelData != null && levelData.getEnemies() != null) {
-            for (Enemy e : levelData.getEnemies()) {
-                this.pendingEnemies.add(e);
-            }
+            this.pendingEnemies.addAll(Arrays.asList(levelData.getEnemies()));
         }
         this.activeEnemies = new ArrayList<>();
         this.random = new Random();
@@ -176,9 +173,9 @@ public class Gameplay {
     public void updateScore(int amount, Difficulty difficulty) {
         // Add score based on difficulty
         switch (difficulty) {
-            case EASY: this.score += amount; break;
-            case MEDIUM: this.score += amount * 1.5; break;
-            case HARD: this.score += amount * 2; break;
+            case EASY -> this.score += amount;
+            case MEDIUM -> this.score += amount * 1.5;
+            case HARD -> this.score += amount * 2;
         }
     }
 
@@ -193,10 +190,6 @@ public class Gameplay {
 
     public void pauseGame() {
         // TODO: Implement pause game function
-    }
-
-    public void resumeGame() {
-        // TODO: Implement resume game function
     }
 
     public void changeLives(int change) {

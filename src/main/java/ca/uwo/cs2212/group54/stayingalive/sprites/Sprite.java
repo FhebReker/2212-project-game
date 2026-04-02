@@ -9,7 +9,7 @@ import javax.swing.JLabel;
  */
 
 public class Sprite {
-    private JLabel image;
+    private final JLabel image;
     private int x;
     private int y;
 

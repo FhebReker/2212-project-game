@@ -10,10 +10,10 @@ import sprites.Sprite;
  */
 
 public class LevelData {
-    private int section;
-    private int number;
-    private Enemy enemies[];
-    private Sprite background;
+    private final int section;
+    private final int number;
+    private final Enemy enemies[];
+    private final Sprite background;
 
     public LevelData(int section, int number, Enemy enemies[], Sprite background) {
         this.section = section;
