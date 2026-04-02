@@ -1,3 +1,5 @@
+package ca.uwo.cs2212.group54.stayingalive.ui;
+
 /**
  * TutorialScreen class represents the tutorial screen of Staying Alive.
  * <p>
@@ -12,10 +14,23 @@
  *
  * @author Fardin Abbassi
  */
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridBagLayout;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 public class TutorialScreen implements Screen {
     // Tutorial Frame
