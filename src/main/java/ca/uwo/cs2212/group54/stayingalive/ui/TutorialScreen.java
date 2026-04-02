@@ -140,41 +140,51 @@ public class TutorialScreen implements Screen {
         tutorialFrame.getContentPane().removeAll();
         currentPage = 0;
 
-        // --- Back button (top-right) ---
+        // --- Root panel ---
+        JPanel root = new JPanel(new BorderLayout());
+        root.setBackground(BACKGROUND_PURPLE);
+
+        // --- NORTH: back button pinned to top-right ---
         Image rawBack = new ImageIcon("global/back.png").getImage()
                             .getScaledInstance(34, 34, Image.SCALE_SMOOTH);
-        ImageIcon backIcon = new ImageIcon(rawBack);
-        backToPreviousButton = new JButton(backIcon);
-        backToPreviousButton.setBounds(700, 15, 45, 45);
+        backToPreviousButton = new JButton(new ImageIcon(rawBack));
         backToPreviousButton.setContentAreaFilled(false);
         backToPreviousButton.setBorderPainted(false);
         backToPreviousButton.setFocusPainted(false);
         backToPreviousButton.setActionCommand("Return");
         backToPreviousButton.addActionListener(this);
 
-        // --- Left arrow button ---
-        leftArrowButton = makeArrowButton("\u2039", "Move Left"); // ‹
-        leftArrowButton.setBounds(55, 160, 60, 80);
+        JPanel topBar = new JPanel(new FlowLayout(FlowLayout.RIGHT, 12, 8));
+        topBar.setOpaque(false);
+        topBar.add(backToPreviousButton);
+        root.add(topBar, BorderLayout.NORTH);
+
+        // --- CENTER: left arrow | display box | right arrow ---
+        leftArrowButton  = makeArrowButton("\u2039", "Move Left");
+        rightArrowButton = makeArrowButton("\u203a", "Move Right");
         leftArrowButton.setVisible(false); // hidden on first page
 
-        // --- Right arrow button ---
-        rightArrowButton = makeArrowButton("\u203a", "Move Right"); // ›
-        rightArrowButton.setBounds(685, 160, 60, 80);
+        // Arrow wrapper panels give consistent padding on each side
+        JPanel leftWrap = new JPanel(new GridBagLayout());
+        leftWrap.setOpaque(false);
+        leftWrap.setPreferredSize(new Dimension(80, 0));
+        leftWrap.add(leftArrowButton);
 
-        // --- Tutorial display box ---
-        displayBox = new JPanel();
-        displayBox.setBounds(165, 60, 470, 290);
+        JPanel rightWrap = new JPanel(new GridBagLayout());
+        rightWrap.setOpaque(false);
+        rightWrap.setPreferredSize(new Dimension(80, 0));
+        rightWrap.add(rightArrowButton);
+
+        // Display box
+        displayBox = new JPanel(new BorderLayout(0, 10));
         displayBox.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2));
         displayBox.setBackground(BOX_BACKGROUND);
-        displayBox.setLayout(new BorderLayout(0, 10));
 
-        // Page title
         pageTitle = new JLabel(PAGES[0][0], SwingConstants.CENTER);
         pageTitle.setFont(new Font("Helvetica", Font.BOLD, 18));
         pageTitle.setForeground(TEXT_WHITE);
         pageTitle.setBorder(BorderFactory.createEmptyBorder(18, 10, 0, 10));
 
-        // Page body
         pageBody = new JLabel(PAGES[0][1], SwingConstants.CENTER);
         pageBody.setFont(new Font("Helvetica", Font.PLAIN, 13));
         pageBody.setForeground(TEXT_WHITE);
@@ -184,29 +194,34 @@ public class TutorialScreen implements Screen {
         displayBox.add(pageTitle, BorderLayout.NORTH);
         displayBox.add(pageBody,  BorderLayout.CENTER);
 
-        // --- Dots panel ---
-        dotsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
-        dotsPanel.setBackground(BACKGROUND_PURPLE);
-        dotsPanel.setBounds(280, 365, 240, 20);
+        displayBox.setPreferredSize(new Dimension(470, 260));
 
+        JPanel centerRow = new JPanel(new BorderLayout());
+        centerRow.setOpaque(false);
+        centerRow.add(leftWrap,   BorderLayout.WEST);
+        centerRow.add(displayBox, BorderLayout.CENTER);
+        centerRow.add(rightWrap,  BorderLayout.EAST);
+
+        // Wrap in GridBagLayout so centerRow keeps its preferred size and stays centred
+        JPanel centerWrapper = new JPanel(new GridBagLayout());
+        centerWrapper.setOpaque(false);
+        centerWrapper.add(centerRow);
+        root.add(centerWrapper, BorderLayout.CENTER);
+
+        // --- SOUTH: progress dots ---
+        dotsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 8));
+        dotsPanel.setOpaque(false);
         for (int i = 0; i < PAGES.length; i++) {
             JLabel dot = new JLabel("\u25CF"); // ●
             dot.setFont(new Font("Helvetica", Font.PLAIN, 16));
             dot.setForeground(i == 0 ? DOT_ACTIVE : DOT_INACTIVE);
             dotsPanel.add(dot);
         }
-
-        // --- Add all components to frame ---
-        tutorialFrame.getContentPane().add(backToPreviousButton);
-        tutorialFrame.getContentPane().add(leftArrowButton);
-        tutorialFrame.getContentPane().add(rightArrowButton);
-        tutorialFrame.getContentPane().add(displayBox);
-        tutorialFrame.getContentPane().add(dotsPanel);
+        root.add(dotsPanel, BorderLayout.SOUTH);
 
         // --- Frame settings ---
+        tutorialFrame.setContentPane(root);
         tutorialFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        tutorialFrame.getContentPane().setLayout(null);
-        tutorialFrame.getContentPane().setBackground(BACKGROUND_PURPLE);
         tutorialFrame.setBackground(BACKGROUND_PURPLE);
         tutorialFrame.setVisible(true);
         tutorialFrame.setLocationRelativeTo(null);
@@ -241,7 +256,7 @@ public class TutorialScreen implements Screen {
     @Override
     public void moveToNextScreen(String screenToMoveTo) {
         if (screenToMoveTo.equals("back")) {
-            NavigationControl.setCurrentScreen(0); // return to main menu
+            NavigationControl.goBack();
         }
     }
 

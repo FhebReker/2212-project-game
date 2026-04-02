@@ -309,8 +309,7 @@ public class PlayerScreen implements Screen {
             NavigationControl.setCurrentScreen(2);
         }
         if (screenToMoveTo.equals("Logout")) {
-            System.out.println("logging out");
-            NavigationControl.setCurrentScreen(0);
+            NavigationControl.goBack();
         }
     }
     // TODO: public getFrame

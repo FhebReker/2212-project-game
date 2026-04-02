@@ -232,8 +232,7 @@ public class StatsScreen implements Screen {
     @Override
     public void moveToNextScreen(String screenToMoveTo) {
         if (screenToMoveTo.equals("Back")) {
-            System.out.println("stats back to player");
-            NavigationControl.setCurrentScreen(3); // TODO: change to previous screen instead of player screen
+            NavigationControl.goBack();
         }
     }
     // TODO: public getFrame

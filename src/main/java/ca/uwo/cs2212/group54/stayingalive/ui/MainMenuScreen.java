@@ -56,77 +56,87 @@ public class MainMenuScreen implements Screen {
         else if (e.getActionCommand().equals("Parental Controls")) {this.moveToNextScreen("Parental Controls");}
     }
 
+    private void buildUI() {
+        // BorderLayout: title NORTH, logo CENTER (scales), subtitle+buttons+credits SOUTH
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        mainPanel.setBackground(backgroundPurple);
+
+        // --- NORTH: title ---
+        title = new JLabel("Staying Alive", SwingConstants.CENTER);
+        title.setFont(new Font("Helvetica", Font.PLAIN, 60));
+        title.setForeground(titleTextColour);
+        title.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
+        mainPanel.add(title, BorderLayout.NORTH);
+
+        // --- CENTER: logo at fixed size, centred — extra window space becomes padding ---
+        Image logoRaw = new ImageIcon("global/logo.png").getImage()
+                            .getScaledInstance(260, 195, Image.SCALE_SMOOTH);
+        JLabel logoLabel = new JLabel(new ImageIcon(logoRaw));
+        JPanel logoPanel = new JPanel(new GridBagLayout());
+        logoPanel.setOpaque(false);
+        logoPanel.add(logoLabel);
+        mainPanel.add(logoPanel, BorderLayout.CENTER);
+
+        // --- SOUTH: subtitle + buttons + credits ---
+        JPanel south = new JPanel();
+        south.setLayout(new BoxLayout(south, BoxLayout.Y_AXIS));
+        south.setOpaque(false);
+        south.setBorder(BorderFactory.createEmptyBorder(0, 0, 18, 0));
+
+        subLabel = new JLabel("A Shebab Kebab Creation", SwingConstants.CENTER);
+        subLabel.setFont(new Font("Helvetica", Font.PLAIN, 18));
+        subLabel.setForeground(titleTextColour);
+        subLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JPanel buttons = new JPanel(new FlowLayout(FlowLayout.CENTER, 16, 0));
+        buttons.setOpaque(false);
+        buttons.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        tutorialButton        = new JButton("Tutorial");
+        loginButton           = new JButton("Login");
+        parentalControlButton = new JButton("Parental Controls");
+
+        for (JButton btn : new JButton[]{tutorialButton, loginButton, parentalControlButton}) {
+            btn.setFont(new Font("Helvetica", Font.PLAIN, 18));
+            btn.setForeground(buttonTextColor);
+            btn.setBackground(buttonBackground);
+            btn.setPreferredSize(new Dimension(170, 38));
+            btn.addActionListener(this);
+            buttons.add(btn);
+        }
+        tutorialButton.setActionCommand("Tutorial");
+        loginButton.setActionCommand("Login");
+        parentalControlButton.setActionCommand("Parental Controls");
+
+        credits = new JLabel(
+            "<html><center>Created by Omar Soliman, Osman Idris, Mohamed Ahmed, Malik Alghneimin, and Fardin Abbassi"
+            + "<br>as Group 54 for the CS 2212 course in the Winter 2026 term.</center></html>",
+            SwingConstants.CENTER);
+        credits.setFont(new Font("Helvetica", Font.PLAIN, 11));
+        credits.setForeground(new Color(220, 200, 240));
+        credits.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        south.add(subLabel);
+        south.add(Box.createVerticalStrut(16));
+        south.add(buttons);
+        south.add(Box.createVerticalStrut(12));
+        south.add(credits);
+
+        mainPanel.add(south, BorderLayout.SOUTH);
+        mainMenuFrame.setContentPane(mainPanel);
+    }
+
     /** ADD DESCRIPTION HERE
-     * 
+     *
      */
     @Override
     public void showScreen() {
-        // Title
-        title = new JLabel("Staying Alive");
-		title.setFont(new Font("Helvetica", Font.PLAIN, 60)); // adjust as needed
-		title.setForeground(titleTextColour);
-		title.setBounds(225, 20, 400, 80); // adjust as needed
-        
-        subLabel = new JLabel("A Shebab Kebab Creation");
-        subLabel.setFont(new Font("Helvetica", Font.PLAIN, 20)); // adjust as needed
-        subLabel.setForeground(titleTextColour);
-        subLabel.setBounds(285, 100, 300, 20); // adjust as needed
-
-
-        // TODO: Add Logo in the middle of the frame(?)
-
-
-		// Set Up Login Button
-		loginButton = new JButton("Login");
-        loginButton.setFont(new Font("Helvetica", Font.PLAIN, 20)); // adjust as needed
-        loginButton.setForeground(buttonTextColor);
-		loginButton.setBackground(buttonBackground);
-		loginButton.setBounds(300, 250, 200, 30); // adjust as needed
-        loginButton.setActionCommand("Login");
-		loginButton.addActionListener(this);
-	
-		// Set Up Tutorial Button
-        tutorialButton = new JButton("Tutorial");
-		tutorialButton.setFont(new Font("Helvetica", Font.PLAIN, 20)); // adjust as needed
-		tutorialButton.setForeground(buttonTextColor);
-		tutorialButton.setBackground(buttonBackground);
-		tutorialButton.setBounds(50, 250, 200, 30); // adjust as needed
-        tutorialButton.setActionCommand("Tutorial");
-		tutorialButton.addActionListener(this);
-
-        // Set Up Parental Control Button
-        parentalControlButton = new JButton("Parental Controls");
-        parentalControlButton.setFont(new Font("Helvetica", Font.PLAIN, 20)); // adjust as needed
-		parentalControlButton.setForeground(buttonTextColor);
-		parentalControlButton.setBackground(buttonBackground);
-		parentalControlButton.setBounds(550, 250, 200, 30); // adjust as needed
-        parentalControlButton.setActionCommand("Parental Controls");
-		parentalControlButton.addActionListener(this);
-
-        // Set Up Credits
-        credits = new JLabel("<html>Created by Omar Soliman, Osman Idris, Mohamed Ahmed, Malik Alghneimin, and Fardin Abbassi as Group 54 for the CS 2212 course in the Winter 2026 term.</html>");
-        credits.setFont(new Font("Helvetica", Font.PLAIN, 15)); // adjust as needed
-        credits.setForeground(Color.white);
-        credits.setBounds(150, 325, 550, 50); // adjust as needed
-		
-		// Add to frame
-		mainMenuFrame.getContentPane().add(title);
-		mainMenuFrame.getContentPane().add(subLabel);
-		mainMenuFrame.getContentPane().add(loginButton);
-		mainMenuFrame.getContentPane().add(tutorialButton);
-		mainMenuFrame.getContentPane().add(parentalControlButton);
-		mainMenuFrame.getContentPane().add(credits);
-		
-		// Set frame
-		mainMenuFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		mainMenuFrame.getContentPane().setLayout(null);
-		mainMenuFrame.getContentPane().setBackground(backgroundPurple);
-		//mainMenuFrame.setIconImage(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/shebab_icon.png"))); // Shebab Kebab logo without text, adjust as needed
-		mainMenuFrame.setBackground(backgroundPurple); // adjust as needed
-        mainMenuFrame.setForeground(backgroundPurple);
-		mainMenuFrame.setVisible(true);
+        mainMenuFrame.getContentPane().removeAll();
+        buildUI();
+        mainMenuFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        mainMenuFrame.setBackground(backgroundPurple);
+        mainMenuFrame.setVisible(true);
         mainMenuFrame.setLocationRelativeTo(null);
-
     }
 
     /** ADD DESCRIPTION HERE
