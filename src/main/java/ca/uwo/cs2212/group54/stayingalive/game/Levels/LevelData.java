@@ -10,26 +10,38 @@ import ca.uwo.cs2212.group54.stayingalive.sprites.Sprite;
  */
 
 public class LevelData {
-    private final int section;
     private final int number;
     private final Enemy enemies[];
     private final Sprite background;
 
-    public LevelData(int section, int number, Enemy enemies[], Sprite background) {
-        this.section = section;
+
+    /**
+     * Constructor for LevelData
+     * 
+     * @param number The level number
+     * @param enemies The enemies in the level
+     * @param background The background of the level
+     */
+    public LevelData(int number, Enemy enemies[], Sprite background) {
         this.number = number;
         this.enemies = enemies;
         this.background = background;
     }
 
-    public int getSection() {
-        return this.section;
-    }
-
+    /**
+     * Get the level number
+     * 
+     * @return The level number
+     */
     public int getNumber() {
         return this.number;
     }
 
+    /**
+     * Get the enemies in the level
+     * 
+     * @return The enemies in the level
+     */
     public Enemy[] getEnemies() {
         return this.enemies;
     }
