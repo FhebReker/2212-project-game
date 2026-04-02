@@ -1,31 +1,10 @@
 package ca.uwo.cs2212.group54.stayingalive.ui;
 
-// FA: Added implementation of screen interface, will need to connect to nav control and properly integrate class with interface methods.
-import java.awt.BasicStroke;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.GridBagLayout;
-import java.awt.Image;
-import java.awt.RenderingHints;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.io.File;
-import java.net.URL;
-
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.*;
+import java.net.*;
+import javax.swing.*;
 
 /**
  * PlayerScreen – the hub screen shown after a player logs in.
@@ -37,9 +16,9 @@ import javax.swing.JPanel;
  *   - Current avatar image (placeholder kitten) centred in the screen
  *   - Four navigation buttons along the bottom:
  *       New Game | Continue Game | Game Store | Stats
- *
- * Navigation callbacks are supplied via a {@link Navigator} interface so this
- * class stays decoupled from whatever navigation controller the project uses.
+ * 
+ * @author Omar Soliman
+ * @author Fardin Abbassi
  */
 public class PlayerScreen implements Screen {
 
@@ -52,26 +31,26 @@ public class PlayerScreen implements Screen {
     // ── Fields ────────────────────────────────────────────────────────────
     private Image avatarImage;
     private JFrame playerFrame;
+    private String avatarPath;
 
     // ── Constructor ───────────────────────────────────────────────────────
-
     /**
-     * @param navigator  callback object that handles screen transitions
+     * Constructor for the class.
+     * 
+     * <p>
+     * Sets the avatar iamge path to whatever is specified, or defaults to the placeholder image.
      * @param avatarPath resource path to the avatar image (e.g. "/assets/kitten.png"),
      *                   or {@code null} to use the built-in placeholder
      */
     public PlayerScreen(String avatarPath) {
-        // TODO: Move this to showScreen()
-        loadAvatar(avatarPath);
-        //buildUI();
+        this.avatarPath = avatarPath;
     }
     /** Convenience constructor that uses the default kitten placeholder. */
     public PlayerScreen() {
-        this("global/download.png");
+        this.avatarPath = "global/download.png";
     }
 
     // ── UI construction ───────────────────────────────────────────────────
-
     private void buildUI() {
         JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBackground(BG_COLOR);
@@ -293,9 +272,8 @@ public class PlayerScreen implements Screen {
         playerFrame.setSize(NavigationControl.screenW, NavigationControl.screenH);
         playerFrame.getContentPane().removeAll();
         
-        loadAvatar("global/download.png");
+        loadAvatar(avatarPath); // Uses either default image or whatever file the user specified when constructing the file.
         buildUI();
-        //gameStoreFrame.setContentPane(screen);
         playerFrame.setLocationRelativeTo(null);
         playerFrame.setVisible(true);
     }

@@ -13,24 +13,11 @@ package ca.uwo.cs2212.group54.stayingalive.ui;
  * and a back button returns to the previous menu.
  *
  * @author Fardin Abbassi
+ * @author Omar Soliman
  */
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.GridBagLayout;
-import java.awt.Image;
-import java.awt.event.ActionEvent;
-
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
+import java.awt.*;
+import javax.swing.*;
+import java.awt.event.*;
 
 public class TutorialScreen implements Screen {
     // Tutorial Frame
@@ -104,6 +91,8 @@ public class TutorialScreen implements Screen {
      * and the back button returns to the previous menu.
      *
      * @param e the ActionEvent triggered by a button click
+     * @author Fardin Abbassi
+     * @author Omar Soliman
      */
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -129,6 +118,8 @@ public class TutorialScreen implements Screen {
     /**
      * Updates the display box content and dot indicators to reflect the current page
      * without rebuilding the entire frame.
+     * 
+     * @author Omar Soliman
      */
     private void refreshPage() {
         pageTitle.setText(PAGES[currentPage][0]);
@@ -149,6 +140,9 @@ public class TutorialScreen implements Screen {
 
     /**
      * Builds and displays the tutorial screen with all components.
+     * 
+     * @author Fardin Abbassi
+     * @author Omar Soliman
      */
     @Override
     public void showScreen() {
@@ -248,6 +242,7 @@ public class TutorialScreen implements Screen {
      * @param symbol the chevron character to display
      * @param command the action command string
      * @return the configured JButton
+     * @author Omar Soliman
      */
     private JButton makeArrowButton(String symbol, String command) {
         JButton btn = new JButton(symbol);
@@ -267,6 +262,7 @@ public class TutorialScreen implements Screen {
      * "back" navigates to the main menu (screen index 0).
      *
      * @param screenToMoveTo the target screen identifier
+     * @author Omar Soliman
      */
     @Override
     public void moveToNextScreen(String screenToMoveTo) {
@@ -279,6 +275,7 @@ public class TutorialScreen implements Screen {
      * Returns the JFrame for this screen.
      *
      * @return the tutorial JFrame
+     * @author Fardin Abbassi
      */
     @Override
     public JFrame getFrame() { return tutorialFrame; }
