@@ -1,6 +1,5 @@
 package game.Enemies;
 
-import game.Gameplay;
 import sprites.Sprite;
 
 /**
@@ -18,6 +17,9 @@ public class Enemy {
     private int weight;
     private int score;
     private int currentWordIndex;
+
+    private float exactX;
+    private float exactY;
 
     protected boolean timeStopped; // How do we implement the time stop???
 
@@ -65,6 +67,8 @@ public class Enemy {
         }
         
         this.currentWordIndex = 0;
+        this.exactX = sprite != null ? sprite.getX() : 0;
+        this.exactY = sprite != null ? sprite.getY() : 0;
     }
 
     /**
@@ -77,24 +81,64 @@ public class Enemy {
     }
 
     /**
-     * Moves the enemy.
+     * Moves the enemy directly towards the target coordinates.
+     * 
+     * @param deltaTime The time elapsed since last frame.
+     * @param targetX The target X coordinate (player).
+     * @param targetY The target Y coordinate (player).
      */
-    public void move() {
-        // TODO: Implement move function
+    public void move(float deltaTime, int targetX, int targetY) {
+        if (sprite == null) return;
+        
+        float dx = targetX - this.exactX;
+        float dy = targetY - this.exactY;
+        float angle = (float) Math.atan2(dy, dx);
+        
+        this.exactX += Math.cos(angle) * this.speed * deltaTime;
+        this.exactY += Math.sin(angle) * this.speed * deltaTime;
+        
+        this.sprite.setX(Math.round(this.exactX));
+        this.sprite.setY(Math.round(this.exactY));
     }
 
     /**
-     * Checks if the enemy has contacted the player.
+     * Checks if the enemy has contacted the player within the safe radius.
      * 
-     * @param player The player to check for contact
-     * @return True if the enemy has contacted the player, false otherwise
+     * @param playerX The X coordinate of the player.
+     * @param playerY The Y coordinate of the player.
+     * @param safeRadius The boundary radius.
+     * @return True if the enemy has breached the safe zone, false otherwise
      */
-    public boolean contact(Gameplay player) {
-        // Move contact logic to Gameplay?
-        return false;
+    public boolean contact(int playerX, int playerY, int safeRadius) {
+        double distance = Math.hypot(playerX - this.exactX, playerY - this.exactY);
+        return distance < safeRadius;
     }
     public int getWeight() {
         return this.weight;
+    }
+
+    /**
+     * Gets the sprite associated with the enemy.
+     * 
+     * @return The sprite object.
+     */
+    public Sprite getSprite() {
+        return this.sprite;
+    }
+
+    /**
+     * Sets the position of the enemy.
+     * 
+     * @param x The exact X coordinate.
+     * @param y The exact Y coordinate.
+     */
+    public void setPosition(int x, int y) {
+        this.exactX = x;
+        this.exactY = y;
+        if (this.sprite != null) {
+            this.sprite.setX(x);
+            this.sprite.setY(y);
+        }
     }
 
     /**

@@ -91,6 +91,10 @@ public class Gameplay {
         }
     }
 
+    private static final int PLAYER_X = 400;
+    private static final int PLAYER_Y = 300;
+    private static final int SAFE_RADIUS = 50;
+
     public void update(float deltaTime) {
         if (inputLockTimer > 0) {
             inputLockTimer -= deltaTime;
@@ -106,7 +110,7 @@ public class Gameplay {
                     
                     // Assign random spawn point representation
                     Point spawnPt = SPAWN_POINTS[random.nextInt(16)];
-                    // Setup enemy location logic will be implemented in rendering logic
+                    spawned.setPosition(spawnPt.x, spawnPt.y);
                     
                     activeEnemies.add(spawned);
                     currWeight += spawned.getWeight();
@@ -115,11 +119,29 @@ public class Gameplay {
             }
         }
 
+        // Update active enemy positions and collision
+        java.util.Iterator<Enemy> iterator = activeEnemies.iterator();
+        while (iterator.hasNext()) {
+            Enemy enemy = iterator.next();
+            enemy.move(deltaTime, PLAYER_X, PLAYER_Y);
+            
+            if (enemy.contact(PLAYER_X, PLAYER_Y, SAFE_RADIUS)) {
+                this.changeLives(-enemy.getDamage());
+                this.currWeight -= enemy.getWeight();
+                // Remove the Sprite from UI parent 
+                if (enemy.getSprite() != null && enemy.getSprite().getImage() != null) {
+                    java.awt.Container parent = enemy.getSprite().getImage().getParent();
+                    if (parent != null) {
+                        parent.remove(enemy.getSprite().getImage());
+                        parent.repaint();
+                    }
+                }
+                iterator.remove();
+            }
+        }
+
         // TODO: Implement other update logic
-        // Update enemy positions
-        // Check for collisions
         // Update score
-        // Update lives
         // Check if level is completed
         // Check if game is over
     }

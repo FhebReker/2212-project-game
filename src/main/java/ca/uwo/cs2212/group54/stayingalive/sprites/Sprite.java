@@ -30,4 +30,18 @@ public class Sprite {
     public int getY() {
         return y;
     }
+
+    public void setX(int x) {
+        this.x = x;
+        if (this.image != null) {
+            this.image.setLocation(this.x, this.y);
+        }
+    }
+
+    public void setY(int y) {
+        this.y = y;
+        if (this.image != null) {
+            this.image.setLocation(this.x, this.y);
+        }
+    }
 }
