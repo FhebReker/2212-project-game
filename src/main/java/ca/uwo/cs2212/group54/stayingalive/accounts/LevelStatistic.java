@@ -6,8 +6,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class LevelStatistic {
     @JsonIgnore
     private LevelData levelData;
-    @JsonProperty("wpm")
-    protected int wordsPerMinute;
+    @JsonProperty("avg_wpm")
+    protected int avgWPM;
+    @JsonProperty("peak_wpm")
+    protected int peakWPM;
     @JsonProperty("mistakes")
     protected int mistakes;
     @JsonProperty("highscore")

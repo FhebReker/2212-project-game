@@ -1,8 +1,15 @@
-import java.awt.*;
-import java.awt.event.*;
-import java.util.ArrayList;
+package ca.uwo.cs2212.group54.stayingalive.ui;
 
-import javax.swing.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.event.ActionEvent;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTable;
+import javax.swing.JTextField;
 
 public class ParentalControls implements Screen {
     // Main Frame
