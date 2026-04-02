@@ -1,8 +1,8 @@
-package game.Levels;
+package ca.uwo.cs2212.group54.stayingalive.game.Levels;
 
-import game.Enemies.Enemy;
-import game.Enemies.Enemy_Attribute;
-import sprites.Sprite;
+import ca.uwo.cs2212.group54.stayingalive.game.Enemies.Enemy;
+import ca.uwo.cs2212.group54.stayingalive.game.Enemies.Enemy_Attribute;
+import ca.uwo.cs2212.group54.stayingalive.sprites.Sprite;
 /**
  * LevelSelector class
  *

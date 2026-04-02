@@ -1,4 +1,4 @@
-package main.java.ca.uwo.cs2212.group54.stayingalive.powerups;
+package ca.uwo.cs2212.group54.stayingalive.powerups;
 
 /**
  * Represents an item that can be purchased and equipped in the store.
@@ -26,11 +26,11 @@ public interface StoreItem {
      * This method will  update the internal state to indicate
      * the item has been bought.
      */
-    void purchase();
+    boolean purchase();
 
     /**
      * Equips the item.
      * This method should only take effect if the item has been purchased.
      */
-    void equip();
+    boolean equip();
 }

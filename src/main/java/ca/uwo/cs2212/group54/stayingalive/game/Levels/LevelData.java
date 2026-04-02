@@ -1,7 +1,7 @@
-package game.Levels;
+package ca.uwo.cs2212.group54.stayingalive.game.Levels;
 
-import game.Enemies.Enemy;
-import sprites.Sprite;
+import ca.uwo.cs2212.group54.stayingalive.game.Enemies.Enemy;
+import ca.uwo.cs2212.group54.stayingalive.sprites.Sprite;
 
 /**
  * LevelData class

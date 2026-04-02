@@ -1,4 +1,4 @@
-package sprites;
+package ca.uwo.cs2212.group54.stayingalive.sprites;
 
 import javax.swing.JLabel;
 

@@ -1,3 +1,5 @@
+package ca.uwo.cs2212.group54.stayingalive.ui;
+
 import java.awt.event.ActionEvent;
 
 import javax.swing.JFrame;

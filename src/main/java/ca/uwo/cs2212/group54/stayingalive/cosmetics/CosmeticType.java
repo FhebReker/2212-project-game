@@ -1,4 +1,4 @@
-package main.java.ca.uwo.cs2212.group54.stayingalive.powerups;
+package ca.uwo.cs2212.group54.stayingalive.cosmetics;
 
 /**
  * Represents the different categories of cosmetic items available in the game.
@@ -17,3 +17,4 @@ public enum CosmeticType {
      * The cosmetic item that defines the character's overall appearance like their clothing
      */
     OUTFIT,
+}

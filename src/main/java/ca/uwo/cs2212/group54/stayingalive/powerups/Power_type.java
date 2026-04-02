@@ -1,4 +1,4 @@
-package main.java.ca.uwo.cs2212.group54.stayingalive.powerups;
+package ca.uwo.cs2212.group54.stayingalive.powerups;
 
 /**
  * Represents the different types of power-up effects available in the game.

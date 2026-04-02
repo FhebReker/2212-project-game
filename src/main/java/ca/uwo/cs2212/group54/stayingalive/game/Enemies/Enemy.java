@@ -1,6 +1,6 @@
-package game.Enemies;
+package ca.uwo.cs2212.group54.stayingalive.game.Enemies;
 
-import sprites.Sprite;
+import ca.uwo.cs2212.group54.stayingalive.sprites.Sprite;
 
 /**
  * Enemy class

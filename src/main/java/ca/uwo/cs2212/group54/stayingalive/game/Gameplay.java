@@ -1,9 +1,5 @@
-package game;
+package ca.uwo.cs2212.group54.stayingalive.game;
 
-import accounts.ac;
-import game.Enemies.Enemy;
-import game.Levels.Difficulty;
-import game.Levels.LevelData;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,6 +7,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Random;
+
+import ca.uwo.cs2212.group54.stayingalive.accounts.Account;
+import ca.uwo.cs2212.group54.stayingalive.game.Enemies.Enemy;
+import ca.uwo.cs2212.group54.stayingalive.game.Levels.Difficulty;
+import ca.uwo.cs2212.group54.stayingalive.game.Levels.LevelData;
 
 /**
  * Gameplay class
@@ -40,7 +41,7 @@ public class Gameplay {
     private static final int PLAYER_Y = 300;
     private static final int SAFE_RADIUS = 50;
     
-    public Gameplay(ac player, LevelData levelData, Difficulty difficulty) {
+    public Gameplay(Account player, LevelData levelData, Difficulty difficulty) {
         this.lives = 3; // Either 3 as a default or based on the account's lives. (Need to confirm)
         // if (player.powerups.get("extraLife")) {
         //     this.lives++;

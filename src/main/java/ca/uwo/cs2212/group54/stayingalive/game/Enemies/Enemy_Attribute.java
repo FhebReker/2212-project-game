@@ -1,4 +1,4 @@
-package game.Enemies;
+package ca.uwo.cs2212.group54.stayingalive.game.Enemies;
 
 /**
  * Enemy_Attribute enum

@@ -1,4 +1,4 @@
-package game.Levels;
+package ca.uwo.cs2212.group54.stayingalive.game.Levels;
 
 /**
  * Difficulty enum represents the difficulty levels of the game.
