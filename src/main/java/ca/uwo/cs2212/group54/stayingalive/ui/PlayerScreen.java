@@ -187,6 +187,7 @@ public class PlayerScreen implements Screen {
         bar.add(makeNavButton("Continue Game")); // actionPerformed will continue game
         bar.add(makeNavButton("Game Store")); // actionPerformed will move to game store
         bar.add(makeNavButton("Stats")); // actionPerformed will show stats
+        bar.add(makeNavButton("Tutorial")); // actionPerformed will show tutorial
 
         return bar;
     }
@@ -303,9 +304,12 @@ public class PlayerScreen implements Screen {
             System.out.println("to stats");
             NavigationControl.setCurrentScreen(4); // TODO: implement stats screen
         }
+        if (screenToMoveTo.equals("Tutorial")) {
+            System.out.println("to tutorial");
+            NavigationControl.setCurrentScreen(2);
+        }
         if (screenToMoveTo.equals("Logout")) {
-            System.out.println("logging out");
-            NavigationControl.setCurrentScreen(0);
+            NavigationControl.goBack();
         }
     }
     // TODO: public getFrame
