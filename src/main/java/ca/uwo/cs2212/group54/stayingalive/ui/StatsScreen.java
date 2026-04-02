@@ -1,38 +1,21 @@
 package ca.uwo.cs2212.group54.stayingalive.ui;
 
-// package ui;
-
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.GridLayout;
-import java.awt.Image;
-import java.awt.RenderingHints;
-import java.awt.event.ActionEvent;
-import java.io.File;
-
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.*;
+import javax.swing.*;
 
 /**
  * StatsScreen – displays per-user statistics with the player's avatar.
  *
+ * <p>
  * Layout:
  *   - Purple background matching the app theme
  *   - Left half: labelled stat rows (label + rounded grey value box)
  *   - Right half: player name heading + avatar image
  *   - Back button (curved arrow) in the top-right corner
+ * @author Omar Soliman
  */
-//public class StatsScreen extends JPanel implements Screen {
 public class StatsScreen implements Screen {
 
     // Colours 
@@ -53,11 +36,10 @@ public class StatsScreen implements Screen {
     private int    currentLevel = 1;
     private int    wordsTyped   = 0;
 
-    // Constructor
+    // Constructor                                          // TODO: Add javadoc comments to method
     public StatsScreen(String playerName) {
         this.playerName = playerName;
         loadAvatar("global/download.png");
-//        buildUI();
     }
 
     // Setters for live data 
@@ -70,7 +52,7 @@ public class StatsScreen implements Screen {
     public void setCurrentLevel(int v) { currentLevel = v; }
     public void setWordsTyped(int v)   { wordsTyped   = v; }
 
-    // UI construction
+    // UI construction                                          // TODO: Add javadoc comments to method
     private void buildUI() {
         JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBackground(BG_COLOR);
@@ -79,7 +61,7 @@ public class StatsScreen implements Screen {
         statsFrame.setContentPane(mainPanel);
     }
 
-    private JPanel buildTopBar() {
+    private JPanel buildTopBar() {                                          // TODO: Add javadoc comments to method
         JPanel bar = new JPanel(new BorderLayout());
         bar.setOpaque(false);
         bar.setBorder(BorderFactory.createEmptyBorder(4, 10, 0, 14));
@@ -88,7 +70,7 @@ public class StatsScreen implements Screen {
     }
 
     /** Back button using the back.png image from the global folder. */
-    private JButton buildBackButton() {
+    private JButton buildBackButton() {                                          // TODO: Add javadoc comments to method
         ImageIcon icon = null;
         File imgFile = new File("global/back.png");
         if (imgFile.exists()) {
@@ -110,7 +92,7 @@ public class StatsScreen implements Screen {
     }
 
     /** Splits the screen into left (stats) and right (avatar) halves. */
-    private JPanel buildBody() {
+    private JPanel buildBody() {                                          // TODO: Add javadoc comments to method
         JPanel body = new JPanel(new GridLayout(1, 2));
         body.setOpaque(false);
         body.add(buildStatsPanel());
@@ -119,7 +101,7 @@ public class StatsScreen implements Screen {
     }
 
     // Left panel: stat rows 
-    private JPanel buildStatsPanel() {
+    private JPanel buildStatsPanel() {                                          // TODO: Add javadoc comments to method
         JPanel panel = new JPanel(null);
         panel.setOpaque(false);
 
@@ -163,7 +145,7 @@ public class StatsScreen implements Screen {
     }
 
     /** A label that paints itself as a rounded grey box. */
-    private JLabel makeValueBox(String text) {
+    private JLabel makeValueBox(String text) {                                          // TODO: Add javadoc comments to method
         JLabel lbl = new JLabel(text, SwingConstants.CENTER) {
             @Override
             protected void paintComponent(Graphics g) {
@@ -182,7 +164,7 @@ public class StatsScreen implements Screen {
     }
 
     // Right panel: avatar
-    private JPanel buildAvatarPanel() {
+    private JPanel buildAvatarPanel() {                                          // TODO: Add javadoc comments to method
         JPanel panel = new JPanel(new BorderLayout()) {
             @Override
             protected void paintComponent(Graphics g) {
@@ -220,8 +202,10 @@ public class StatsScreen implements Screen {
         }
     }
 
-// SCREEN INTERGACE METHODS -----------------------------------------------
-    // TODO: Action listener
+// SCREEN INTERFACE METHODS -----------------------------------------------
+    /**
+     * Clicking on back button will call to move back to player screen.
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand() != null) {
@@ -230,7 +214,14 @@ public class StatsScreen implements Screen {
             this.moveToNextScreen(e.getActionCommand());
         }
     }
-    //TODO: public showScreen
+    /**
+     * Builds statistics screen using the helper methods above.
+     * 
+     * <p>
+     * Sets up frame, calls helper methods, then sets the frame to visible.
+     * @author Fardin Abbassi
+     * @author Omar Soliman
+     */
     @Override
     public void showScreen() {
         if (statsFrame == null) {
@@ -242,18 +233,27 @@ public class StatsScreen implements Screen {
         
         loadAvatar("global/download.png");
         buildUI();
-        //gameStoreFrame.setContentPane(screen);
         statsFrame.setLocationRelativeTo(null);
         statsFrame.setVisible(true);
     }
-    // TODO: public moveToNextScreen
+    /**
+     * Move from statistics screen back to the previous screen.
+     * 
+     * @param screenToMoveTo The screen the user will move back to
+     * @author Fardin Abbassi
+     * @author Omar Soliman
+     */
     @Override
     public void moveToNextScreen(String screenToMoveTo) {
         if (screenToMoveTo.equals("Back")) {
             NavigationControl.goBack();
         }
     }
-    // TODO: public getFrame
+    /**
+     * Returns the stats frame.
+     * @author Fardin Abbassi
+     * @return JFrame of the StatsScreen class.
+     */
     @Override
     public JFrame getFrame() {return this.statsFrame;}
 }

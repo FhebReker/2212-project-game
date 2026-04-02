@@ -24,5 +24,8 @@
             <version>2.17.2</version>
         </dependency>
     </dependencies>
+    <properties>
+        <maven.compiler.release>17</maven.compiler.release>
+    </properties>
     <build></build>
 </project>
