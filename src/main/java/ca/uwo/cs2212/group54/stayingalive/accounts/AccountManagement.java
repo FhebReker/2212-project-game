@@ -19,17 +19,19 @@ public class AccountManagement {
         parental.createAccount(user2, pass2);
         System.out.println("exists2: "+accMng.checkUserLogin(user2, pass2));
         //test 3: get stats
-        System.out.println(parental.getStats(user2).wordsPerMinute); // works
+        System.out.println("get avg_wpm:" + parental.getAccount(user2).getLevelStat(1).avgWPM); // works
         //test 4: wrong password
         System.out.println("check pass: " + accMng.checkUserLogin(user1, pass2));
         //test 5: no username exists
         System.out.println("check username exists: " + accMng.checkUserLogin("osman", pass2));
-        //test 6: update/save data
-        /*Account acc2 = parental.getAccount(user2);
-        acc2.setStats(0,2,3,6,Level_status.COMPLETED);        
-        parental.updateAccountData(acc2);*/
-        parental.getAccount(user2).setStats(50,2,3,6,Level_status.COMPLETED);
+        //test 6: update/save stats
+        /* 
+        LevelStatistic stats = new LevelStatistic(new LevelData(1,1));
+        stats.avgWPM = 40;
+        stats.peakWPM = 30;
+        parental.getAccount(user2).setStats();
         Parental.saveAccountData();
+        */
     }
 
     public AccountManagement(Parental parental) {

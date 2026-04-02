@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class PlayerProgress {
     @JsonIgnore
-    public static final int MAX_LEVELS = 8;
+    public static final int MAX_LEVELS = 3;
     @JsonProperty("current_level")
     private int currentLevel;
     @JsonProperty("completed_levels")

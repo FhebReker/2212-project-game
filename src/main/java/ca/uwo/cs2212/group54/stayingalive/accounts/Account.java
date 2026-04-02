@@ -1,6 +1,7 @@
 package ca.uwo.cs2212.group54.stayingalive.accounts;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Account {
@@ -9,7 +10,7 @@ public class Account {
     @JsonProperty("password")
     private String pass;
     @JsonProperty("stats")
-    private LevelStatistic levelStats;
+    private LevelStatistic[] levelStatistics;
     @JsonProperty("progress")
     public PlayerProgress playerProgress;
     @JsonProperty("coins")
@@ -31,19 +32,22 @@ public class Account {
     public Account(@JsonProperty("username") String username,
         @JsonProperty("password") String password,
         @JsonProperty("coins") int coins,
-        @JsonProperty("stats") LevelStatistic levelStats,
+        @JsonProperty("stats") LevelStatistic[] levelStatistics,
         @JsonProperty("progress") PlayerProgress playerProgress) {
         this.username = username;
         this.pass = password;
         this.coins = coins;
-        this.levelStats = levelStats;
+        this.levelStatistics = levelStatistics;
         this.playerProgress = playerProgress;
     }
 
     public Account (String username, String pass) {
         this.username = username;
         this.pass = pass;
-        this.levelStats = new LevelStatistic();
+        this.levelStatistics = new LevelStatistic[PlayerProgress.MAX_LEVELS];
+        for (int i =0; i < levelStatistics.length;i++) {
+            levelStatistics[i] = new LevelStatistic(new LevelData(1, i + 1));
+        }
         this.playerProgress = new PlayerProgress();
         coins = 0;
     }
@@ -61,16 +65,26 @@ public class Account {
         Parental.saveAccountData();
     }
 
-    public LevelStatistic getStats() {
-        return levelStats;
+    @JsonProperty("stats")
+    public LevelStatistic[] getAllLevelStats() {
+        return levelStatistics;
     }
 
+    @JsonIgnore
+    public LevelStatistic getLevelStat(int levelNum) {
+        return levelStatistics[levelNum-1];
+    }
+
+    @JsonIgnore
     public void setStats(LevelStatistic levelStats) {
-        this.levelStats = levelStats;
+        int levelNum = levelStats.getLevelData().getLevelNum();
+        levelStatistics[levelNum-1] = levelStats;
     }
 
-    public void setStats(int wordsPerMinute, int mistakes, int highscore, int attempts, Level_status status) {
-        this.levelStats.updateStats(wordsPerMinute, mistakes, highscore, attempts, status);
+    protected void clearStats() {
+        for (int i = 0; i < levelStatistics.length; i++) {
+            levelStatistics[i] = new LevelStatistic();
+        }
     }
 
     public PlayerProgress getProgress() {

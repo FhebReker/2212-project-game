@@ -70,11 +70,11 @@ public class Parental {
         saveAccountData();
     }
 
-    public LevelStatistic getStats(String username) {
+    public LevelStatistic[] getStats(String username) {
         // return the statistics for a specific player
         for (Account account: accounts) {
             if (account.getUsername().equals(username)) {
-                return account.getStats();
+                return account.getAllLevelStats();
             }
         }
         System.err.print("No stats found for " + username);
@@ -82,9 +82,9 @@ public class Parental {
     }
 
     private void resetStats() {
-        // resets all player statistic data
+        // resets all statistic data for all players
         for (Account account: accounts) {
-            account.getStats().clearStatistics();
+            account.clearStats();
             account.getProgress().clearProgress();
         }
         saveAccountData();
