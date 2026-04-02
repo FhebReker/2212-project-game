@@ -1,9 +1,31 @@
+package ca.uwo.cs2212.group54.stayingalive.ui;
+
 // FA: Added implementation of screen interface, will need to connect to nav control and properly integrate class with interface methods.
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BasicStroke;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.GridBagLayout;
+import java.awt.Image;
+import java.awt.RenderingHints;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.net.URL;
+
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 /**
  * PlayerScreen – the hub screen shown after a player logs in.
@@ -187,6 +209,7 @@ public class PlayerScreen implements Screen {
         bar.add(makeNavButton("Continue Game")); // actionPerformed will continue game
         bar.add(makeNavButton("Game Store")); // actionPerformed will move to game store
         bar.add(makeNavButton("Stats")); // actionPerformed will show stats
+        bar.add(makeNavButton("Tutorial")); // actionPerformed will show tutorial
 
         return bar;
     }
@@ -303,9 +326,12 @@ public class PlayerScreen implements Screen {
             System.out.println("to stats");
             NavigationControl.setCurrentScreen(4); // TODO: implement stats screen
         }
+        if (screenToMoveTo.equals("Tutorial")) {
+            System.out.println("to tutorial");
+            NavigationControl.setCurrentScreen(2);
+        }
         if (screenToMoveTo.equals("Logout")) {
-            System.out.println("logging out");
-            NavigationControl.setCurrentScreen(0);
+            NavigationControl.goBack();
         }
     }
     // TODO: public getFrame

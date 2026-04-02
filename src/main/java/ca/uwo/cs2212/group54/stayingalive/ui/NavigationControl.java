@@ -1,3 +1,5 @@
+package ca.uwo.cs2212.group54.stayingalive.ui;
+
 /**
  * NavigationControl class both controls the screen navigation and the origin point of the application.
  * <p>
@@ -12,6 +14,8 @@ public class NavigationControl {
     // Screen Control
     private static Screen[] listOfScreens = new Screen[8];
     private static Screen currentScreen;
+    private static int currentScreenIndex  = 0;
+    private static int previousScreenIndex = 0;
 
     // Screen Dimensions
     public final static int screenW = 800; //sets the screen width
@@ -38,8 +42,18 @@ public class NavigationControl {
      */
     public static void setCurrentScreen(int screenToSet) {
         if (currentScreen != null && screenToSet != 1) currentScreen.getFrame().dispose();
+        previousScreenIndex = currentScreenIndex;
+        currentScreenIndex  = screenToSet;
         currentScreen = listOfScreens[screenToSet];
         updateScreen();
+    }
+
+    /**
+     * Navigates back to the previous screen.
+     * @author Fardin Abbassi
+     */
+    public static void goBack() {
+        setCurrentScreen(previousScreenIndex);
     }
     /**
      * Get screen at the index of the screen list.

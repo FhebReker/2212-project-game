@@ -1,3 +1,5 @@
+package ca.uwo.cs2212.group54.stayingalive.ui;
+
 /**
  * MainMenuScreen class represents the main menu screen of Staying Alive.
  * <p>
@@ -8,107 +10,179 @@
  * 
  * @author Fardin Abbassi
  */
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
 
-public class TutorialScreen implements Screen{
-    // Tutorial Frame
-    private JFrame tutorialFrame = new JFrame("Staying Alive - Tutorial");
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridBagLayout;
+import java.awt.Image;
+import java.awt.event.ActionEvent;
+
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+
+
+public class MainMenuScreen implements Screen {
+    // Main Menu Frame
+    private JFrame mainMenuFrame = new JFrame("Staying Alive - Main Menu");
 
     // UI Colours
-    private final static Color backgroundPurple = new Color(106, 69, 156);
-    private final static Color tutorialBoxOutline = Color.white;
+    private static final Color backgroundPurple = new Color(106, 69, 156);
+    private static final Color titleTextColour = new Color(255, 73, 164);
+    private static final Color buttonBackground = new Color(0, 140, 255);
+    private static final Color buttonTextColor = Color.black;
 
-    // Navigation Icons
-    private ImageIcon leftArrowIcon; // add icons
-    private ImageIcon rightArrowIcon; // add icons
-    private ImageIcon backArrow; // add icons
-    private ImageIcon progressDots; // also add progression dots for tutorial steps, add icons
+    // Navigation Buttons
+    private JButton loginButton;
+    private JButton tutorialButton;
+    private JButton parentalControlButton;
 
-    // Arrow Buttons
-    private JButton leftArrowButton = new JButton(leftArrowIcon);
-    private JButton rightArrowButton = new JButton(rightArrowIcon);
-    private JButton backToPreviousButton = new JButton(backArrow);
+    // Labels
+    private JLabel title;
+    private JLabel subLabel;
+    private JLabel credits;
+    
 
     /** ADD DESCRIPTION HERE
      * Handle button clicks on main menu
      * <p>
-     * Left arrow button moves tutorial to the previous part, right arrow moves to the next part, 
-     * back button moves back to the previous screen.
+     * Exit button exits application, login button moves to login screen, 
+     * tutorial button moves to tutorial screen, and 
+     * parental control button moves to parental control screen.
      * <p>
      * 
      * @param e
      */
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        // TODO Properly fix up tutorial navigation
-        if (e.getActionCommand().equals("Move Left")) {}
-        else if (e.getActionCommand().equals("Move Right")) {}
-        else if (e.getActionCommand().equals("Return")) {this.moveToNextScreen("back");} // set up for different ways to go back?
+    // 
+	@Override
+	public void actionPerformed(ActionEvent e) {
+        // Switch to login screen if login button is pressed
+        if (e.getActionCommand().equals("Login")) {this.moveToNextScreen("Login");}
+        // Switch to tutorial screen if tutorial button is pressed
+        else if (e.getActionCommand().equals("Tutorial")) {this.moveToNextScreen("Tutorial");}
+        // Switch to parental control screen if parental control button is pressed
+        else if (e.getActionCommand().equals("Parental Controls")) {this.moveToNextScreen("Parental Controls");}
+    }
+
+    private void buildUI() {
+        // BorderLayout: title NORTH, logo CENTER (scales), subtitle+buttons+credits SOUTH
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        mainPanel.setBackground(backgroundPurple);
+
+        // --- NORTH: title ---
+        title = new JLabel("Staying Alive", SwingConstants.CENTER);
+        title.setFont(new Font("Helvetica", Font.PLAIN, 60));
+        title.setForeground(titleTextColour);
+        title.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
+        mainPanel.add(title, BorderLayout.NORTH);
+
+        // --- CENTER: logo at fixed size, centred — extra window space becomes padding ---
+        Image logoRaw = new ImageIcon("global/logo.png").getImage()
+                            .getScaledInstance(260, 195, Image.SCALE_SMOOTH);
+        JLabel logoLabel = new JLabel(new ImageIcon(logoRaw));
+        JPanel logoPanel = new JPanel(new GridBagLayout());
+        logoPanel.setOpaque(false);
+        logoPanel.add(logoLabel);
+        mainPanel.add(logoPanel, BorderLayout.CENTER);
+
+        // --- SOUTH: subtitle + buttons + credits ---
+        JPanel south = new JPanel();
+        south.setLayout(new BoxLayout(south, BoxLayout.Y_AXIS));
+        south.setOpaque(false);
+        south.setBorder(BorderFactory.createEmptyBorder(0, 0, 18, 0));
+
+        subLabel = new JLabel("A Shebab Kebab Creation", SwingConstants.CENTER);
+        subLabel.setFont(new Font("Helvetica", Font.PLAIN, 18));
+        subLabel.setForeground(titleTextColour);
+        subLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JPanel buttons = new JPanel(new FlowLayout(FlowLayout.CENTER, 16, 0));
+        buttons.setOpaque(false);
+        buttons.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        tutorialButton        = new JButton("Tutorial");
+        loginButton           = new JButton("Login");
+        parentalControlButton = new JButton("Parental Controls");
+
+        for (JButton btn : new JButton[]{tutorialButton, loginButton, parentalControlButton}) {
+            btn.setFont(new Font("Helvetica", Font.PLAIN, 18));
+            btn.setForeground(buttonTextColor);
+            btn.setBackground(buttonBackground);
+            btn.setPreferredSize(new Dimension(170, 38));
+            btn.addActionListener(this);
+            buttons.add(btn);
+        }
+        tutorialButton.setActionCommand("Tutorial");
+        loginButton.setActionCommand("Login");
+        parentalControlButton.setActionCommand("Parental Controls");
+
+        credits = new JLabel(
+            "<html><center>Created by Omar Soliman, Osman Idris, Mohamed Ahmed, Malik Alghneimin, and Fardin Abbassi"
+            + "<br>as Group 54 for the CS 2212 course in the Winter 2026 term.</center></html>",
+            SwingConstants.CENTER);
+        credits.setFont(new Font("Helvetica", Font.PLAIN, 11));
+        credits.setForeground(new Color(220, 200, 240));
+        credits.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        south.add(subLabel);
+        south.add(Box.createVerticalStrut(16));
+        south.add(buttons);
+        south.add(Box.createVerticalStrut(12));
+        south.add(credits);
+
+        mainPanel.add(south, BorderLayout.SOUTH);
+        mainMenuFrame.setContentPane(mainPanel);
     }
 
     /** ADD DESCRIPTION HERE
-     * 
      *
      */
     @Override
     public void showScreen() {
-        // Set up image icons
-        leftArrowIcon = new ImageIcon();
-        rightArrowIcon = new ImageIcon();
-        backArrow = new ImageIcon("global/back.png"); // TODO: adjust as needed
-        progressDots = new ImageIcon();
-
-		// Set Up Left and Right Arrows
-        leftArrowButton = new JButton(leftArrowIcon);
-		leftArrowButton.setBounds(200, 200, 40, 40);
-        leftArrowButton.setActionCommand("Move Left");
-        leftArrowButton.addActionListener(this);
-
-        rightArrowButton = new JButton(rightArrowIcon);
-		rightArrowButton.setBounds(500, 200, 40, 40);
-        rightArrowButton.setActionCommand("Move Right");
-        rightArrowButton.addActionListener(this);
-
-        // Set up Back Button
-        backToPreviousButton = new JButton(backArrow);
-        backToPreviousButton.setBounds(700, 20, 40,40);
-        backToPreviousButton.setActionCommand("Return");
-        backToPreviousButton.addActionListener(this);
-
-        // TODO: Set up progress dots
-		
-		// Add to frame
-		tutorialFrame.getContentPane().add(leftArrowButton);
-		tutorialFrame.getContentPane().add(rightArrowButton);
-        tutorialFrame.getContentPane().add(backToPreviousButton);
-		
-		// Set frame
-		tutorialFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		tutorialFrame.getContentPane().setLayout(null);
-		tutorialFrame.getContentPane().setBackground(backgroundPurple);
-		//tutorialFrame.setIconImage(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/shebab_icon.png"))); // Shebab Kebab logo without text, adjust as needed
-		tutorialFrame.setBackground(backgroundPurple); // adjust as needed
-        tutorialFrame.setForeground(backgroundPurple);
-		tutorialFrame.setVisible(true);
-        tutorialFrame.setLocationRelativeTo(null);
+        mainMenuFrame.getContentPane().removeAll();
+        buildUI();
+        mainMenuFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        mainMenuFrame.setBackground(backgroundPurple);
+        mainMenuFrame.setVisible(true);
+        mainMenuFrame.setLocationRelativeTo(null);
     }
 
     /** ADD DESCRIPTION HERE
      * @param screenToMoveTo
      * @return Screen
-     *
-    */
+     */
     @Override
     public void moveToNextScreen(String screenToMoveTo) {
-        // Move back to main menu
-        if (screenToMoveTo.equals("back")) {NavigationControl.setCurrentScreen(0);}
+        // Open login screen as a pop-up
+        if (screenToMoveTo.equals("Login")) {
+            System.out.println("logging in");
+            NavigationControl.setCurrentScreen(1);
+        }
+        // Open tutorial screen
+        else if (screenToMoveTo.equals("Tutorial")) {
+            System.out.println("reading tutorial");
+            NavigationControl.setCurrentScreen(2);
+        }
+        // Open parental control screen
+        else if (screenToMoveTo.equals("Parental Controls")) {
+            System.err.println("ERROR: have yet to implement parental controls");
+            //NavigationControl.setCurrentScreen(6); // TODO: implement parental controls screen
+        }
     }
 
     /** ADD DESCRIPTION HERE
      * 
      */
     @Override
-    public JFrame getFrame() {return tutorialFrame;}
+    public JFrame getFrame() {return mainMenuFrame;}
 }
