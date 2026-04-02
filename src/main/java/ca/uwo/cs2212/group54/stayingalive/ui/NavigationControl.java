@@ -1,3 +1,5 @@
+package ca.uwo.cs2212.group54.stayingalive.ui;
+
 /**
  * NavigationControl class both controls the screen navigation and the origin point of the application.
  * <p>
