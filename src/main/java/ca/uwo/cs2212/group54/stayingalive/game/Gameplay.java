@@ -9,6 +9,8 @@ import java.util.Queue;
 import java.util.Random;
 
 import ca.uwo.cs2212.group54.stayingalive.accounts.Account;
+import ca.uwo.cs2212.group54.stayingalive.accounts.LevelStatistic;
+import ca.uwo.cs2212.group54.stayingalive.accounts.Level_status;
 import ca.uwo.cs2212.group54.stayingalive.game.Enemies.Enemy;
 import ca.uwo.cs2212.group54.stayingalive.game.Levels.Difficulty;
 import ca.uwo.cs2212.group54.stayingalive.game.Levels.LevelData;
@@ -36,12 +38,16 @@ public class Gameplay {
     private static final Point[] SPAWN_POINTS = new Point[16];
     private Random random;
     private boolean levelCleared;
+    private Account player;
+    private LevelData levelData;
 
     private static final int PLAYER_X = 400;
     private static final int PLAYER_Y = 300;
     private static final int SAFE_RADIUS = 50;
     
     public Gameplay(Account player, LevelData levelData, Difficulty difficulty) {
+        this.player = player;
+        this.levelData = levelData;
         this.lives = 3; // Either 3 as a default or based on the account's lives. (Need to confirm)
         // if (player.powerups.get("extraLife")) {
         //     this.lives++;
@@ -56,15 +62,15 @@ public class Gameplay {
         // This is for how much enemies are present in the game.
         // Maybe with the difficulty, the speed of the enemies should increase too.
         switch (difficulty) {
-            case EASY ->  {
+            case EASY:  {
                 this.maxWeight = 10; 
                 this.spawnDelay = 3.0f;
             }
-            case MEDIUM ->  {
+            case MEDIUM:  {
                 this.maxWeight = 15; 
                 this.spawnDelay = 2.5f;
             }
-            case HARD ->  {
+            case HARD:  {
                 this.maxWeight = 20;
                 this.spawnDelay = 1.0f;
             }
@@ -193,7 +199,6 @@ public class Gameplay {
                     currWeight -= enemy.getWeight();
                     activeEnemies.remove(enemy);
                 }
-                return; // hit only the first matching enemy!
             }
         }
 
@@ -205,15 +210,30 @@ public class Gameplay {
     public void updateScore(int amount, Difficulty difficulty) {
         // Add score based on difficulty
         switch (difficulty) {
-            case EASY -> this.score += amount;
-            case MEDIUM -> this.score += amount * 1.5;
-            case HARD -> this.score += amount * 2;
+            case EASY: this.score += amount;
+            case MEDIUM: this.score += amount * 1.5;
+            case HARD: this.score += amount * 2;
         }
     }
 
     public void endLevel() {
-        // TODO: Implement end level function
-        // Send results to ac's levelStats
+        if (player != null && levelData != null) {
+            LevelStatistic stats = this.player.getLevelStat(levelData.getNumber());
+            if (stats == null) {
+                LevelData accLevelData = 
+                    new LevelData(levelData.getNumber(), null, null);
+                stats = new LevelStatistic(accLevelData);
+            }
+            int totalWords = corrects + mistakes;
+            double accuracy = totalWords == 0 ? 0.0 : ((double) corrects / totalWords) * 100.0;
+            
+            Level_status status = isLevelCleared() ? Level_status.COMPLETED : Level_status.UNLOCKED;
+            
+            int newHighscore = Math.max(score, stats.getHighScore());
+            int newAttempts = stats.getAttempts() + 1;
+            stats.updateStats(calculateWPM(), calculateWPM(), mistakes, newHighscore, newAttempts, accuracy, status);
+            this.player.setStats(stats);
+        }
     }
 
     public boolean isGameOver() {

@@ -47,20 +47,19 @@ public class LevelSelector {
     public static LevelData getLevel(int section, int number, Difficulty difficulty) {
         String[] wordPool = selectWordPool(difficulty);
 
-        return switch (section) {
-            case 1 -> buildSection1Level(number, wordPool);
-            case 2 -> buildSection2Level(number, wordPool);
-            default -> null;
-        };
+        switch (section) {
+            case 1:
+                return buildLevel(number, wordPool);
+            default:
+                return null;
+        }
     }
-
-    // Section 1
-
-    private static LevelData buildSection1Level(int number, String[] wordPool) {
+    
+    private static LevelData buildLevel(int number, String[] wordPool) {
         Sprite background = new Sprite(null, 0, 0); // TODO: replace null with section-1 ImageIcon
 
         switch (number) {
-            case 1 -> {
+            case 1: {
                 // 10 Normal enemies — gentle introduction
                 Enemy[] enemies = {
                     makeEnemy(1, Enemy_Attribute.NORMAL,  wordPool),
@@ -74,9 +73,9 @@ public class LevelSelector {
                     makeEnemy(1, Enemy_Attribute.NORMAL,  wordPool),
                     makeEnemy(1, Enemy_Attribute.NORMAL,  wordPool),
                 };
-                return new LevelData(1, 1, enemies, background);
+                return new LevelData(1, enemies, background);
             }
-            case 2 -> {
+            case 2: {
                 // Mix of Normal and a hasHeart enemy
                 Enemy[] enemies = {
                     makeEnemy(1, Enemy_Attribute.NORMAL,   wordPool),
@@ -94,9 +93,9 @@ public class LevelSelector {
                     makeEnemy(1, Enemy_Attribute.NORMAL,   wordPool),
                     makeEnemy(1, Enemy_Attribute.HAS_HEART, wordPool),
                 };
-                return new LevelData(1, 2, enemies, background);
+                return new LevelData(2, enemies, background);
             }
-            case 3 -> {
+            case 3: {
                 // Introduce the Big enemy type
                 Enemy[] enemies = {
                     makeEnemy(1, Enemy_Attribute.NORMAL, wordPool),
@@ -115,34 +114,9 @@ public class LevelSelector {
                     makeEnemy(1, Enemy_Attribute.NORMAL, wordPool),
                     makeEnemy(1, Enemy_Attribute.NORMAL, wordPool)
                };
-                return new LevelData(1, 3, enemies, background);
+                return new LevelData(3, enemies, background);
             }
-            default -> {
-                return null;
-            }
-        }
-    }
-
-    // Section 2 (New Area)
-
-    private static LevelData buildSection2Level(int number, String[] wordPool) {
-        Sprite background = new Sprite(null, 0, 0); // TODO: replace null with section-2 ImageIcon
-
-        // TODO: Implement section 2 levels
-        switch (number) {
-            case 1 -> {
-                Enemy[] enemies = {};
-                return new LevelData(2, 1, enemies, background);
-            }
-            case 2 -> {
-                Enemy[] enemies = {};
-                return new LevelData(2, 2, enemies, background);
-            }
-            case 3 -> {
-                Enemy[] enemies = {};
-                return new LevelData(2, 3, enemies, background);
-            }
-            default -> {
+            default: {
                 return null;
             }
         }
