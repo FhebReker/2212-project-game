@@ -94,7 +94,7 @@ public class ParentalControls implements Screen {
         int selectedRow = playerTable.getSelectedRow();
         if (selectedRow != -1) {
             String username = (String)playerTableModel.getValueAt(selectedRow,0);
-            String newPassword = JOptionPane.showInputDialog(null, "Enter new username:");
+            String newPassword = JOptionPane.showInputDialog(null, "Enter new password:");
             NavigationControl.getAccountManager().getParental().resetPassword(username, newPassword);
         }
     }
