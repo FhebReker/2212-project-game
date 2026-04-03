@@ -6,11 +6,11 @@ package ca.uwo.cs2212.group54.stayingalive.store;
  * A power-up can be purchased, equipped, activated, and placed on cooldown.
  *
  * <p> The cooldown duration depends on the type of power-up:</p>
- * <ul>
+ * 
  *     <li>TIME_STOP: 10 seconds
  *     <li>SHIELD: 15 seconds
  *     <li>AREA_OF_EFFECT: 0 seconds
- * </ul>
+ * 
  */
 public class Powerup implements StoreItem {
 
