@@ -8,6 +8,7 @@ import ca.uwo.cs2212.group54.stayingalive.sprites.Sprite;
  * A cosmetic item is a non-functional item that can changes the visual of a player
  * appearance of a character or element in the game. Each cosmetic has
  * a name, price, type, and associated sprite for display in the store and inventory.
+ * @author Mohamed Ahmed
  */
 public class Cosmetic {
 
