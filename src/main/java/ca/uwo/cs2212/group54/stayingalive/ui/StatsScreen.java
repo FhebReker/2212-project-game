@@ -2,7 +2,8 @@ package ca.uwo.cs2212.group54.stayingalive.ui;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.io.*;
+import java.io.File;
+
 import javax.swing.*;
 
 /**
@@ -246,7 +247,7 @@ public class StatsScreen implements Screen {
     public void showScreen() {
         if (statsFrame == null) {
             statsFrame = new JFrame("Staying Alive - Player Menu");
-            statsFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            WindowUtils.addSaveOnClose(statsFrame); // data is saved when window is closed
         }
         statsFrame.setSize(NavigationControl.screenW, NavigationControl.screenH);
         statsFrame.getContentPane().removeAll();

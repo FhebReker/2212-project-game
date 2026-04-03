@@ -47,7 +47,11 @@ public class LoginScreen implements Screen{
      */
     private void checkUserLogin() {
         boolean correctLogin = NavigationControl.getAccountManager().checkUserLogin(usernameField.getText(), new String(passwordField.getPassword()));
-        if (correctLogin) this.moveToNextScreen("Player"); // test with player screen later
+        if (correctLogin) { 
+            AccountManagement.setCurrentAccount(NavigationControl.getAccountManager().getParental().getAccount(usernameField.getText()));
+            NavigationControl.startTimer();
+            this.moveToNextScreen("Player"); // test with player screen later 
+        }
         else messageLabel.setVisible(true);
     }
     

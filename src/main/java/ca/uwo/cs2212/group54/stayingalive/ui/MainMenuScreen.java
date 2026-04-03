@@ -223,9 +223,50 @@ public class MainMenuScreen implements Screen {
         }
         // Open parental control screen
         else if (screenToMoveTo.equals("Parental Controls")) {
-            // TODO: force user to type master password before showing screen
-            System.err.println("controlling parentally");
-            NavigationControl.setCurrentScreen(6); 
+            // Styled master-password dialog matching the student login screen
+            JDialog dialog = new JDialog(mainMenuFrame, "Parental Controls", true);
+            dialog.setSize(400, 250);
+            dialog.setLayout(null);
+            dialog.getContentPane().setBackground(new Color(80, 52, 117));
+
+            JLabel passLabel = new JLabel("Master Password:");
+            passLabel.setFont(new Font("Helvetica", Font.PLAIN, 15));
+            passLabel.setForeground(Color.WHITE);
+            passLabel.setBounds(50, 80, 150, 25);
+
+            JPasswordField passField = new JPasswordField();
+            passField.setBackground(new Color(224, 224, 224));
+            passField.setForeground(Color.BLACK);
+            passField.setFont(new Font("Helvetica", Font.BOLD, 15));
+            passField.setBounds(210, 80, 150, 25);
+
+            JLabel errorLabel = new JLabel("Incorrect password.");
+            errorLabel.setForeground(Color.RED);
+            errorLabel.setFont(new Font(null, Font.BOLD, 14));
+            errorLabel.setBounds(120, 160, 200, 25);
+            errorLabel.setVisible(false);
+
+            JButton enterButton = new JButton("Enter");
+            enterButton.setFont(new Font("Helvetica", Font.PLAIN, 15));
+            enterButton.setForeground(Color.BLACK);
+            enterButton.setBackground(new Color(102, 187, 255));
+            enterButton.setBounds(150, 120, 100, 28);
+            enterButton.addActionListener(ev -> {
+                String entered = new String(passField.getPassword());
+                if (NavigationControl.getAccountManager().checkMasterPass(entered)) {
+                    dialog.dispose();
+                    NavigationControl.setCurrentScreen(6);
+                } else {
+                    errorLabel.setVisible(true);
+                }
+            });
+
+            dialog.add(passLabel);
+            dialog.add(passField);
+            dialog.add(enterButton);
+            dialog.add(errorLabel);
+            dialog.setLocationRelativeTo(mainMenuFrame);
+            dialog.setVisible(true);
         }
         // Give the user the option to leave the app
         else if (screenToMoveTo.equals("Exit")) {

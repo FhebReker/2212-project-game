@@ -2,8 +2,9 @@ package ca.uwo.cs2212.group54.stayingalive.ui;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.io.*;
-import java.net.*;
+import java.io.File;
+import java.net.URL;
+
 import javax.swing.*;
 
 /**
@@ -356,7 +357,7 @@ public class PlayerScreen implements Screen {
         // Build Player Frame
         if (playerFrame == null) {
             playerFrame = new JFrame("Staying Alive - Player Menu");
-            playerFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            WindowUtils.addSaveOnClose(playerFrame); // data is saved when window is closed
         }
         playerFrame.setSize(NavigationControl.screenW, NavigationControl.screenH);
         playerFrame.getContentPane().removeAll();
@@ -400,7 +401,8 @@ public class PlayerScreen implements Screen {
             NavigationControl.setCurrentScreen(2);
         }
         if (screenToMoveTo.equals("Logout")) {
-            NavigationControl.setCurrentScreen(0);
+            WindowUtils.activateSaveSequence(); // save data before logging out.
+            NavigationControl.goBack();
         }
     }
     // TODO: public getFrame
