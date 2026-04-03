@@ -70,6 +70,16 @@ public class TutorialScreen implements Screen {
             + "<b>Powerups</b> show up mid-game. Type them fast to grab<br>"
             + "bonuses like extra time or health restored."
             + "</div></html>"
+        },
+        {
+            "Keyboard Shortcuts",
+            "<html><div style='text-align:center;'>"
+            + "Navigate the game quickly with these shortcuts:<br><br>"
+            + "<b>T</b> &nbsp;&mdash;&nbsp; Open the <b>Tutorial</b><br><br>"
+            + "<b>P</b> &nbsp;&mdash;&nbsp; Open <b>Parental Controls</b><br><br>"
+            + "<b>L</b> &nbsp;&mdash;&nbsp; Go to the <b>Login</b> screen<br><br>"
+            + "Use these from the main menu to jump straight where you need to go."
+            + "</div></html>"
         }
     };
 

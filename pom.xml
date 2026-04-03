@@ -45,6 +45,15 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.2.5</version>
             </plugin>
+            <!-- Run the app via "mvn exec:java" -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <mainClass>ca.uwo.cs2212.group54.stayingalive.ui.NavigationControl</mainClass>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 </project>

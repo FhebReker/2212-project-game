@@ -64,7 +64,6 @@ public class LevelStatistic {
     }
 
     public int getHighScore() { return this.highscore; }
-    public int getAttempts()  { return this.attempts;  }
 
     public void clearStatistics() {
         mistakes = avgWPM = peakWPM = highscore = attempts = 0;
