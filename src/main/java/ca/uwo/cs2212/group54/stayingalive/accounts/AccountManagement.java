@@ -51,5 +51,8 @@ public class AccountManagement {
         return pass.equals(masterPass);
     }
 
+    public Parental getParental() {
+        return parental;
+    }
 
 }
