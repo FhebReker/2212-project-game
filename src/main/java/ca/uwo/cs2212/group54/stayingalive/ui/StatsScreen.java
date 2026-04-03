@@ -1,9 +1,25 @@
 package ca.uwo.cs2212.group54.stayingalive.ui;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.io.*;
-import javax.swing.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.RenderingHints;
+import java.awt.event.ActionEvent;
+import java.io.File;
+
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 /**
  * StatsScreen – displays per-user statistics with the player's avatar.
@@ -224,6 +240,7 @@ public class StatsScreen implements Screen {
      */
     @Override
     public void showScreen() {
+        WindowUtils.addSaveOnClose(statsFrame); // data is saved when window is closed
         if (statsFrame == null) {
             statsFrame = new JFrame("Staying Alive - Player Menu");
             statsFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

@@ -480,6 +480,7 @@ public class GameStoreScreen implements Screen {
     //TODO: public showScreen
     @Override
     public void showScreen() {
+        WindowUtils.addSaveOnClose(gameStoreFrame); // data is saved when window is closed
         if (gameStoreFrame == null) {
             gameStoreFrame = new JFrame("Staying Alive - Game Store");
             gameStoreFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

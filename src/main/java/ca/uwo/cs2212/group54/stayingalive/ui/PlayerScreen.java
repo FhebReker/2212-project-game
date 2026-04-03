@@ -1,10 +1,30 @@
 package ca.uwo.cs2212.group54.stayingalive.ui;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.io.*;
-import java.net.*;
-import javax.swing.*;
+import java.awt.BasicStroke;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.GridBagLayout;
+import java.awt.Image;
+import java.awt.RenderingHints;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.File;
+import java.net.URL;
+
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 /**
  * PlayerScreen – the hub screen shown after a player logs in.
@@ -265,6 +285,7 @@ public class PlayerScreen implements Screen {
     //TODO: public showScreen
     @Override
     public void showScreen() {
+        WindowUtils.addSaveOnClose(playerFrame); // data is saved when window is closed
         if (playerFrame == null) {
             playerFrame = new JFrame("Staying Alive - Player Menu");
             playerFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

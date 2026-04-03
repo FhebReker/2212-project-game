@@ -3,9 +3,15 @@
  */
 package ca.uwo.cs2212.group54.stayingalive.ui;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
 
 public class LoginScreen implements Screen{
     // Login Frame
@@ -48,6 +54,7 @@ public class LoginScreen implements Screen{
      */
     @Override
     public void showScreen() {
+        WindowUtils.addSaveOnClose(loginFrame); // data is saved when window is closed
         // Clear frame
         loginFrame.getContentPane().removeAll();
         loginFrame.getContentPane().setLayout(null);

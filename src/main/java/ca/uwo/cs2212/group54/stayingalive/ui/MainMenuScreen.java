@@ -52,7 +52,6 @@ public class MainMenuScreen implements Screen {
     private JLabel subLabel;
     private JLabel credits;
     
-
     /** ADD DESCRIPTION HERE
      * Handle button clicks on main menu
      * <p>
@@ -149,6 +148,7 @@ public class MainMenuScreen implements Screen {
      */
     @Override
     public void showScreen() {
+        WindowUtils.addSaveOnClose(mainMenuFrame); // data is saved when window is closed
         mainMenuFrame.getContentPane().removeAll();
         buildUI();
         mainMenuFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

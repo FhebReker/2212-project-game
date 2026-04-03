@@ -70,7 +70,12 @@ public class ParentalControls implements Screen {
 
     // Helper Functions
     /**
+     * Signs up a new user by getting test from the username and password fields.
+     * Storage of the user is automatically done in the JSON when calling the createAccount(user,pass)
+     * method from the parental class.
      * 
+     * @author Fardin
+     * @author Osman
      */
     private void signUpNewUser() {
         String newUsername = usernameField.getText().trim();
@@ -82,13 +87,18 @@ public class ParentalControls implements Screen {
 
     /** Calls Parental.java's resetStats() method to clear all user stats to 0s.
      * 
+     * @author Osman
      */
     private void resetStats() {
         NavigationControl.getAccountManager().getParental().resetStats();
     }
 
     /**
-     * Checks the selected row and resets the password to a password that's provided
+     * Checks which row is selected and resets the password for that account (to a new password).
+     * Makes use of playerTable to check selected row, JOptionPane's input dialog to set a new password,
+     * and parental (from account manager in nav control) to reset password.
+     * 
+     * @author Osman
      */
     private void resetPassword() {
         int selectedRow = playerTable.getSelectedRow();
@@ -461,6 +471,7 @@ public class ParentalControls implements Screen {
      */
     @Override
     public void showScreen() {
+        WindowUtils.addSaveOnClose(parentalControlsFrame); // data is saved when window is closed
         // Set up frame
         if (parentalControlsFrame == null) {
             parentalControlsFrame = new JFrame("Staying Alive - Parental Controls");
