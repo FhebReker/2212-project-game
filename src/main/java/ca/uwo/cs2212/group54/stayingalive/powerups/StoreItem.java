@@ -2,8 +2,9 @@ package ca.uwo.cs2212.group54.stayingalive.powerups;
 
 /**
  * Represents an item that can be purchased and equipped in the store.
- * All store items must provide information like as name and price,
+ * All store items must provide information such as name and price,
  * and have purchasing and equipping functionality.
+ * @author Mohamed Ahmed
  */
 public interface StoreItem {
 
