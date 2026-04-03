@@ -6,6 +6,7 @@ package ca.uwo.cs2212.group54.stayingalive.powerups;
  * Each power type defines a specific ability that can be activated by the player.
  * These types are used to control both the behavior of the power-up and how it
  * is displayed in the user interface.
+ *  @author Mohamed Ahme
  */
 public enum Power_type {
 
