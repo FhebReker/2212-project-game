@@ -69,7 +69,7 @@ public class PlayerScreen implements Screen {
     public PlayerScreen() {
         this.avatarPath = "global/download.png";
     }
-
+    
     // ── UI construction ───────────────────────────────────────────────────
     private void buildUI() {
         JPanel mainPanel = new JPanel(new BorderLayout());
