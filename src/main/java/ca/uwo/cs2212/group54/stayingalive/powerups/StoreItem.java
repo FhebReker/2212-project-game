@@ -17,7 +17,7 @@ public interface StoreItem {
     /**
      * Here gets the price of the store item.
      *
-     * @return the price of the item in in-game currency
+     * @return the price of the item in coins
      */
     int getPrice();
 
