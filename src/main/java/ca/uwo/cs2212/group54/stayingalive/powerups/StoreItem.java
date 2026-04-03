@@ -15,7 +15,7 @@ public interface StoreItem {
     String getName();
 
     /**
-     * Gets the price of the store item.
+     * Here gets the price of the store item.
      *
      * @return the price of the item in in-game currency
      */
@@ -24,7 +24,7 @@ public interface StoreItem {
     /**
      * Marks the item as purchased.
      * This method will  update the internal state to indicate
-     * the item has been bought.
+     * then the item has been bought.
      */
     boolean purchase();
 
