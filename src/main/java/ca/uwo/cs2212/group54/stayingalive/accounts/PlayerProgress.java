@@ -10,6 +10,8 @@ public class PlayerProgress {
     private int currentLevel;
     @JsonProperty("completed_levels")
     private boolean[] completedLevels;
+    @JsonProperty("playtime")
+    private double playtime;
 
     /*@JsonCreator
     public PlayerProgress(@JsonProperty int currentLevel, 
@@ -18,6 +20,25 @@ public class PlayerProgress {
         this.completedLevels = completedLevels;
         this.lastSaveDate = lastSaveDate;
     }*/
+
+    public void setPlaytime(double playtime) {
+        this.playtime = playtime;
+    }
+
+    /**
+     * Updates the playtime for the parent player object of this PlayerProgress object.
+     * 
+     * @param startTime Log in time in milliseconds
+     * @param endTime   Log out time in milliseconds
+     */
+    public void updatePlaytime(long startTime, long endTime) {
+        long duration = endTime - startTime; // IN MILLISECONDS
+        double durationMins = duration/60000.0;
+        durationMins = Math.round(durationMins * 100.0) / 100.0; // rounding
+        playtime = playtime + durationMins;
+
+    }
+
 
     public PlayerProgress() {
         currentLevel = 1;
@@ -43,6 +64,10 @@ public class PlayerProgress {
     public void clearProgress() {
         int currentLevel = 1;
         completedLevels = new boolean[MAX_LEVELS];
+    }
+
+    public double getPlaytime() {
+        return playtime;
     }
 
 }

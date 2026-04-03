@@ -1,3 +1,6 @@
+/** 
+ * 
+ */
 package ca.uwo.cs2212.group54.stayingalive.ui;
 
 import java.awt.Color;
@@ -9,6 +12,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+
+import ca.uwo.cs2212.group54.stayingalive.accounts.AccountManagement;
 
 public class LoginScreen implements Screen{
     // Login Frame
@@ -22,7 +27,7 @@ public class LoginScreen implements Screen{
     private final static Color buttonTextColor = Color.black;
 
     // Navigation Buttons (forgot password? sign up?)
-    private JButton loginButton;   
+    private JButton loginButton;
 
     // Labels and Fields
     private JLabel usernameLabel;
@@ -40,8 +45,15 @@ public class LoginScreen implements Screen{
         // Only close login screen if exitbutton or proper login
         if(e.getSource() == loginButton) {
             // Until proper implementation of login, just move to player menu screen
-
-            this.moveToNextScreen("Player"); // test with player screen later
+            String username = usernameField.getText();
+            String password = new String(passwordField.getPassword());
+            boolean correctLogin = NavigationControl.getAccountManager().checkUserLogin(username, password);
+            if (correctLogin) {
+                AccountManagement.setCurrentAccount(NavigationControl.getAccountManager().getParental().getAccount(username));
+                NavigationControl.startTimer();
+                this.moveToNextScreen("Player"); // test with player screen later
+            }
+            else messageLabel.setVisible(true);
         }
     }
 
@@ -58,17 +70,19 @@ public class LoginScreen implements Screen{
         usernameLabel = new JLabel("User Name:");
         usernameLabel.setFont(new Font("Helvetica", Font.PLAIN, 15)); // adjust as needed
         usernameLabel.setForeground(textColor);
-        usernameLabel.setBounds(50, 100, 100, 25);
+        usernameLabel.setBounds(50, 75, 100, 25);
         
         passwordLabel = new JLabel("Password:");
         passwordLabel.setFont(new Font("Helvetica", Font.PLAIN, 15)); // adjust as needed
         passwordLabel.setForeground(textColor);
-		passwordLabel.setBounds(50, 150, 100, 25);
+		passwordLabel.setBounds(50, 125, 100, 25);
 
         // TODO: Adjust error message label once user login is fully implemented
-        messageLabel = new JLabel(""); // add text later
-		messageLabel.setBounds(125, 260, 250, 35);
+        messageLabel = new JLabel("ERROR: Incorrect login");
+		messageLabel.setBounds(125, 235, 250, 35);
+        messageLabel.setForeground(Color.red);
 		messageLabel.setFont(new Font(null, Font.BOLD, 15));
+        messageLabel.setVisible(false);
 
         // Set up text fields
         // TODO: Adjust text field properties (i.e. boldness) as needed
@@ -76,13 +90,13 @@ public class LoginScreen implements Screen{
         usernameField.setBackground(textFieldColor);
         usernameField.setForeground(buttonTextColor);
         usernameField.setFont(new Font("Helvetica", Font.BOLD, 15)); // adjust as needed
-		usernameField.setBounds(175, 100, 200, 25);
+		usernameField.setBounds(175, 75, 200, 25);
         
         passwordField = new JPasswordField();
         passwordField.setBackground(textFieldColor);
         passwordField.setForeground(buttonTextColor);
         passwordField.setFont(new Font("Helvetica", Font.BOLD, 15)); // adjust as needed
-		passwordField.setBounds(175, 150, 200, 25);
+		passwordField.setBounds(175, 125, 200, 25);
 
 		// Set up login button
         // TODO: adjust button properties (i.e. size, position) as needed
@@ -90,7 +104,7 @@ public class LoginScreen implements Screen{
 		loginButton.setFont(new Font("Helvetica", Font.PLAIN, 16));
 		loginButton.setForeground(buttonTextColor);
 		loginButton.setBackground(buttonBackground);
-		loginButton.setBounds(125, 200, 100, 25);
+		loginButton.setBounds(150, 175, 100, 25);
         //for (ActionListener al : loginButton.getActionListeners()) {loginButton.removeActionListener(al);}
         loginButton.addActionListener(this);
         

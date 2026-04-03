@@ -482,7 +482,7 @@ public class GameStoreScreen implements Screen {
     public void showScreen() {
         if (gameStoreFrame == null) {
             gameStoreFrame = new JFrame("Staying Alive - Game Store");
-            gameStoreFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            WindowUtils.addSaveOnClose(gameStoreFrame); // data is saved when window is closed
         }
         gameStoreFrame.setSize(NavigationControl.screenW, NavigationControl.screenH);
         this.playerCoins = 0;   //temp screen = new temp(3000); // GameStoreScreen screen = new GameStoreScreen(() -> System.out.println("→ Back"), 3000);

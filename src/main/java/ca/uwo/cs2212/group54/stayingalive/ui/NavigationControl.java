@@ -1,5 +1,8 @@
 package ca.uwo.cs2212.group54.stayingalive.ui;
 
+import ca.uwo.cs2212.group54.stayingalive.accounts.AccountManagement;
+import ca.uwo.cs2212.group54.stayingalive.accounts.Parental;
+
 /**
  * NavigationControl class both controls the screen navigation and the origin point of the application.
  * <p>
@@ -17,9 +20,16 @@ public class NavigationControl {
     private static int currentScreenIndex  = 0;
     private static int previousScreenIndex = 0;
 
+    // Account Control
+    private static AccountManagement accountManager;
+
     // Screen Dimensions
     public final static int screenW = 800; //sets the screen width
     public final static int screenH = 450; //sets the screen height
+
+    // Other
+    private static long startTime; // for checking (start - end) time to update player playtime
+    private static long endTime;
 
     /**
      * Updates the current screen by showing it and setting its size to defined dimensions
@@ -27,7 +37,7 @@ public class NavigationControl {
      */
     private static void updateScreen() {
         currentScreen.showScreen();
-        if (!currentScreen.getClass().toString().equals("class LoginScreen")){
+        if (!currentScreen.getClass().toString().equals("class ca.uwo.cs2212.group54.stayingalive.ui.LoginScreen")){
              currentScreen.getFrame().setSize(screenW, screenH);
              System.out.println(currentScreen.getClass().toString());   // debug
         }
@@ -42,7 +52,7 @@ public class NavigationControl {
      */
     public static void setCurrentScreen(int screenToSet) {
         if (currentScreen != null && screenToSet != 1) currentScreen.getFrame().dispose();
-        previousScreenIndex = currentScreenIndex;
+        if (currentScreenIndex != 1) previousScreenIndex = currentScreenIndex;
         currentScreenIndex  = screenToSet;
         currentScreen = listOfScreens[screenToSet];
         updateScreen();
@@ -50,7 +60,7 @@ public class NavigationControl {
 
     /**
      * Navigates back to the previous screen.
-     * @author Fardin Abbassi
+     * @author Omar Soliman
      */
     public static void goBack() {
         setCurrentScreen(previousScreenIndex);
@@ -59,6 +69,11 @@ public class NavigationControl {
      * Get screen at the index of the screen list.
      */
     public static Screen getScreen(int index) {return listOfScreens[index];}
+    /**
+     * Get account management object.
+     */
+    public static AccountManagement getAccountManager() {return accountManager;}
+
     
     /**
      * Constructor for NavigationControl. Initializes screens, then starts at the main menu screen.
@@ -69,9 +84,10 @@ public class NavigationControl {
         MainMenuScreen mainMenu = new MainMenuScreen();
         LoginScreen loginScreen = new LoginScreen();
         TutorialScreen tutorialScreen = new TutorialScreen();
-        PlayerScreen playerScreen = new PlayerScreen(null); // TODO: replace placeholder constructor
+        PlayerScreen playerScreen = new PlayerScreen(); // TODO: replace placeholder constructor
         StatsScreen statsScreen = new StatsScreen("Placeholder"); // TODO: Replace placeholder constructor
         GameStoreScreen gameStoreScreen = new GameStoreScreen(3000);        // GameStoreScreen gameStoreScreen = new GameStoreScreen(null);
+        ParentalControls parentalControls = new ParentalControls();
 
         // Add screens to list of screens (add as screens are implemented)
         listOfScreens[0] = mainMenu;
@@ -80,14 +96,34 @@ public class NavigationControl {
         listOfScreens[3] = playerScreen;        // player
         listOfScreens[4] = statsScreen;         // stats
         listOfScreens[5] = gameStoreScreen;     // game store           //listOfScreens[5] = gameStoreScreen;     // game store
-        listOfScreens[6] = null;                // parental control
+        listOfScreens[6] = parentalControls;    // parental control
         listOfScreens[7] = null;                // gameplay
         
 
-        // Start at main menu
-//        setCurrentScreen(0);
+        // Add account manager and start at main menu
+        accountManager = new AccountManagement(new Parental());
         setCurrentScreen(0);
     }
+
+    /**
+     * This method is exclusively used when a player logs in. It serves the purpose of
+     *  recording the total duration of playtime (for each player).
+     */
+    public static void startTimer() {
+        startTime = System.currentTimeMillis();
+    }
+
+    /**
+     * This method is exclusively used when a player logs in. It serves the purpose of
+     *  recording the total duration of playtime (for each player).
+     */
+    public static void endTimer() {
+        endTime = System.currentTimeMillis();
+    }
+
+    // Getters
+    public static long getStartTime() { return startTime; }
+    public static long getEndTime() { return endTime; }
 
     // Use as driver for application
     public static void main(String[] args) {

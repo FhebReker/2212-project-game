@@ -15,12 +15,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
@@ -28,6 +30,9 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
+
+import ca.uwo.cs2212.group54.stayingalive.accounts.Account;
+import ca.uwo.cs2212.group54.stayingalive.accounts.LevelStatistic;
 
 public class ParentalControls implements Screen {
     // Main Frame
@@ -65,15 +70,45 @@ public class ParentalControls implements Screen {
 
     // Helper Functions
     /**
+     * Signs up a new user by getting test from the username and password fields.
+     * Storage of the user is automatically done in the JSON when calling the createAccount(user,pass)
+     * method from the parental class.
      * 
+     * @author Fardin
+     * @author Osman
      */
     private void signUpNewUser() {
         String newUsername = usernameField.getText().trim();
         String newPassword = new String(passwordField.getPassword());
-        
+        NavigationControl.getAccountManager().getParental().createAccount(newUsername, newPassword);
         // TODO: Use Parental.java to handle sign ups
         refreshPlayerTable(); // show new account
     }
+
+    /** Calls Parental.java's resetStats() method to clear all user stats to 0s.
+     * 
+     * @author Osman
+     */
+    private void resetStats() {
+        NavigationControl.getAccountManager().getParental().resetStats();
+    }
+
+    /**
+     * Checks which row is selected and resets the password for that account (to a new password).
+     * Makes use of playerTable to check selected row, JOptionPane's input dialog to set a new password,
+     * and parental (from account manager in nav control) to reset password.
+     * 
+     * @author Osman
+     */
+    private void resetPassword() {
+        int selectedRow = playerTable.getSelectedRow();
+        if (selectedRow != -1) {
+            String username = (String)playerTableModel.getValueAt(selectedRow,0);
+            String newPassword = JOptionPane.showInputDialog(null, "Enter new password:");
+            NavigationControl.getAccountManager().getParental().resetPassword(username, newPassword);
+        }
+    }
+
     /**
      * Refresh table data after changes to accounts.
      * 
@@ -82,11 +117,11 @@ public class ParentalControls implements Screen {
      * 
      * @author Fardin Abbassi
      */
+    // TODO: make sure the player table refreshes when signin up a new player
     private void refreshPlayerTable() {
-        if (playerTable != null) {
-            playerTable.revalidate();
-            playerTable.repaint();
-        }
+        playerTable.revalidate();
+        playerTable.repaint();
+        
     }
     /**
      * Helper function to switch to the "Show All Players" panel and update tab button colours.
@@ -97,7 +132,9 @@ public class ParentalControls implements Screen {
         allPlayersPanel.setVisible(true);
         createAccountPanel.setVisible(false);
 
-        if (showAllPlayersTab != null) {showAllPlayersTab.setBackground(PICKED_TAB);}
+        if (showAllPlayersTab != null) {
+            showAllPlayersTab.setBackground(PICKED_TAB);
+        }
         if (createAccountTab != null) {createAccountTab.setBackground(BUTTON_BG);}
     }
     /**
@@ -192,6 +229,17 @@ public class ParentalControls implements Screen {
             public boolean isCellEditable(int row, int column) {return false;} // make table non-editable
         };
 
+        // Add data to table
+        ArrayList<Account> players = NavigationControl.getAccountManager().getParental().getAccounts();
+        for (Account player: players) {
+            Object[] row = new Object[3];
+            row[0] = player.getUsername();
+            LevelStatistic[] stats = player.getAllLevelStats();
+            row[1] = stats[player.getProgress().getCurrentLevel()].getHighscore();
+            row[2] = stats[player.getProgress().getCurrentLevel()].getAccuracy();
+            playerTableModel.addRow(row);
+        }
+
         playerTable = new JTable(playerTableModel);
         playerTable.setBackground(TABLE_COLOR);
         playerTable.setForeground(Color.WHITE);
@@ -247,14 +295,14 @@ public class ParentalControls implements Screen {
         resetStatsButton.setActionCommand("Reset Stats");
         resetStatsButton.addActionListener(this);
 
-        resetPasswordButton = new JButton("Reset Passwords");
+        resetPasswordButton = new JButton("Reset Password");
         resetPasswordButton.setFont(new Font("SansSerif", Font.BOLD, 12));
         resetPasswordButton.setForeground(Color.WHITE);
         resetPasswordButton.setBackground(new Color(200, 120, 60));
         resetPasswordButton.setBorderPainted(false);
         resetPasswordButton.setFocusPainted(false);
         resetPasswordButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        resetPasswordButton.setActionCommand("Reset Passwords");
+        resetPasswordButton.setActionCommand("Reset Password");
         resetPasswordButton.addActionListener(this);
 
         buttonPanel.add(resetStatsButton);
@@ -396,15 +444,14 @@ public class ParentalControls implements Screen {
                 moveToNextScreen(command);
                 break;
             case "Sign Up":
-                // Add user to database
+                signUpNewUser();
                 break;
             case "Reset Password":
-                // set all user's passwords to CompSci2212
+                resetPassword();
                 break;
             case "Reset Stats":
-                // set all user stats in the database to 0s
+                resetStats(); // reset all player stats to 0s
                 break;
-
             case "Show All Players":
                 showAllPlayers();
                 // show the all players panel
@@ -427,7 +474,6 @@ public class ParentalControls implements Screen {
         // Set up frame
         if (parentalControlsFrame == null) {
             parentalControlsFrame = new JFrame("Staying Alive - Parental Controls");
-            parentalControlsFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         }
         parentalControlsFrame.setSize(NavigationControl.screenW, NavigationControl.screenH);
         parentalControlsFrame.getContentPane().removeAll();

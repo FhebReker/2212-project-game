@@ -50,7 +50,7 @@ public class Parental {
         // not loading from storage since accounts array should already have all the relevant data.
         File file = new File("data/players.json");
         ObjectMapper objectMapper = new ObjectMapper();
-
+        // save accounts
         try {
             objectMapper.writerWithDefaultPrettyPrinter().writeValue(file, accounts);
         } catch (Exception e) {
@@ -61,7 +61,7 @@ public class Parental {
         return postCreation - preCreation == 1; // successful account creation and adding to array
     }
 
-    private void resetPassword(String username, String newPass) {
+    public void resetPassword(String username, String newPass) {
         for (Account account: accounts) {
             if (account.getUsername().equals(username)) {
                 account.setPassword(newPass);
@@ -81,7 +81,7 @@ public class Parental {
         return null;
     }
 
-    private void resetStats() {
+    public void resetStats() {
         // resets all statistic data for all players
         for (Account account: accounts) {
             account.clearStats();
@@ -92,6 +92,10 @@ public class Parental {
 
     private void resetHighScores() {
         
+    }
+
+    public ArrayList<Account> getAccounts() {
+        return accounts;
     }
 
     private ArrayList<Account> getAccountsFromStorage() {
