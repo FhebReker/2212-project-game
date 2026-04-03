@@ -71,4 +71,32 @@ public class LevelStatistic {
     
     protected void completeLevel() {status = Level_status.COMPLETED;}
 
+    public int getAvgWPM() {
+        return avgWPM;
+    }
+
+    public int getPeakWPM() {
+        return peakWPM;
+    }
+
+    public int getMistakes() {
+        return mistakes;
+    }
+
+    public int getHighscore() {
+        return highscore;
+    }
+
+    public int getAttempts() {
+        return attempts;
+    }
+
+    public double getAccuracy() {
+        return accuracy;
+    }
+
+    public Level_status getStatus() {
+        return status;
+    }
+
 }

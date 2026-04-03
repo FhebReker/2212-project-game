@@ -1,6 +1,7 @@
 package ca.uwo.cs2212.group54.stayingalive.ui;
 
-import ca.uwo.cs2212.group54.stayingalive.accounts.*;
+import ca.uwo.cs2212.group54.stayingalive.accounts.AccountManagement;
+import ca.uwo.cs2212.group54.stayingalive.accounts.Parental;
 
 /**
  * NavigationControl class both controls the screen navigation and the origin point of the application.

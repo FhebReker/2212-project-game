@@ -50,7 +50,7 @@ public class Parental {
         // not loading from storage since accounts array should already have all the relevant data.
         File file = new File("data/players.json");
         ObjectMapper objectMapper = new ObjectMapper();
-
+        // save accounts
         try {
             objectMapper.writerWithDefaultPrettyPrinter().writeValue(file, accounts);
         } catch (Exception e) {
@@ -92,6 +92,10 @@ public class Parental {
 
     private void resetHighScores() {
         
+    }
+
+    public ArrayList<Account> getAccounts() {
+        return accounts;
     }
 
     private ArrayList<Account> getAccountsFromStorage() {

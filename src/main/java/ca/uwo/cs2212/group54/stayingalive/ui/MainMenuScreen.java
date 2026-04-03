@@ -176,7 +176,7 @@ public class MainMenuScreen implements Screen {
         // Open parental control screen
         else if (screenToMoveTo.equals("Parental Controls")) {
             System.err.println("ERROR: have yet to implement parental controls");
-            //NavigationControl.setCurrentScreen(6); // TODO: implement parental controls screen
+            NavigationControl.setCurrentScreen(6); // TODO: implement parental controls screen
         }
     }
 
