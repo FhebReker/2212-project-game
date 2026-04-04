@@ -1,8 +1,16 @@
 package ca.uwo.cs2212.group54.stayingalive.accounts;
 
+import java.awt.Image;
+import java.io.File;
+
+import javax.swing.ImageIcon;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import ca.uwo.cs2212.group54.stayingalive.game.Gameplay;
+import ca.uwo.cs2212.group54.stayingalive.sprites.Sprite;
 
 public class Account {
     @JsonProperty("username")
@@ -15,7 +23,8 @@ public class Account {
     public PlayerProgress playerProgress;
     @JsonProperty("coins")
     public int coins;
-    //public Sprite playerSprite;
+    @JsonIgnore
+    private Sprite sprite;
     //public Powerup[] powerups;
     //public Cosmetic[] cosmetics;
 
@@ -39,6 +48,7 @@ public class Account {
         this.coins = coins;
         this.levelStatistics = levelStatistics;
         this.playerProgress = playerProgress;
+        loadAvatar("global/download.png");
     }
 
     public Account (String username, String pass) {
@@ -50,6 +60,20 @@ public class Account {
         }
         this.playerProgress = new PlayerProgress();
         coins = 0;
+        loadAvatar("global/download.png");
+    }
+
+    /** Loads the avatar image from a file path; leaves {@code avatarImage} null if not found. */
+    private void loadAvatar(String filePath) {
+        if (filePath != null) {
+            File file = new File(filePath);
+            if (file.exists()) {
+                Image image = new ImageIcon(filePath).getImage();
+                Sprite sprite = new Sprite(image,Gameplay.getPlayerX(),Gameplay.getPlayerY());
+                return;
+            }
+        }
+        // avatarImage stays null → buildAvatarPanel draws the placeholder box
     }
 
     public String getUsername() {
@@ -101,4 +125,6 @@ public class Account {
         }
         return false;
     }
+    
+    public Sprite getSprite() { return this.sprite; }
 }

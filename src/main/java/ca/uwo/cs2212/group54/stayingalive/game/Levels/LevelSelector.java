@@ -1,8 +1,9 @@
 package ca.uwo.cs2212.group54.stayingalive.game.Levels;
 
 
+import java.awt.Image;
+
 import javax.swing.ImageIcon;
-import javax.swing.JLabel;
 
 import ca.uwo.cs2212.group54.stayingalive.game.Enemies.Enemy;
 import ca.uwo.cs2212.group54.stayingalive.game.Enemies.Enemy_Attribute;
@@ -71,7 +72,6 @@ public class LevelSelector {
                 // 10 Normal enemies — gentle introduction
                 Enemy[] enemies = {
                     makeEnemy(1, Enemy_Attribute.NORMAL, wordPool),
-                    /*makeEnemy(1, Enemy_Attribute.NORMAL, wordPool),
                     makeEnemy(1, Enemy_Attribute.NORMAL, wordPool),
                     makeEnemy(1, Enemy_Attribute.NORMAL, wordPool),
                     makeEnemy(1, Enemy_Attribute.NORMAL, wordPool),
@@ -79,7 +79,8 @@ public class LevelSelector {
                     makeEnemy(1, Enemy_Attribute.NORMAL, wordPool),
                     makeEnemy(1, Enemy_Attribute.NORMAL, wordPool),
                     makeEnemy(1, Enemy_Attribute.NORMAL, wordPool),
-                    makeEnemy(1, Enemy_Attribute.NORMAL, wordPool)*/
+                    makeEnemy(1, Enemy_Attribute.NORMAL, wordPool),
+                    makeEnemy(1, Enemy_Attribute.NORMAL, wordPool)
                 };
                 return new LevelData(1, enemies, background);
             }
@@ -178,12 +179,10 @@ public class LevelSelector {
 
         // Load the chosen image from the resources/images folder
         ImageIcon icon = new ImageIcon(chosenBird);
-
-        //  this puts the image inside a JLabel, which is needed to create a Sprite for the enemy
-        JLabel label = new JLabel(icon);
+        Image image = icon.getImage();
 
         // Here is the the enemy sprite using the bird image and starting position (0,0)
-        Sprite sprite = new Sprite(label, 0, 0);
+        Sprite sprite = new Sprite(image, 0, 0);
 
         // Here the enemy is created with the randomly sampled words, the specified attribute, and the sprite with the bird image
         return new Enemy(words, attribute, sprite);

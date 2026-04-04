@@ -1,6 +1,6 @@
 package ca.uwo.cs2212.group54.stayingalive.sprites;
 
-import javax.swing.JLabel;
+import java.awt.Image;
 
 /**
  * Sprite class
@@ -9,17 +9,17 @@ import javax.swing.JLabel;
  */
 
 public class Sprite {
-    private final JLabel image;
+    private final Image image;
     private int x;
     private int y;
 
-    public Sprite(JLabel image, int x, int y) {
+    public Sprite(Image image, int x, int y) {
         this.image = image;
         this.x = x;
         this.y = y;
     }
 
-    public JLabel getImage() {
+    public Image getImage() {
         return image;
     }
 
@@ -34,14 +34,14 @@ public class Sprite {
     public void setX(int x) {
         this.x = x;
         if (this.image != null) {
-            this.image.setLocation(this.x, this.y);
+            //this.image.setLocation(this.x, this.y);
         }
     }
 
     public void setY(int y) {
         this.y = y;
         if (this.image != null) {
-            this.image.setLocation(this.x, this.y);
+            //this.image.setLocation(this.x, this.y);
         }
     }
 }

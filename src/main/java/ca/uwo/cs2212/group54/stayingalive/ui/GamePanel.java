@@ -11,9 +11,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.List;
 
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -66,33 +64,23 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 
         // Player
         g.setColor(Color.GREEN);
-        g.fillRect(playerX, playerY, 50, 50);
+        Image playerImage = new ImageIcon("global/download.png").getImage();
+        g.drawImage(playerImage,playerX - 37,playerY - 50,75,100,null);
 
         // Example enemy
         g.setColor(Color.RED);
         List<Enemy> active = gameplay.getActiveEnemies();
         for (Enemy enemy: active) {
-            System.out.println(enemy.getPositionX() + " " + enemy.getPositionY());
-            //g.fillRect(enemy.getPositionX(), enemy.getPositionY(), 40, 40);
-            JLabel label = enemy.getSprite().getImage();
-            Icon icon = label.getIcon();
-            Image image = ((ImageIcon) icon).getImage();
+            Image image = enemy.getSprite().getImage();
             
-            g.drawImage(image, enemy.getSprite().getX(), enemy.getSprite().getY(), 200, 200, null);
-            g.drawLine(playerX,playerY,enemy.getSprite().getX(),enemy.getSprite().getY());
-            //g.drawImage(image, enemy.getPositionX(), enemy.getPositionY(), 200, 200, null);
-            /*if (enemy.getPositionX() < playerX) {
-                g.drawImage(image, enemy.getPositionX(), enemy.getPositionY(), 200, 200, null);
-            } else {
-                g.drawImage(image, enemy.getPositionX(), enemy.getPositionY(), -200, 200, null);
-            }*/
+            g.drawImage(image, enemy.getSprite().getX()-50, enemy.getSprite().getY()-50, 100, 100, null);
         }
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         long now = System.nanoTime();
-        float deltaTime = (now - lastTime) / 100_000_000.0f;
+        float deltaTime = (now - lastTime) / 30_000_000.0f;
         lastTime = now;
         updateGame(deltaTime);
         repaint();

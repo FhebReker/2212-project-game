@@ -95,12 +95,15 @@ public class Gameplay {
         this.inputLockTimer = 0;
         this.currWeight = 0;
         
+        int screenWidthBounds = NavigationControl.screenW * 2;
+        int screenHeightBounds = NavigationControl.screenH * 2;
+
         // Setup 16 target corners for spawn
         int[][] corners = {
             {50, 50}, {100, 50}, {50, 100}, {100, 100}, // Top Left
-            {700, 50}, {750, 50}, {700, 100}, {750, 100}, // Top Right
-            {50, 500}, {100, 500}, {50, 550}, {100, 550}, // Bottom Left
-            {700, 500}, {750, 500}, {700, 550}, {750, 550} // Bottom Right
+            {screenWidthBounds - 100, 50}, {screenWidthBounds - 50, 50}, {screenWidthBounds - 100, 100}, {screenWidthBounds - 50, 100}, // Top Right
+            {50, screenHeightBounds - 100}, {100, screenHeightBounds - 100}, {50, screenHeightBounds - 50}, {100, screenHeightBounds - 50}, // Bottom Left
+            {screenWidthBounds - 100, screenHeightBounds - 100}, {screenWidthBounds - 50, screenHeightBounds - 100}, {screenWidthBounds - 100, screenHeightBounds - 50}, {screenWidthBounds - 50, screenHeightBounds - 50} // Bottom Right
         };
         for (int i = 0; i < 16; i++) {
             SPAWN_POINTS[i] = new Point(corners[i][0], corners[i][1]);
@@ -202,13 +205,14 @@ public class Gameplay {
                 this.updateScore(-100, this.difficulty);
                 this.currWeight -= enemy.getWeight();
                 // Remove the Sprite from UI parent 
+                /* 
                 if (enemy.getSprite() != null && enemy.getSprite().getImage() != null) {
                     java.awt.Container parent = enemy.getSprite().getImage().getParent();
                     if (parent != null) {
                         parent.remove(enemy.getSprite().getImage());
                         parent.repaint();
                     }
-                }
+                }*/
                 iterator.remove();
             }
         }
