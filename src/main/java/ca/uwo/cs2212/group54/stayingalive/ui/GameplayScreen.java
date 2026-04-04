@@ -3,7 +3,9 @@ package ca.uwo.cs2212.group54.stayingalive.ui;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 
+import javax.swing.Action;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 
 import ca.uwo.cs2212.group54.stayingalive.accounts.Account;
@@ -100,4 +102,9 @@ public class GameplayScreen implements Screen {
     public static Color getBackgroundClr1() { return backgroundClr1; }
 
     public static Color getBackgroundClr2() { return backgroundClr2; }
+
+    @Override
+    public void addKeyShortcut(JComponent target, int keyCode, Action action) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }
