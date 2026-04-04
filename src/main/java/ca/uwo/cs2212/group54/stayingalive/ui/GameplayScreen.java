@@ -31,7 +31,6 @@ public class GameplayScreen implements Screen {
     private static final Color backgroundClr2 = new Color(165, 84, 84); // BROWN
         private static final Color backgroundPurple = new Color(106, 69, 156);
     private static final Color heartsClr = new Color(0, 0, 170);
-    private static final Color textColor = new Color(255, 165, 0);
 
     // UI Button
     private JButton backButton;

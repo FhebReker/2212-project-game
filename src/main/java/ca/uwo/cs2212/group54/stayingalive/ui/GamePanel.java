@@ -1,6 +1,8 @@
 package ca.uwo.cs2212.group54.stayingalive.ui;
 
 import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -29,7 +31,12 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 
     // Color
     private static final Color backgroundPurple = new Color(106, 69, 156);
+    private static final Color textColor = new Color(255, 165, 0);
+
+    // Other
+    private static final int textOffset = 20;
     private static final int borderSize = 20;
+    private static final int heartImageSize = 80;
 
     // Gameplay Related
     private static boolean running;
@@ -71,10 +78,50 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
         g.setColor(Color.RED);
         List<Enemy> active = gameplay.getActiveEnemies();
         for (Enemy enemy: active) {
-            Image image = enemy.getSprite().getImage();
+            if (! enemy.isDefeated()) {
+                // Draw enemy sprites
+                Image image = enemy.getSprite().getImage();
+                g.drawImage(image, enemy.getSprite().getX()-50, enemy.getSprite().getY()-50, 100, 100, null);
+                g.drawRect(enemy.getSprite().getX()-50, enemy.getSprite().getY()-50, 100, 100); // only testing for hitboxes
+
+                // Text title for each enemy
+                int textX = enemy.getSprite().getX() - textOffset;
+                int textY = enemy.getSprite().getY() - textOffset;
+                String currentWord = enemy.getCurrentWord();
+                g.setColor(textColor);
+                Font enemyFont = new Font("Helvetica", Font.PLAIN, 16);
+                g.setFont(enemyFont);
+                
+                // FOR HIGHLIGHTING BEHIND IT
+                FontMetrics fontMetrics = g.getFontMetrics(); // Calculate font size
+                String highlight = currentWord.substring(0,enemy.getFirstUnlockedChar());
+                int textWidth = fontMetrics.stringWidth(highlight);
+                int textHeight = fontMetrics.getHeight();
+                g.setColor(Color.GREEN);
+                g.fillRect(textX, textY - fontMetrics.getAscent(),
+                    textWidth, textHeight); // Highlight behind characters
+                
+                // Drawing enemy current word
+                g.setColor(textColor);
+                g.drawString(currentWord.toUpperCase(), textX, textY);    
+            }
             
-            g.drawImage(image, enemy.getSprite().getX()-50, enemy.getSprite().getY()-50, 100, 100, null);
         }
+
+        // Player hearts
+        Image heartImage = new ImageIcon("global/blueheart.png").getImage();
+        int lives = gameplay.getLives();
+        for (int i = 0; i < lives; i++) {
+            g.drawImage(heartImage, borderSize + 10 + i * heartImageSize, borderSize + 10, 
+                heartImageSize, heartImageSize, null);
+        }
+
+        // Current score
+        g.setColor(Color.WHITE);
+        Font scoreFont = new Font("Helvetica", Font.PLAIN, 40);
+        g.setFont(scoreFont);
+        g.drawString("Current Score: " + gameplay.getScore(), 
+            borderSize + 10, NavigationControl.screenH * 2 - borderSize - 50);
     }
 
     @Override
@@ -96,26 +143,19 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
     // Key controls
     @Override
     public void keyPressed(KeyEvent e) {
-        switch (e.getKeyCode()) {
-            /*case KeyEvent.VK_W -> up = true;
-            case KeyEvent.VK_S -> down = true;
-            case KeyEvent.VK_A -> left = true;
-            case KeyEvent.VK_D -> right = true;*/
-        }
+        switch (e.getKeyCode()) {}
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        switch (e.getKeyCode()) {
-            /*case KeyEvent.VK_W -> up = false;
-            case KeyEvent.VK_S -> down = false;
-            case KeyEvent.VK_A -> left = false;
-            case KeyEvent.VK_D -> right = false;*/
-        }
+        switch (e.getKeyCode()) {}
     }
 
     @Override
-    public void keyTyped(KeyEvent e) {}
+    public void keyTyped(KeyEvent e) {
+        char c = e.getKeyChar();
+        gameplay.processInput(c);
+    }
 
     public static boolean getRunState() { return running; }
 }
