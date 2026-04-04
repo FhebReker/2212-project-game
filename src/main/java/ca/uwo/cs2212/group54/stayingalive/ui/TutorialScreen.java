@@ -61,12 +61,12 @@ public class TutorialScreen implements Screen {
             + "</div></html>"
         },
         {
-            "Health, Points & Powerups",
+            "Health, Points & Power-Ups",
             "<html><div style='text-align:center;'>"
             + "You start each run with a fixed amount of <b>health</b>.<br>"
             + "Every mistake chips away at it, so play smart.<br><br>"
             + "Nailing words earns you <b>points</b> and builds your score.<br><br>"
-            + "<b>Powerups</b> show up mid-game. Type them fast to grab<br>"
+            + "<b>Power-Ups</b> show up mid-game. Type them fast to grab<br>"
             + "bonuses like extra time or health restored."
             + "</div></html>"
         },
@@ -271,6 +271,7 @@ public class TutorialScreen implements Screen {
         tutorialFrame.setContentPane(root);
         tutorialFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         tutorialFrame.setBackground(BACKGROUND_PURPLE);
+        WindowUtils.setAppIcon(tutorialFrame);
         tutorialFrame.setVisible(true);
         tutorialFrame.setLocationRelativeTo(null);
         addKeyShortcut((JPanel)tutorialFrame.getContentPane(),KeyEvent.VK_LEFT, new AbstractAction() {

@@ -238,6 +238,7 @@ public class MainMenuScreen implements Screen {
         mainMenuFrame.setBackground(backgroundPurple);
         mainMenuFrame.setVisible(true);
         mainMenuFrame.setLocationRelativeTo(null);
+        WindowUtils.setAppIcon(mainMenuFrame);
         addKeyShortcuts((JPanel) mainMenuFrame.getContentPane());
     }
 

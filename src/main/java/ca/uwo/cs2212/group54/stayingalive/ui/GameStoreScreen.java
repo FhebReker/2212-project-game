@@ -1,6 +1,6 @@
 package ca.uwo.cs2212.group54.stayingalive.ui;
 
-// TODO: Adjust class to match Screen interface; scroll bar hides content when sized by the app, may need to resize components
+// TODO: Integrate account classes for saving purchases
 
 import java.awt.*;
 import java.awt.event.*;
@@ -9,6 +9,8 @@ import java.util.*;
 import java.util.List;
 
 import javax.swing.*;
+
+import ca.uwo.cs2212.group54.stayingalive.accounts.*;
 
 /**
  * GameStoreScreen – lets the player spend accumulated score on power-ups and cosmetics.
@@ -47,9 +49,10 @@ public class GameStoreScreen implements Screen {
     }
 
     // ── Fields ────────────────────────────────────────────────────────────
-    private       int            playerCoins;
-    private       Image          avatarImage;
-    private final List<StoreItem> items = new ArrayList<>();
+    private       int               playerCoins;
+    private       Image             avatarImage;
+    private final List<StoreItem>   items = new ArrayList<>();
+    private       Account           currentUser;
     
     // Coin pill label so we can update it after a purchase
     private JLabel coinPill;
@@ -58,26 +61,22 @@ public class GameStoreScreen implements Screen {
     private final List<JLabel> badgeLabels = new ArrayList<>();
     private       JFrame         gameStoreFrame;
 
-    // ── Keyboard Navigation ───────────────────────────────────────────────
-    // TODO: ADD KEYBOARD NAV FIELDS
-
 
     // ── Constructors ──────────────────────────────────────────────────────
-    // TODO: Maybe need a way to adjust based on user coins
-    public GameStoreScreen(int initialCoins) {
-//        NavigationControl.getAccountManager().getParental().getAccount(null).coins
-        this.playerCoins = initialCoins;
-    }
     public GameStoreScreen() {
-        this(0);
+        this.playerCoins = 0;
     }
 
-    // ── Public API ────────────────────────────────────────────────────────
+    // ── Coin Updates ────────────────────────────────────────────────────────
+    public void setAccount(Account user) {
+        this.currentUser = user;
+        this.playerCoins = user.coins;
+        refreshCoinPill();
+    }
     public void setPlayerCoins(int coins) {
         this.playerCoins = coins;
         refreshCoinPill();
     }
-
     public int getPlayerCoins() { return playerCoins; }
 
     // ── Default catalogue ─────────────────────────────────────────────────
@@ -411,6 +410,7 @@ public class GameStoreScreen implements Screen {
     }
 
     // ── Purchase logic ────────────────────────────────────────────────────
+    // TODO: Ensure purchases are saved, both as items and as coin deficits
     private void handlePurchase(StoreItem item) {
         System.out.println("Buying " + item.name);
         if (playerCoins < item.cost) {
@@ -420,6 +420,8 @@ public class GameStoreScreen implements Screen {
             return;
         }
         playerCoins -= item.cost;
+        currentUser.coins = playerCoins;
+        Parental.saveAccountData(); // TODO: Ensure purchases are saved
         item.quantity++;
         refreshCoinPill();
         refreshBadges();
@@ -487,8 +489,8 @@ public class GameStoreScreen implements Screen {
             gameStoreFrame = new JFrame("Staying Alive - Game Store");
             WindowUtils.addSaveOnClose(gameStoreFrame); // data is saved when window is closed
         }
+        setAccount(AccountManagement.getCurrentAccount());
         gameStoreFrame.setSize(NavigationControl.screenW, NavigationControl.screenH);
-        this.playerCoins = 0;   //temp screen = new temp(3000); // GameStoreScreen screen = new GameStoreScreen(() -> System.out.println("→ Back"), 3000);
         gameStoreFrame.getContentPane().removeAll();
         loadAvatar("global/download.png");
         initItems();
@@ -496,6 +498,7 @@ public class GameStoreScreen implements Screen {
         //gameStoreFrame.setContentPane(screen);
         gameStoreFrame.setLocationRelativeTo(null);
         gameStoreFrame.setVisible(true);
+        WindowUtils.setAppIcon(gameStoreFrame);
         addKeyShortcut((JPanel)gameStoreFrame.getContentPane(),KeyEvent.VK_ESCAPE, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) { navigateTo("Back"); }

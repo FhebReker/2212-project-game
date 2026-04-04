@@ -86,8 +86,8 @@ public class NavigationControl {
         LoginScreen loginScreen = new LoginScreen();
         TutorialScreen tutorialScreen = new TutorialScreen();
         PlayerScreen playerScreen = new PlayerScreen(); // TODO: replace placeholder constructor
-        StatsScreen statsScreen = new StatsScreen("Placeholder"); // TODO: Replace placeholder constructor
-        GameStoreScreen gameStoreScreen = new GameStoreScreen(3000);        // GameStoreScreen gameStoreScreen = new GameStoreScreen(null);
+        StatsScreen statsScreen = new StatsScreen(); // TODO: Replace placeholder constructor
+        GameStoreScreen gameStoreScreen = new GameStoreScreen();        // GameStoreScreen gameStoreScreen = new GameStoreScreen(null);
         ParentalControls parentalControls = new ParentalControls();
 
         // Add screens to list of screens (add as screens are implemented)

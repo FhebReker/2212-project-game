@@ -4,6 +4,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.net.URL;
+import ca.uwo.cs2212.group54.stayingalive.accounts.Account;
+import ca.uwo.cs2212.group54.stayingalive.accounts.AccountManagement;
 
 import javax.swing.*;
 
@@ -33,13 +35,14 @@ public class PlayerScreen implements Screen {
     private Image avatarImage;
     private JFrame playerFrame;
     private String avatarPath;
+    private Account user;
 
     // ── Constructor ───────────────────────────────────────────────────────
     /**
      * Constructor for the class.
      * 
      * <p>
-     * Sets the avatar iamge path to whatever is specified, or defaults to the placeholder image.
+     * Sets the avatar image path to whatever is specified, or defaults to the placeholder image.
      * @param avatarPath resource path to the avatar image (e.g. "/assets/kitten.png"),
      *                   or {@code null} to use the built-in placeholder
      */
@@ -50,6 +53,10 @@ public class PlayerScreen implements Screen {
     public PlayerScreen() {
         this.avatarPath = "global/download.png";
     }
+
+    // ──── User Setter and Getter ─────────────────────────────────────────────
+    public void setUser(Account user) {this.user = user;}
+    public Account getUser() {return user;}
 
     // ── UI construction ───────────────────────────────────────────────────
     /**
@@ -320,7 +327,7 @@ public class PlayerScreen implements Screen {
     }
     
     
-// SCREEN INTERGACE METHODS -----------------------------------------------
+// SCREEN INTERFACE METHODS -----------------------------------------------
     /**
      * Add key press functionality to a given key.
      * 
@@ -359,6 +366,7 @@ public class PlayerScreen implements Screen {
             playerFrame = new JFrame("Staying Alive - Player Menu");
             WindowUtils.addSaveOnClose(playerFrame); // data is saved when window is closed
         }
+        setUser(AccountManagement.getCurrentAccount());
         playerFrame.setSize(NavigationControl.screenW, NavigationControl.screenH);
         playerFrame.getContentPane().removeAll();
         
@@ -366,6 +374,7 @@ public class PlayerScreen implements Screen {
         buildUI();
         playerFrame.setLocationRelativeTo(null);
         playerFrame.setVisible(true);
+        WindowUtils.setAppIcon(playerFrame);
 
         // Add key press navigation
         addKeyShortcuts((JPanel) playerFrame.getContentPane());
@@ -379,7 +388,7 @@ public class PlayerScreen implements Screen {
      */
     @Override
     public void moveToNextScreen(String screenToMoveTo) {
-        // when integrating, move from this class to player menu when the back button is clicked
+        // TODO: when integrating, move from this class to player menu when the back button is clicked; ensure that player data is kept when continuing a game
         if (screenToMoveTo.equals("New Game")) {
             System.out.println("to new game");
 //            NavigationControl.setCurrentScreen(7); // Make sure to reset data when starting a new game

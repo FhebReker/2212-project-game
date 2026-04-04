@@ -775,6 +775,7 @@ public class ParentalControls implements Screen {
         parentalControlsFrame.getContentPane().add(buildMainContent(), BorderLayout.CENTER);
 
         // Snap frame to center and show
+        WindowUtils.setAppIcon(parentalControlsFrame);
         parentalControlsFrame.setLocationRelativeTo(null);
         parentalControlsFrame.setVisible(true);
         addKeyShortcuts();

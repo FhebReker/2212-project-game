@@ -3,7 +3,7 @@ package ca.uwo.cs2212.group54.stayingalive.ui;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
-
+import ca.uwo.cs2212.group54.stayingalive.accounts.*;
 import javax.swing.*;
 
 /**
@@ -19,29 +19,58 @@ import javax.swing.*;
  */
 public class StatsScreen implements Screen {
 
-    // Colours 
+    // UI 
     private static final Color BG_COLOR  = new Color(106, 69, 156);
     private static final Color FIELD_BG  = new Color(215, 215, 215);
-    // Data
-    private final String   playerName;
-    private Image avatarImage;
     private JFrame statsFrame;
 
-    // Default / placeholder values — replace with real data from the stats system
-    private int    highScore    = 0;
-    private int    avgWpm       = 0;
-    private int    peakWpm      = 0;
-    private double accuracy     = 0.0;
-    private int    errorCount   = 0;
-    private String timePlayed   = "0 minutes";
-    private int    currentLevel = 1;
-    private int    wordsTyped   = 0;
+    // Data
+    private String  playerName;
+    private Image   avatarImage;
+    private Account user;
+    private int     highScore;
+    private int     avgWpm;
+    private int     peakWpm;
+    private double  accuracy;
+    private int     errorCount;
+    private String  timePlayed;
+    private int     currentLevel;
 
     // Constructor                                          // TODO: Add javadoc comments to method
-    public StatsScreen(String playerName) {
-        this.playerName = playerName;
+    public StatsScreen() {
+        this.highScore    = 0;
+        this.avgWpm       = 0;
+        this.peakWpm      = 0;
+        this.accuracy     = 0.0;
+        this.errorCount   = 0;
+        this.timePlayed   = "0 minutes";
+        this.currentLevel = 1;
         loadAvatar("global/download.png");
     }
+    /**
+     * Properly s
+     * @param v
+     */
+    public void loadStatsFromUser() {
+        this.user = AccountManagement.getCurrentAccount();
+        this.playerName = user.getUsername();
+        
+        LevelStatistic currentStats = user.getLevelStat(user.getProgress().getCurrentLevel());
+        this.highScore = currentStats.getHighscore();
+        this.avgWpm = currentStats.getAvgWPM();
+        this.peakWpm = currentStats.getPeakWPM();
+        this.accuracy = currentStats.getAccuracy();
+        this.errorCount = currentStats.getMistakes();
+//        this.wordsTyped = currentStats.get
+        this.currentLevel = user.getProgress().getCurrentLevel();
+        this.timePlayed = formatPlaytime(user.getProgress().getPlaytime());
+    }
+    private String formatPlaytime(double minutes) {
+        int hrs = (int)(minutes / 60);
+        int mins = (int)(minutes % 60);
+        return hrs > 0 ? hrs + "h " + mins + "m" : mins + "m";
+    }
+
 
     // Setters for live data 
     public void setHighScore(int v)    { highScore    = v; }
@@ -51,7 +80,6 @@ public class StatsScreen implements Screen {
     public void setErrorCount(int v)   { errorCount   = v; }
     public void setTimePlayed(String v){ timePlayed   = v; }
     public void setCurrentLevel(int v) { currentLevel = v; }
-    public void setWordsTyped(int v)   { wordsTyped   = v; }
 
     // UI construction                                          // TODO: Add javadoc comments to method
     private void buildUI() {
@@ -114,7 +142,6 @@ public class StatsScreen implements Screen {
             { "Error Count:",                  String.valueOf(errorCount)      },
             { "Total Time Played:",            timePlayed                      },
             { "Current Level:",                "Level " + currentLevel         },
-            { "Words Correctly Typed:",  String.valueOf(wordsTyped)      },
         };
 
         int startY = 8;
@@ -245,6 +272,7 @@ public class StatsScreen implements Screen {
      */
     @Override
     public void showScreen() {
+        loadStatsFromUser();
         if (statsFrame == null) {
             statsFrame = new JFrame("Staying Alive - Player Menu");
             WindowUtils.addSaveOnClose(statsFrame); // data is saved when window is closed
@@ -255,6 +283,7 @@ public class StatsScreen implements Screen {
         loadAvatar("global/download.png");
         buildUI();
         statsFrame.setLocationRelativeTo(null);
+        WindowUtils.setAppIcon(statsFrame);
         statsFrame.setVisible(true);
 
         addKeyShortcut((JPanel)statsFrame.getContentPane(),KeyEvent.VK_ESCAPE, new AbstractAction() {
