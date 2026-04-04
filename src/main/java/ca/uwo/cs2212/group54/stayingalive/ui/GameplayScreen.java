@@ -3,8 +3,7 @@ package ca.uwo.cs2212.group54.stayingalive.ui;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
+import javax.swing.*;
 
 import ca.uwo.cs2212.group54.stayingalive.accounts.Account;
 import ca.uwo.cs2212.group54.stayingalive.game.Gameplay;
@@ -56,6 +55,10 @@ public class GameplayScreen implements Screen {
             System.out.println("→ Back");
             this.moveToNextScreen("Player");
         }
+    }
+    @Override
+    public void addKeyShortcut(JComponent target, int keyCode, Action action) {
+        // TODO Auto-generated method stub
     }
     
     /**
