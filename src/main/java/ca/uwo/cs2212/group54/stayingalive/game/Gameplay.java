@@ -46,6 +46,13 @@ public class Gameplay {
     private static final int PLAYER_Y = 300;
     private static final int SAFE_RADIUS = 50;
     
+    /**
+     * Constructor for Gameplay
+     * 
+     * @param player The player account
+     * @param levelData The level data
+     * @param difficulty The difficulty of the game
+     */
     public Gameplay(Account player, LevelData levelData, Difficulty difficulty) {
         this.player = player;
         this.levelData = levelData;
@@ -100,27 +107,56 @@ public class Gameplay {
     }
 
     // Getters
-
+    /**
+     * Gets the number of lives the player has.
+     * 
+     * @return The number of lives the player has.
+     */
     public int getLives() {
         return this.lives;
     }
 
+    /**
+     * Gets the score of the player.
+     * 
+     * @return The score of the player.
+     */
     public int getScore() {
         return this.score;
     }
 
+    /**
+     * Gets the words per minute of the player.
+     * 
+     * @return The words per minute of the player.
+     */
     public int getWPM() {
         return this.calculateWPM();
     }
 
+    /**
+     * Gets the time elapsed since the start of the game.
+     * 
+     * @return The time elapsed since the start of the game.
+     */
     public float getTime() {
         return this.time;
     }
 
+    /**
+     * Gets the list of active enemies.
+     * 
+     * @return The list of active enemies.
+     */
     public List<Enemy> getActiveEnemies() {
         return this.activeEnemies;
     }
 
+    /**
+     * Updates the game state.
+     * 
+     * @param deltaTime The time elapsed since last frame.
+     */
     public void update(float deltaTime) {
         if (isGameOver() || isLevelCleared()) {
             return;
@@ -179,6 +215,11 @@ public class Gameplay {
         }
     }
 
+    /**
+     * Processes the input from the player.
+     * 
+     * @param input The input from the player.
+     */
     public void processInput(String input) {
         if (isGameOver() || isLevelCleared()) {
             return;
@@ -208,8 +249,13 @@ public class Gameplay {
         inputLockTimer = 1.0f;
     }
     
+    /**
+     * Updates the score of the player.
+     * 
+     * @param amount The amount to add to the score.
+     * @param difficulty The difficulty of the game.
+     */
     public void updateScore(int amount, Difficulty difficulty) {
-        // Add score based on difficulty
         switch (difficulty) {
             case EASY: this.score += amount;
             case MEDIUM: this.score += amount * 1.5;
@@ -217,6 +263,10 @@ public class Gameplay {
         }
     }
 
+    /**
+     * Ends the current level and updates the player's statistics.
+     * Updates the player's level status and score.
+     */
     public void endLevel() {
         if (player != null && levelData != null) {
             LevelStatistic stats = this.player.getLevelStat(levelData.getNumber());
@@ -238,19 +288,39 @@ public class Gameplay {
         }
     }
 
+    /**
+     * Checks if the game is over.
+     * 
+     * @return True if the game is over, false otherwise.
+     */
     public boolean isGameOver() {
         return this.lives <= 0;
     }
     
+    /**
+     * Checks if the level is cleared.
+     * 
+     * @return True if the level is cleared, false otherwise.
+     */
     public boolean isLevelCleared() {
         return this.levelCleared;
     }
 
+    /**
+     * Calculates the words per minute of the player.
+     * 
+     * @return The words per minute of the player.
+     */
     public int calculateWPM() {
         if (time == 0) return 0;
         return (int) (corrects / (time / 60.0f));
     }
 
+    /**
+     * Changes the number of lives the player has.
+     * 
+     * @param change The amount to change the number of lives by.
+     */
     public void changeLives(int change) {
         this.lives += change;
     }
