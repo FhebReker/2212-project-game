@@ -402,7 +402,7 @@ public class PlayerScreen implements Screen {
         }
         if (screenToMoveTo.equals("Logout")) {
             WindowUtils.activateSaveSequence(); // save data before logging out.
-            NavigationControl.goBack();
+            NavigationControl.setCurrentScreen(0);;
         }
     }
     // TODO: public getFrame

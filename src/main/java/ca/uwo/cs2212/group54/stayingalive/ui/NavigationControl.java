@@ -62,7 +62,9 @@ public class NavigationControl {
      * @author Omar Soliman
      */
     public static void goBack() {
+        System.err.println("prev index = " + previousScreenIndex);
         setCurrentScreen(previousScreenIndex);
+        System.err.println("prev index = " + previousScreenIndex);
     }
     /**
      * Get screen at the index of the screen list.

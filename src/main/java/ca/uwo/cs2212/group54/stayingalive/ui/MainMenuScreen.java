@@ -14,6 +14,7 @@ package ca.uwo.cs2212.group54.stayingalive.ui;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.event.*;
 
 
 public class MainMenuScreen implements Screen {
@@ -48,6 +49,45 @@ public class MainMenuScreen implements Screen {
             System.out.println("to " + command);
             this.moveToNextScreen(command);
     }
+    /**
+     * Helper function to reset the message when either the username or password fields change.
+     * @author Fardin Abbassi
+     */
+    private void addMessageResetOnType(JLabel messageLabel, JPasswordField masterPassField) {
+        DocumentListener resetListener = new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {messageLabel.setVisible(false); }
+            @Override
+            public void removeUpdate(DocumentEvent e) { messageLabel.setVisible(false); }
+            @Override
+            public void changedUpdate(DocumentEvent e) { messageLabel.setVisible(false); }
+        };
+        masterPassField.getDocument().addDocumentListener(resetListener);
+    }
+    /**
+     * Helper function to make adding shortcuts easier to read by setting key binds to both fields.
+     * @author Fardin Abbassi
+     */
+    private void keyShortcutOnParentalPass(JPasswordField masterPassField, JDialog dialog, JLabel messageLabel) {
+        addKeyShortcut(masterPassField, KeyEvent.VK_ENTER, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) { 
+                String entered = new String(masterPassField.getPassword());
+                if (NavigationControl.getAccountManager().checkMasterPass(entered)) {
+                    dialog.dispose();
+                    NavigationControl.setCurrentScreen(6);
+                } else {
+                    messageLabel.setVisible(true);
+                }
+             }
+        });
+        addKeyShortcut((JPanel)dialog.getContentPane(),KeyEvent.VK_ESCAPE, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) { dialog.dispose(); }
+        });
+    }
+
+
     /** 
      * Handle button clicks on main menu
      * <p>
@@ -221,7 +261,7 @@ public class MainMenuScreen implements Screen {
             System.out.println("reading tutorial");
             NavigationControl.setCurrentScreen(2);
         }
-        // Open parental control screen
+        // Check for the master password, then open parental controls screen on correct login
         else if (screenToMoveTo.equals("Parental Controls")) {
             // Styled master-password dialog matching the student login screen
             JDialog dialog = new JDialog(mainMenuFrame, "Parental Controls", true);
@@ -260,6 +300,8 @@ public class MainMenuScreen implements Screen {
                     errorLabel.setVisible(true);
                 }
             });
+            addMessageResetOnType(errorLabel, passField);
+            keyShortcutOnParentalPass(passField, dialog, errorLabel);
 
             dialog.add(passLabel);
             dialog.add(passField);

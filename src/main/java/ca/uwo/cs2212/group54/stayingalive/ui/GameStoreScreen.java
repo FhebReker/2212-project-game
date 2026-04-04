@@ -13,11 +13,13 @@ import javax.swing.*;
 /**
  * GameStoreScreen – lets the player spend accumulated score on power-ups and cosmetics.
  *
+ * <p>
  * Layout:
  *   - Purple background matching the app theme
  *   - Top bar: "Game Store" title left | coin pill + back button right
  *   - Left half: player avatar centred, owned power-up badges underneath
  *   - Right half: scrollable card list of purchasable items with Buy buttons
+ * @author Omar Soliman
  */
 
 public class GameStoreScreen implements Screen {
@@ -58,6 +60,7 @@ public class GameStoreScreen implements Screen {
 
     // ── Keyboard Navigation ───────────────────────────────────────────────
     // TODO: ADD KEYBOARD NAV FIELDS
+
 
     // ── Constructors ──────────────────────────────────────────────────────
     // TODO: Maybe need a way to adjust based on user coins
@@ -456,12 +459,14 @@ public class GameStoreScreen implements Screen {
      */
     private void navigateTo(String command) {
         // move from this class to the next screen based on the button clicked
-            System.out.println("→ " + command);
-            this.moveToNextScreen(command);
+        if (command.equals("Back")){
+            System.out.println("to player");
+            this.moveToNextScreen("Player");
+        }
     }
     
 
-//    @Override
+    @Override
     public void addKeyShortcut(JComponent target, int keyCode, Action action) {
         InputMap im = target.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
         ActionMap am = target.getActionMap();
@@ -473,11 +478,7 @@ public class GameStoreScreen implements Screen {
     // TODO: Action listener
     @Override
     public void actionPerformed(ActionEvent e) {
-        // move from this class to player menu when back button is clicked
-        if (e.getActionCommand() != null && e.getActionCommand().equals("Back")) {
-            System.out.println("→ Back");
-            this.moveToNextScreen("Player");
-        }
+        if (e.getActionCommand() != null) navigateTo(e.getActionCommand());
     }
     //TODO: public showScreen
     @Override
@@ -495,6 +496,10 @@ public class GameStoreScreen implements Screen {
         //gameStoreFrame.setContentPane(screen);
         gameStoreFrame.setLocationRelativeTo(null);
         gameStoreFrame.setVisible(true);
+        addKeyShortcut((JPanel)gameStoreFrame.getContentPane(),KeyEvent.VK_ESCAPE, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) { navigateTo("Back"); }
+        });
     }
     // TODO: public moveToNextScreen
     @Override

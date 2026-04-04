@@ -1,4 +1,3 @@
-// TODO: ADD JAVADOC COMMENTS
 package ca.uwo.cs2212.group54.stayingalive.ui;
 
 import java.awt.*;
@@ -12,7 +11,22 @@ import javax.swing.table.*;
 import ca.uwo.cs2212.group54.stayingalive.accounts.Account;
 import ca.uwo.cs2212.group54.stayingalive.accounts.LevelStatistic;
 
+/**
+ * Implements the Parental Controls screen of the application.
+ * 
+ * <p>
+ * The parental user, upon login, will be able to  cycle between two panels: one for the
+ * database and another to sign up a new user.
+ * <p>
+ * In the first, the parent can view the total high scores of all users, reset passwords and 
+ * stats of selected users, or delete a selected user.
+ * In the second, the parent can sign up a new user, provided the username does not already exist.
+ * 
+ * @author Osman Idris
+ * @author Fardin Abbassi
+ */
 public class ParentalControls implements Screen {
+    // ──── Instance Variables ─────────────────────────────────────────────────
     // Main Frame
     private JFrame parentalControlsFrame = new JFrame("Staying Alive - Parental Controls");
 
@@ -20,7 +34,7 @@ public class ParentalControls implements Screen {
     private static final Color BG_COLOR = new Color(106, 69, 156);
     private static final Color BUTTON_BG = new Color(0, 140, 255);
     private static final Color PICKED_TAB = new Color(100, 180, 255);
-    private static final Color TABLE_COLOR = new Color(255, 255, 255, 50);
+    private static final Color TABLE_COLOR = new Color(60, 40, 100);
     private static final Color TABLE_HEADER_BG = new Color(80, 60, 120);
 
 
@@ -36,7 +50,6 @@ public class ParentalControls implements Screen {
     // Player Account Management Fields
     private JTable playerTable;
     private DefaultTableModel playerTableModel;
-    //private ArrayList<Account> playerAccounts; // TODO: Refactor ac.java into Account.java
 
     // Account Creation Fields
     private JTextField usernameField;
@@ -47,14 +60,14 @@ public class ParentalControls implements Screen {
     private JPanel createAccountPanel;
 
 
-    // Helper Functions
+    // ──── Account Management Helpers ─────────────────────────────────────────
     /**
      * Signs up a new user by getting test from the username and password fields.
      * Storage of the user is automatically done in the JSON when calling the createAccount(user,pass)
      * method from the parental class.
      * 
-     * @author Fardin
-     * @author Osman
+     * @author Fardin Abbassi
+     * @author Osman Idris
      */
     private void signUpNewUser() {
         String newUsername = usernameField.getText().trim();
@@ -75,8 +88,11 @@ public class ParentalControls implements Screen {
         passwordField.setText("");
         showStyledMessage("Account created successfully!");
     }
-
-    /** Resets stats for the selected player only. */
+    /** 
+     * Resets stats for the selected player only. 
+     * 
+     * @author Osman Idris
+     * */
     private void resetStats() {
         int selectedRow = playerTable.getSelectedRow();
         if (selectedRow == -1) {
@@ -89,8 +105,11 @@ public class ParentalControls implements Screen {
         playerTableModel.setValueAt(0, selectedRow, 1);
         playerTableModel.setValueAt(0.0, selectedRow, 2);
     }
-
-    /** Deletes the selected player account. */
+    /** 
+     * Deletes the selected player account. 
+     * 
+     * @author Osman Idris
+     */
     private void deleteAccount() {
         int selectedRow = playerTable.getSelectedRow();
         if (selectedRow == -1) {
@@ -102,27 +121,131 @@ public class ParentalControls implements Screen {
         NavigationControl.getAccountManager().getParental().deleteAccount(username);
         playerTableModel.removeRow(selectedRow);
     }
-
     /**
      * Checks which row is selected and resets the password for that account (to a new password).
      * Makes use of playerTable to check selected row, JOptionPane's input dialog to set a new password,
      * and parental (from account manager in nav control) to reset password.
      * 
-     * @author Osman
+     * @author Osman Idris
+     * @author Fardin Abbassi
      */
     private void resetPassword() {
         int selectedRow = playerTable.getSelectedRow();
-        if (selectedRow != -1) {
-            String username = (String)playerTableModel.getValueAt(selectedRow,0);
-            String newPassword = showStyledPasswordInput("Enter new password:");
-            if (newPassword == null) return;
-            NavigationControl.getAccountManager().getParental().resetPassword(username, newPassword);
+        if (selectedRow == -1) {
+            showStyledMessage("Please select a player first.");
+            return;
         }
+        String username = (String)playerTableModel.getValueAt(selectedRow,0);
+        String newPassword = showStyledPasswordInput("Enter new password:");
+        if (newPassword.isBlank()) {
+            showStyledMessage("New password cannot be empty.");
+            System.out.println(newPassword);
+            return;
+        }
+        NavigationControl.getAccountManager().getParental().resetPassword(username, newPassword);
+    }
+    /**
+     * Displays a styled dialog with detailed statistics for the given player.
+     * 
+     * @param username The username of the player whose stats to show
+     * @author Fardin Abbassi
+     */
+    private void showPlayerStatsDialog(String username) {
+        Account player = NavigationControl.getAccountManager().getParental().getAccount(username);
+        if (player == null) return;
+        
+        LevelStatistic[] allStats = player.getAllLevelStats();
+        int currentLevel = player.getProgress().getCurrentLevel();
+        LevelStatistic currentStats = allStats[currentLevel - 1];
+        
+        // Create a panel with GridLayout for labels and values
+        JPanel statsPanel = new JPanel(new GridLayout(0, 2, 10, 5));
+        statsPanel.setBackground(new Color(80, 52, 117));
+        statsPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        
+        Font labelFont = new Font("Helvetica", Font.PLAIN, 13);
+        Font valueFont = new Font("Helvetica", Font.BOLD, 13);
+        Color gold = new Color(255, 215, 60);
+        
+        // TODO: Debug this display of data when actually playing the game
+        String[][] data = {
+            {"Current Level:", String.valueOf(currentLevel)},
+            {"High Score:", String.valueOf(currentStats.getHighscore())},
+            {"Average WPM:", String.valueOf(currentStats.getAvgWPM())},
+            {"Peak WPM:", String.valueOf(currentStats.getPeakWPM())},
+            {"Accuracy (%):", String.format("%.2f", currentStats.getAccuracy())},
+            {"Error Count:", String.valueOf(currentStats.getMistakes())},
+            {"Attempts:", String.valueOf(currentStats.getAttempts())},
+            {"Status:", currentStats.getStatus().toString()}
+        };
+        
+        for (String[] row : data) {
+            JLabel label = new JLabel(row[0]);
+            label.setFont(labelFont);
+            label.setForeground(Color.WHITE);
+            JLabel value = new JLabel(row[1]);
+            value.setFont(valueFont);
+            value.setForeground(gold);
+            statsPanel.add(label);
+            statsPanel.add(value);
+        }
+        
+        // Optional overall stats (simple)
+        int totalHighScore = 0;
+        double totalAccuracy = 0;
+        for (LevelStatistic stat : allStats) {
+            totalHighScore += stat.getHighscore();
+            totalAccuracy += stat.getAccuracy();
+        }
+        double avgAccuracy = allStats.length > 0 ? totalAccuracy / allStats.length : 0;
+        
+        statsPanel.add(new JLabel("--- Overall ---"));
+        statsPanel.add(new JLabel(""));
+        statsPanel.add(new JLabel("Total High Score:"));
+        statsPanel.add(new JLabel(String.valueOf(totalHighScore)));
+        statsPanel.add(new JLabel("Avg Accuracy (all):"));
+        statsPanel.add(new JLabel(String.format("%.2f", avgAccuracy)));
+        
+        // Put panel in a scroll pane (optional, in case many levels)
+        JScrollPane scrollPane = new JScrollPane(statsPanel);
+        scrollPane.setBorder(null);
+        scrollPane.getViewport().setBackground(new Color(80, 52, 117));
+        
+        // Create dialog
+        JDialog dialog = new JDialog(parentalControlsFrame, username + "'s Statistics", true);
+        dialog.setLayout(new BorderLayout());
+        dialog.add(scrollPane, BorderLayout.CENTER);
+        
+        // Close button
+        JButton closeBtn = new JButton("Close");
+        closeBtn.setFont(new Font("Helvetica", Font.PLAIN, 14));
+        closeBtn.setForeground(Color.BLACK);
+        closeBtn.setBackground(new Color(102, 187, 255));
+        closeBtn.setBorderPainted(false);
+        closeBtn.setFocusPainted(false);
+        closeBtn.addActionListener(e -> dialog.dispose());
+        addKeyShortcut(closeBtn, KeyEvent.VK_ENTER, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) { dialog.dispose(); }
+        });
+        
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setBackground(new Color(80, 52, 117));
+        buttonPanel.add(closeBtn);
+        dialog.add(buttonPanel, BorderLayout.SOUTH);
+        
+        dialog.setSize(400, 450);
+        dialog.setLocationRelativeTo(parentalControlsFrame);
+        dialog.setVisible(true);
     }
 
-    // ── Styled dialog helpers (match login screen colours) ────────────────
-
-    /** Shows a styled message dialog (OK button). */
+    // ──── Styled dialog helpers (match login screen colours) ─────────────────
+    /** 
+     * Shows a styled message dialog (OK button). 
+     * 
+     * @author Osman Idris
+     * @author Fardin Abbassi
+     */
     private void showStyledMessage(String message) {
         JDialog dialog = new JDialog(parentalControlsFrame, true);
         dialog.setSize(350, 180);
@@ -140,16 +263,25 @@ public class ParentalControls implements Screen {
         okBtn.setBackground(new Color(102, 187, 255));
         okBtn.setBorderPainted(false);
         okBtn.setFocusPainted(false);
-        okBtn.setBounds(125, 115, 100, 28);
+        okBtn.setBounds(125, 100, 100, 30);
         okBtn.addActionListener(e -> dialog.dispose());
+        addKeyShortcut(okBtn, KeyEvent.VK_ENTER, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) { dialog.dispose(); }
+        });
 
         dialog.add(msgLabel);
         dialog.add(okBtn);
         dialog.setLocationRelativeTo(parentalControlsFrame);
         dialog.setVisible(true);
-    }
 
-    /** Shows a styled Yes/No confirm dialog. Returns true if Yes was clicked. */
+    }
+    /**
+     *  Shows a styled Yes/No confirm dialog.
+     * 
+     * @return True if 'Yes' was clicked, false if 'No' was clicked
+     * @author Osman Idris
+     */
     private boolean showStyledConfirm(String message) {
         boolean[] result = {false};
         JDialog dialog = new JDialog(parentalControlsFrame, true);
@@ -187,8 +319,12 @@ public class ParentalControls implements Screen {
         dialog.setVisible(true);
         return result[0];
     }
-
-    /** Shows a styled password input dialog. Returns entered text, or null if cancelled. */
+    /** 
+     * Shows a styled password input dialog. 
+     * 
+     * @return Entered text, or null if cancelled
+     * @author Osman Idris
+     */
     private String showStyledPasswordInput(String prompt) {
         String[] result = {null};
         JDialog dialog = new JDialog(parentalControlsFrame, true);
@@ -234,20 +370,7 @@ public class ParentalControls implements Screen {
         return result[0];
     }
 
-    /**
-     * Refresh table data after changes to accounts.
-     * 
-     * <p>
-     * This will be called after functions that change data, like signing a new user up or reseting stats.
-     * 
-     * @author Fardin Abbassi
-     */
-    // TODO: make sure the player table refreshes when signin up a new player
-    private void refreshPlayerTable() {
-        playerTable.revalidate();
-        playerTable.repaint();
-        
-    }
+    // ──── Tab Switching ──────────────────────────────────────────────────────
     /**
      * Helper function to switch to the "Show All Players" panel and update tab button colours.
      * 
@@ -275,34 +398,21 @@ public class ParentalControls implements Screen {
         if (createAccountTab != null) {createAccountTab.setBackground(PICKED_TAB);}
     }
 
+    // ──── UI Building ────────────────────────────────────────────────────────
     /**
      * Builds top bar of screen that contains the tab buttons and back button.
+     * @author Fardin Abbassi
+     * @return The top bar of the screen's UI
      */
     private JPanel buildTopBar() {
-        JPanel topBar = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel topBar = new JPanel(new BorderLayout());
         topBar.setBackground(BG_COLOR);
-        
-        // Back button
-        ImageIcon icon = null;
-        File f = new File("global/back.png");
-        if (f.exists()) {
-            Image img = new ImageIcon(f.getAbsolutePath()).getImage()
-                            .getScaledInstance(34, 34, Image.SCALE_SMOOTH);
-            icon = new ImageIcon(img);
-        }
-        backButton = new JButton(icon);
-        backButton.setActionCommand("Back");
-        backButton.setPreferredSize(new Dimension(34, 34));
-        backButton.setOpaque(false);
-        backButton.setContentAreaFilled(false);
-        backButton.setBorderPainted(false);
-        backButton.setFocusPainted(false);
-        backButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        backButton.setToolTipText("Back");
-        backButton.addActionListener(this);
-        
+        topBar.setBorder(BorderFactory.createEmptyBorder(8, 10, 8, 10)); // optional padding
 
         // Tab Buttons
+        JPanel tabsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
+        tabsPanel.setOpaque(false);
+
         showAllPlayersTab = new JButton("Show All Players");
         showAllPlayersTab.setFont(new Font("SansSerif", Font.BOLD, 14));
         showAllPlayersTab.setForeground(Color.WHITE);
@@ -323,13 +433,33 @@ public class ParentalControls implements Screen {
         createAccountTab.setActionCommand("Create Account");
         createAccountTab.addActionListener(this);
 
+        tabsPanel.add(showAllPlayersTab);
+        tabsPanel.add(createAccountTab);
+
+        // Back button
+        ImageIcon icon = null;
+        File f = new File("global/back.png");
+        if (f.exists()) {
+            Image img = new ImageIcon(f.getAbsolutePath()).getImage()
+                            .getScaledInstance(34, 34, Image.SCALE_SMOOTH);
+            icon = new ImageIcon(img);
+        }
+        backButton = new JButton(icon);
+        backButton.setActionCommand("Back");
+        backButton.setPreferredSize(new Dimension(34, 34));
+        backButton.setOpaque(false);
+        backButton.setContentAreaFilled(false);
+        backButton.setBorderPainted(false);
+        backButton.setFocusPainted(false);
+        backButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        backButton.setToolTipText("Back");
+        backButton.addActionListener(this);
+
         // Add buttons to top bar and return
-        topBar.add(backButton);
-        topBar.add(showAllPlayersTab);
-        topBar.add(createAccountTab);
+        topBar.add(tabsPanel, BorderLayout.CENTER);
+        topBar.add(backButton, BorderLayout.EAST);
         return topBar;
     }
-
     /**
      * Helper function to build the "Show All Players" panel.
      * 
@@ -338,6 +468,7 @@ public class ParentalControls implements Screen {
      * to reset passwords or stats for all accounts.
      * 
      * @return JPanel containing the "Show All Players" table and buttons
+     * @author Osman Idris
      * @author Fardin Abbassi
      */
     private JPanel buildAllPlayersPanel() {
@@ -366,12 +497,13 @@ public class ParentalControls implements Screen {
         }
 
         playerTable = new JTable(playerTableModel);
-        playerTable.setBackground(TABLE_COLOR);
+        playerTable.setOpaque(true);
+        playerTable.setBackground(Color.WHITE);
         playerTable.setForeground(Color.WHITE);
         playerTable.setFont(new Font("SansSerif", Font.PLAIN, 12));
         playerTable.setRowHeight(30);
         playerTable.setShowGrid(false);
-        playerTable.setIntercellSpacing(new Dimension(0, 0));
+        playerTable.setIntercellSpacing(new Dimension(2, 2));
         playerTable.setSelectionBackground(new Color(100, 100, 200));
 
         // Stylize Table Header
@@ -391,7 +523,7 @@ public class ParentalControls implements Screen {
         javax.swing.table.DefaultTableCellRenderer centerRenderer = new javax.swing.table.DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
         centerRenderer.setForeground(Color.WHITE);
-        centerRenderer.setBackground(new Color(0, 0, 0, 0));
+        centerRenderer.setBackground(TABLE_COLOR);
         for (int i = 0; i < playerTable.getColumnCount(); i++) {
             playerTable.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
         }
@@ -403,7 +535,7 @@ public class ParentalControls implements Screen {
                 int row = playerTable.getSelectedRow();
                 if (row >= 0 && column == 2) {
                     String playerName = (String) playerTableModel.getValueAt(row, 0); // get username from table
-                    // TODO: Access player stats from database and show via popup
+                    showPlayerStatsDialog(playerName);
                 }
             }
         });
@@ -465,6 +597,7 @@ public class ParentalControls implements Screen {
      * <p>
      * Contains form fields to make a new player account and a button to sign up the new account.
      * @return JPanel containing the "Create Account" panel
+     * @author Fardin Abbassi
      */
     private JPanel buildCreateAccountPanel() {
         // Styled to match the student login screen
@@ -544,21 +677,27 @@ public class ParentalControls implements Screen {
         return mainPanel;
     }
 
+    // ──── Keyboard Helper ────────────────────────────────────────────────────
     /**
-     * 
+     * Helper function to add navigation to key inputs to the target components.
+     * @author Fardin Abbassi
      */
     private void addKeyShortcuts() {
-        // TODO: Keep key shortcuts only available when the given panel is viewable
+        addKeyShortcut((JPanel)parentalControlsFrame.getContentPane(),KeyEvent.VK_ESCAPE, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) { moveToNextScreen("Back"); }
+        });
+        addKeyShortcut((JPanel) parentalControlsFrame.getContentPane(), KeyEvent.VK_ENTER, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (createAccountPanel != null && createAccountPanel.isVisible()) {
+                    signUpNewUser();
+                }
+            }
+        });
     }
 
-
-
-    // Constructor
-    public ParentalControls() {
-        // TODO: this.playerAccounts = AccountManagement.getPlayers();
-    }
-
-    // Screen Methods
+    // ──── Screen Methods ─────────────────────────────────────────────────────
     /**
      * Handles button clicks on the screen
      * 
@@ -567,11 +706,11 @@ public class ParentalControls implements Screen {
      * resetting player stats or creating a new account. 
      * 
      * @param e The ActionEvent triggered by a button click
+     * @author Fardin Abbassi
      */
     @Override
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
-        // TODO: Add functions for each button
         switch (command) {
             case "Back":
                 moveToNextScreen(command);
@@ -590,11 +729,9 @@ public class ParentalControls implements Screen {
                 break;
             case "Show All Players":
                 showAllPlayers();
-                // show the all players panel
                 break;
             case "Create Account":
                 showCreateAccount();
-                // show the create account panel
                 break;
         }
     }
@@ -614,7 +751,6 @@ public class ParentalControls implements Screen {
         im.put(KeyStroke.getKeyStroke(keyCode, 0), key);
         am.put(key, action);
     }
-    
     /**
      * Display the screen by building top bar and the main content panels,
      * then adds them to the frame and makes the frame visible.
@@ -641,17 +777,13 @@ public class ParentalControls implements Screen {
         // Snap frame to center and show
         parentalControlsFrame.setLocationRelativeTo(null);
         parentalControlsFrame.setVisible(true);
-        addKeyShortcut((JPanel)parentalControlsFrame.getContentPane(),KeyEvent.VK_ESCAPE, new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) { moveToNextScreen("Back"); }
-        });
+        addKeyShortcuts();
     }
-
     /**
-     * Move back to the main menu when the back button is clicked.
+     * Move back to the main menu when called back.
      * 
      * @param screenToMoveTo The name of the screen to switch to, currently just the main menu.
-     * 
+     * @author Fardin Abbassi
      */
     @Override
     public void moveToNextScreen(String screenToMoveTo) {
@@ -659,7 +791,6 @@ public class ParentalControls implements Screen {
             NavigationControl.setCurrentScreen(0);
         }
     }
-
     /**
      * Get the screen's frame
      * 
