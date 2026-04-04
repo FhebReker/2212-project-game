@@ -254,4 +254,7 @@ public class Gameplay {
     public void changeLives(int change) {
         this.lives += change;
     }
+
+    public static int getPlayerX() { return PLAYER_X; }
+    public static int getPlayerY() { return PLAYER_Y; }
 }
