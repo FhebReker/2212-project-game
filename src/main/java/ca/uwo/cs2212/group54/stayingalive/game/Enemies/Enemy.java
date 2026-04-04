@@ -10,6 +10,7 @@ import ca.uwo.cs2212.group54.stayingalive.sprites.Sprite;
  */
 public class Enemy {
     private String[] words;
+    private boolean[] charsPressed; // To see which indexes of characters for the word were pressed
     private Enemy_Attribute attribute;
     private Sprite sprite;
     private int damage;
@@ -220,7 +221,49 @@ public class Enemy {
      */
     public void updateWords() {
         if (!isDefeated()) {
-            this.currentWordIndex++;
+            if (getFirstUnlockedChar() == -1) {
+                this.currentWordIndex++;
+            }
         }
+    }
+
+    /**
+     * Helper method to unlock the next character in the current word.
+     */
+    public void unlockNextCharacter() {
+        // if this is the first character being pressed
+        for (int i = 0; i < charsPressed.length; i++) {
+            if (charsPressed[i] == false) {
+                charsPressed[i] = true;
+                return;
+            }
+        }
+    }
+
+    /**
+     * Helper method to check which index is unlocked.
+     * @return the index of the first unlocked character
+     * 
+     */
+    public int getFirstUnlockedChar() {
+        for (int i = 0; i < charsPressed.length; i++) {
+            if (charsPressed[i] == false) {
+                return i;
+            }
+        }
+        return -1; // if all characters are unlocked
+    }
+
+    /**
+     * Check if the current word contain the character.
+     * @param c The character that has been input.
+     * @return True if 'c' is in the word and false otherwise.
+     */
+    public boolean wordContainsChar(char c) {
+        if (getFirstUnlockedChar() >= 0) {
+            int unlockedIndex = getFirstUnlockedChar();
+            if (getCurrentWord().charAt(unlockedIndex) == c) return true;
+        }
+        return false;
     }
 }

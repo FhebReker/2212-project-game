@@ -226,9 +226,9 @@ public class Gameplay {
     /**
      * Processes the input from the player.
      * 
-     * @param input The input from the player.
+     * @param input The input from the player which will be a letter.
      */
-    public void processInput(String input) {
+    public void processInput(char input) {
         if (isGameOver() || isLevelCleared()) {
             return;
         }
@@ -239,11 +239,11 @@ public class Gameplay {
 
         for (Enemy enemy : activeEnemies) {
             String currentWord = enemy.getCurrentWord();
-            if (currentWord != null && currentWord.equals(input)) {
-                // Match found
+
+            if (enemy.wordContainsChar(input)) {
                 enemy.updateWords();
                 updateScore(enemy.getScore(), difficulty);
-                
+
                 if (enemy.isDefeated()) {
                     updateScore(enemy.getScore() * 5, difficulty);
                     currWeight -= enemy.getWeight();
