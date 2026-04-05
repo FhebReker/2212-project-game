@@ -1,10 +1,37 @@
 package ca.uwo.cs2212.group54.stayingalive.ui;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.RenderingHints;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.io.File;
-import ca.uwo.cs2212.group54.stayingalive.accounts.*;
-import javax.swing.*;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.ActionMap;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.InputMap;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.KeyStroke;
+import javax.swing.SwingConstants;
+
+import ca.uwo.cs2212.group54.stayingalive.accounts.Account;
+import ca.uwo.cs2212.group54.stayingalive.accounts.AccountManagement;
+import ca.uwo.cs2212.group54.stayingalive.accounts.LevelStatistic;
+import ca.uwo.cs2212.group54.stayingalive.audio.AudioManager;
 
 /**
  * StatsScreen – displays per-user statistics with the player's avatar.
@@ -240,6 +267,7 @@ public class StatsScreen implements Screen {
      */
     @Override
     public void actionPerformed(ActionEvent e) {
+        AudioManager.playButtonClick();
         if (e.getActionCommand() != null) {
             // move from this class to the next screen based on the button clicked
             System.out.println("→ " + e.getActionCommand());
@@ -288,7 +316,8 @@ public class StatsScreen implements Screen {
 
         addKeyShortcut((JPanel)statsFrame.getContentPane(),KeyEvent.VK_ESCAPE, new AbstractAction() {
             @Override
-            public void actionPerformed(ActionEvent e) { moveToNextScreen("Back"); }
+            public void actionPerformed(ActionEvent e) {
+                AudioManager.playButtonClick(); moveToNextScreen("Back"); }
         });
     }
     /**

@@ -365,6 +365,9 @@ public class Gameplay {
      */
     public void changeLives(int change) {
         this.lives += change;
+        if (change > 0) {
+            AudioManager.playPlayerHeal();
+        }
     }
 
     /**

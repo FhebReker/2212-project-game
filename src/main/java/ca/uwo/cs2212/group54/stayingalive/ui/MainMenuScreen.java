@@ -11,10 +11,39 @@ package ca.uwo.cs2212.group54.stayingalive.ui;
  * @author Fardin Abbassi
  */
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.event.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridBagLayout;
+import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.ActionMap;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.InputMap;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.KeyStroke;
+import javax.swing.SwingConstants;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+
+import ca.uwo.cs2212.group54.stayingalive.audio.AudioManager;
 
 
 public class MainMenuScreen implements Screen {
@@ -71,7 +100,8 @@ public class MainMenuScreen implements Screen {
     private void keyShortcutOnParentalPass(JPasswordField masterPassField, JDialog dialog, JLabel messageLabel) {
         addKeyShortcut(masterPassField, KeyEvent.VK_ENTER, new AbstractAction() {
             @Override
-            public void actionPerformed(ActionEvent e) { 
+            public void actionPerformed(ActionEvent e) {
+                AudioManager.playButtonClick(); 
                 String entered = new String(masterPassField.getPassword());
                 if (NavigationControl.getAccountManager().checkMasterPass(entered)) {
                     dialog.dispose();
@@ -83,7 +113,8 @@ public class MainMenuScreen implements Screen {
         });
         addKeyShortcut((JPanel)dialog.getContentPane(),KeyEvent.VK_ESCAPE, new AbstractAction() {
             @Override
-            public void actionPerformed(ActionEvent e) { dialog.dispose(); }
+            public void actionPerformed(ActionEvent e) {
+                AudioManager.playButtonClick(); dialog.dispose(); }
         });
     }
 
@@ -101,6 +132,7 @@ public class MainMenuScreen implements Screen {
      */
 	@Override
 	public void actionPerformed(ActionEvent e) {
+        AudioManager.playButtonClick();
         // Switch to login screen if login button is pressed
         if (e.getActionCommand() != null) { navigateTo(e.getActionCommand()); }
     }
@@ -113,25 +145,29 @@ public class MainMenuScreen implements Screen {
         // Tutorial: T
         addKeyShortcut(target, KeyEvent.VK_T, new AbstractAction() {
             @Override
-            public void actionPerformed(ActionEvent e) { navigateTo("Tutorial"); }
+            public void actionPerformed(ActionEvent e) {
+                AudioManager.playButtonClick(); navigateTo("Tutorial"); }
         });
         
         // Login: L
         addKeyShortcut(target, KeyEvent.VK_L, new AbstractAction() {
             @Override
-            public void actionPerformed(ActionEvent e) { navigateTo("Login"); }
+            public void actionPerformed(ActionEvent e) {
+                AudioManager.playButtonClick(); navigateTo("Login"); }
         });
 
         // Parental Controls: P
         addKeyShortcut(target, KeyEvent.VK_P, new AbstractAction() {
             @Override
-            public void actionPerformed(ActionEvent e) { navigateTo("Parental Controls"); }
+            public void actionPerformed(ActionEvent e) {
+                AudioManager.playButtonClick(); navigateTo("Parental Controls"); }
         });
 
         // Exit App: Esc
         addKeyShortcut(target, KeyEvent.VK_ESCAPE, new AbstractAction() {
             @Override
-            public void actionPerformed(ActionEvent e) { navigateTo("Exit"); }
+            public void actionPerformed(ActionEvent e) {
+                AudioManager.playButtonClick(); navigateTo("Exit"); }
         });
     }
     /**
@@ -293,6 +329,7 @@ public class MainMenuScreen implements Screen {
             enterButton.setBackground(new Color(102, 187, 255));
             enterButton.setBounds(150, 120, 100, 28);
             enterButton.addActionListener(ev -> {
+                AudioManager.playButtonClick();
                 String entered = new String(passField.getPassword());
                 if (NavigationControl.getAccountManager().checkMasterPass(entered)) {
                     dialog.dispose();

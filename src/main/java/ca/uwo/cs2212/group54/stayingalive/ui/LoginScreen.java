@@ -1,11 +1,27 @@
 package ca.uwo.cs2212.group54.stayingalive.ui;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.event.*;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.ActionMap;
+import javax.swing.InputMap;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+import javax.swing.KeyStroke;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 import ca.uwo.cs2212.group54.stayingalive.accounts.AccountManagement;
+import ca.uwo.cs2212.group54.stayingalive.audio.AudioManager;
 
 /**
  * Login screen for the application.
@@ -79,15 +95,18 @@ public class LoginScreen implements Screen{
     private void addKeyShortcuts() {
         addKeyShortcut(usernameField, KeyEvent.VK_ENTER, new AbstractAction() {
             @Override
-            public void actionPerformed(ActionEvent e) { checkUserLogin(); }
+            public void actionPerformed(ActionEvent e) {
+                AudioManager.playButtonClick(); checkUserLogin(); }
         });
         addKeyShortcut(passwordField, KeyEvent.VK_ENTER, new AbstractAction() {
             @Override
-            public void actionPerformed(ActionEvent e) { checkUserLogin(); }
+            public void actionPerformed(ActionEvent e) {
+                AudioManager.playButtonClick(); checkUserLogin(); }
         });
         addKeyShortcut((JPanel)loginFrame.getContentPane(),KeyEvent.VK_ESCAPE, new AbstractAction() {
             @Override
-            public void actionPerformed(ActionEvent e) { moveToNextScreen("Back"); }
+            public void actionPerformed(ActionEvent e) {
+                AudioManager.playButtonClick(); moveToNextScreen("Back"); }
         });
     }
     /**
@@ -114,6 +133,7 @@ public class LoginScreen implements Screen{
      */
     @Override
     public void actionPerformed(ActionEvent e) {
+        AudioManager.playButtonClick();
         if(e.getSource() == loginButton) { checkUserLogin(); }
     }
 

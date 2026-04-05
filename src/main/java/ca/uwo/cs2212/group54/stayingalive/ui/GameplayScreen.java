@@ -1,18 +1,10 @@
 package ca.uwo.cs2212.group54.stayingalive.ui;
 
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.Image;
-import java.awt.event.ActionEvent;
+import java.awt.*;
+import java.awt.event.*;
 import java.io.File;
 
-import javax.swing.Action;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
+import javax.swing.*;
 
 import ca.uwo.cs2212.group54.stayingalive.accounts.Account;
 import ca.uwo.cs2212.group54.stayingalive.accounts.AccountManagement;
@@ -20,6 +12,7 @@ import ca.uwo.cs2212.group54.stayingalive.game.Gameplay;
 import ca.uwo.cs2212.group54.stayingalive.game.Levels.Difficulty;
 import ca.uwo.cs2212.group54.stayingalive.game.Levels.LevelData;
 import ca.uwo.cs2212.group54.stayingalive.game.Levels.LevelSelector;
+import ca.uwo.cs2212.group54.stayingalive.audio.AudioManager;
 
 /**
  * 
@@ -136,6 +129,7 @@ public class GameplayScreen implements Screen {
      */
     @Override
     public void actionPerformed(ActionEvent e) {
+        AudioManager.playButtonClick();
         // move from this class to player menu when back button is clicked
         if (e.getActionCommand() != null) {
             switch (e.getActionCommand()) {

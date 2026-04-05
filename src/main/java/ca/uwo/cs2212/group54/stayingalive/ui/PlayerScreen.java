@@ -35,6 +35,7 @@ import javax.swing.KeyStroke;
 
 import ca.uwo.cs2212.group54.stayingalive.accounts.Account;
 import ca.uwo.cs2212.group54.stayingalive.accounts.AccountManagement;
+import ca.uwo.cs2212.group54.stayingalive.audio.AudioManager;
 
 /**
  * PlayerScreen – the hub screen shown after a player logs in.
@@ -325,31 +326,36 @@ public class PlayerScreen implements Screen {
         // New Game: N
         addKeyShortcut(target, KeyEvent.VK_N, new AbstractAction() {
             @Override
-            public void actionPerformed(ActionEvent e) { navigateTo("New Game"); }
+            public void actionPerformed(ActionEvent e) {
+                AudioManager.playButtonClick(); navigateTo("New Game"); }
         });
         
         // Continue Game: C
         addKeyShortcut(target, KeyEvent.VK_C, new AbstractAction() {
             @Override
-            public void actionPerformed(ActionEvent e) { navigateTo("Continue Game"); }
+            public void actionPerformed(ActionEvent e) {
+                AudioManager.playButtonClick(); navigateTo("Continue Game"); }
         });
 
         // Game Store: G
         addKeyShortcut(target, KeyEvent.VK_G, new AbstractAction() {
             @Override
-            public void actionPerformed(ActionEvent e) { navigateTo("Game Store"); }
+            public void actionPerformed(ActionEvent e) {
+                AudioManager.playButtonClick(); navigateTo("Game Store"); }
         });
 
         // Stats: S
         addKeyShortcut(target, KeyEvent.VK_S, new AbstractAction() {
             @Override
-            public void actionPerformed(ActionEvent e) { navigateTo("Stats"); }
+            public void actionPerformed(ActionEvent e) {
+                AudioManager.playButtonClick(); navigateTo("Stats"); }
         });
 
         // Logout: ESC
         addKeyShortcut(target, KeyEvent.VK_ESCAPE, new AbstractAction() {
             @Override
-            public void actionPerformed(ActionEvent e) { navigateTo("Logout"); }
+            public void actionPerformed(ActionEvent e) {
+                AudioManager.playButtonClick(); navigateTo("Logout"); }
         });
     }
     
@@ -377,6 +383,7 @@ public class PlayerScreen implements Screen {
      */
     @Override
     public void actionPerformed(ActionEvent e) {
+        AudioManager.playButtonClick();
         if (e.getActionCommand() != null) navigateTo(e.getActionCommand());
     }
     //TODO: public showScreen

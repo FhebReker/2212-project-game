@@ -17,6 +17,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
+import ca.uwo.cs2212.group54.stayingalive.audio.AudioManager;
 import ca.uwo.cs2212.group54.stayingalive.game.Enemies.Enemy;
 import ca.uwo.cs2212.group54.stayingalive.game.Gameplay;
 
@@ -178,12 +179,14 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 
         // to see and detect win or loss
         if (gameplay.isLevelCleared()) {
+            AudioManager.playLevelComplete();
             showResultOverlay = true;
             levelWon = true;
             gameLoop.stop();
         }
 
         if (gameplay.isGameOver()) {
+            AudioManager.playGameOver();
             showResultOverlay = true;
             levelWon = false;
             gameLoop.stop();

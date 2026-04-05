@@ -1,15 +1,44 @@
 package ca.uwo.cs2212.group54.stayingalive.ui;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.ArrayList;
 
-import javax.swing.*;
-import javax.swing.table.*;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.ActionMap;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.InputMap;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.KeyStroke;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 
 import ca.uwo.cs2212.group54.stayingalive.accounts.Account;
 import ca.uwo.cs2212.group54.stayingalive.accounts.LevelStatistic;
+import ca.uwo.cs2212.group54.stayingalive.audio.AudioManager;
 
 /**
  * Implements the Parental Controls screen of the application.
@@ -223,10 +252,11 @@ public class ParentalControls implements Screen {
         closeBtn.setBackground(new Color(102, 187, 255));
         closeBtn.setBorderPainted(false);
         closeBtn.setFocusPainted(false);
-        closeBtn.addActionListener(e -> dialog.dispose());
+        closeBtn.addActionListener(e -> { AudioManager.playButtonClick(); dialog.dispose(); });
         addKeyShortcut(closeBtn, KeyEvent.VK_ENTER, new AbstractAction() {
             @Override
-            public void actionPerformed(ActionEvent e) { dialog.dispose(); }
+            public void actionPerformed(ActionEvent e) {
+                AudioManager.playButtonClick(); dialog.dispose(); }
         });
         
         JPanel buttonPanel = new JPanel();
@@ -264,10 +294,11 @@ public class ParentalControls implements Screen {
         okBtn.setBorderPainted(false);
         okBtn.setFocusPainted(false);
         okBtn.setBounds(125, 100, 100, 30);
-        okBtn.addActionListener(e -> dialog.dispose());
+        okBtn.addActionListener(e -> { AudioManager.playButtonClick(); dialog.dispose(); });
         addKeyShortcut(okBtn, KeyEvent.VK_ENTER, new AbstractAction() {
             @Override
-            public void actionPerformed(ActionEvent e) { dialog.dispose(); }
+            public void actionPerformed(ActionEvent e) {
+                AudioManager.playButtonClick(); dialog.dispose(); }
         });
 
         dialog.add(msgLabel);
@@ -301,7 +332,7 @@ public class ParentalControls implements Screen {
         yesBtn.setBorderPainted(false);
         yesBtn.setFocusPainted(false);
         yesBtn.setBounds(70, 130, 90, 28);
-        yesBtn.addActionListener(e -> { result[0] = true; dialog.dispose(); });
+        yesBtn.addActionListener(e -> { AudioManager.playButtonClick(); result[0] = true; dialog.dispose(); });
 
         JButton noBtn = new JButton("No");
         noBtn.setFont(new Font("Helvetica", Font.PLAIN, 14));
@@ -310,7 +341,7 @@ public class ParentalControls implements Screen {
         noBtn.setBorderPainted(false);
         noBtn.setFocusPainted(false);
         noBtn.setBounds(200, 130, 90, 28);
-        noBtn.addActionListener(e -> dialog.dispose());
+        noBtn.addActionListener(e -> { AudioManager.playButtonClick(); dialog.dispose(); });
 
         dialog.add(msgLabel);
         dialog.add(yesBtn);
@@ -350,7 +381,7 @@ public class ParentalControls implements Screen {
         okBtn.setBorderPainted(false);
         okBtn.setFocusPainted(false);
         okBtn.setBounds(90, 135, 85, 28);
-        okBtn.addActionListener(e -> { result[0] = new String(passField.getPassword()); dialog.dispose(); });
+        okBtn.addActionListener(e -> { AudioManager.playButtonClick(); result[0] = new String(passField.getPassword()); dialog.dispose(); });
 
         JButton cancelBtn = new JButton("Cancel");
         cancelBtn.setFont(new Font("Helvetica", Font.PLAIN, 14));
@@ -359,7 +390,7 @@ public class ParentalControls implements Screen {
         cancelBtn.setBorderPainted(false);
         cancelBtn.setFocusPainted(false);
         cancelBtn.setBounds(200, 135, 85, 28);
-        cancelBtn.addActionListener(e -> dialog.dispose());
+        cancelBtn.addActionListener(e -> { AudioManager.playButtonClick(); dialog.dispose(); });
 
         dialog.add(promptLabel);
         dialog.add(passField);
@@ -685,11 +716,13 @@ public class ParentalControls implements Screen {
     private void addKeyShortcuts() {
         addKeyShortcut((JPanel)parentalControlsFrame.getContentPane(),KeyEvent.VK_ESCAPE, new AbstractAction() {
             @Override
-            public void actionPerformed(ActionEvent e) { moveToNextScreen("Back"); }
+            public void actionPerformed(ActionEvent e) {
+                AudioManager.playButtonClick(); moveToNextScreen("Back"); }
         });
         addKeyShortcut((JPanel) parentalControlsFrame.getContentPane(), KeyEvent.VK_ENTER, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                AudioManager.playButtonClick();
                 if (createAccountPanel != null && createAccountPanel.isVisible()) {
                     signUpNewUser();
                 }
@@ -710,6 +743,7 @@ public class ParentalControls implements Screen {
      */
     @Override
     public void actionPerformed(ActionEvent e) {
+        AudioManager.playButtonClick();
         String command = e.getActionCommand();
         switch (command) {
             case "Back":

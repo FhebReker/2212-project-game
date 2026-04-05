@@ -2,6 +2,7 @@ package ca.uwo.cs2212.group54.stayingalive.ui;
 
 import ca.uwo.cs2212.group54.stayingalive.accounts.AccountManagement;
 import ca.uwo.cs2212.group54.stayingalive.accounts.Parental;
+import ca.uwo.cs2212.group54.stayingalive.audio.AudioManager;
 
 /**
  * NavigationControl class both controls the screen navigation and the origin point of the application.
@@ -106,8 +107,8 @@ public class NavigationControl {
         // Add account manager and start at main menu
         accountManager = new AccountManagement(new Parental());
 
-        ca.uwo.cs2212.group54.stayingalive.audio.AudioManager.init();
-        Runtime.getRuntime().addShutdownHook(new Thread(ca.uwo.cs2212.group54.stayingalive.audio.AudioManager::shutdown));
+        AudioManager.init();
+        Runtime.getRuntime().addShutdownHook(new Thread(AudioManager::shutdown));
 
         setCurrentScreen(0);
     }
