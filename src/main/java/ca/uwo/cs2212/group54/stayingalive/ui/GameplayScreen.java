@@ -231,9 +231,4 @@ public class GameplayScreen implements Screen {
     public static Color getBackgroundClr1() { return backgroundClr1; }
 
     public static Color getBackgroundClr2() { return backgroundClr2; }
-
-    @Override
-    public void addKeyShortcut(JComponent target, int keyCode, Action action) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
 }
