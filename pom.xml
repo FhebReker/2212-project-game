@@ -54,6 +54,19 @@
                     <mainClass>ca.uwo.cs2212.group54.stayingalive.ui.NavigationControl</mainClass>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.5.0</version>
+                <configuration>
+                    <!-- Ensure dependencies are on the classpath -->
+                    <detectOfflineLinks>true</detectOfflineLinks>
+                    <failOnError>false</failOnError>
+                    <!-- If you still have issues, explicitly add the classpath -->
+                    <additionalparam>-classpath ${project.compileClasspathElements}</additionalparam>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 </project>
