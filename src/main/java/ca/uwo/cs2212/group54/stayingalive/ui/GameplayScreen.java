@@ -72,7 +72,7 @@ public class GameplayScreen implements Screen {
                     // TODO: add here
                     break;
                 case "Restart Level":
-                    System.out.println("→ Next level");
+                    System.out.println("→ Restart level");
                     // TODO: add here
                     break;
             }
