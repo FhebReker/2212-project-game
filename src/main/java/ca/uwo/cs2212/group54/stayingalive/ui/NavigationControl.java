@@ -101,6 +101,10 @@ public class NavigationControl {
 
         // Add account manager and start at main menu
         accountManager = new AccountManagement(new Parental());
+
+        ca.uwo.cs2212.group54.stayingalive.audio.AudioManager.init();
+        Runtime.getRuntime().addShutdownHook(new Thread(ca.uwo.cs2212.group54.stayingalive.audio.AudioManager::shutdown));
+
         setCurrentScreen(0);
     }
 
