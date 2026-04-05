@@ -16,6 +16,7 @@ import ca.uwo.cs2212.group54.stayingalive.AudioManager;
 import ca.uwo.cs2212.group54.stayingalive.game.Enemies.Enemy;
 import ca.uwo.cs2212.group54.stayingalive.game.Levels.Difficulty;
 import ca.uwo.cs2212.group54.stayingalive.game.Levels.LevelData;
+import ca.uwo.cs2212.group54.stayingalive.ui.NavigationControl;
 
 /**
  * Gameplay class
@@ -37,16 +38,27 @@ public class Gameplay {
     private List<Enemy> activeEnemies;
     private float timeSinceLastSpawn;
     private float inputLockTimer;
-    private static final Point[] SPAWN_POINTS = new Point[16];
     private Random random;
+    private static final Point[] SPAWN_POINTS = new Point[16];
+    private static final int MIN_DISTANCE = 100;
+    private static final int MAX_SPAWN_ATTEMPTS = 50; // attempts to spread apart enemy spawn locations
+    private static final int SPAWN_BORDER_RADIUS = 99; // amnt of pixels that form a spawnable border
     private boolean levelCleared;
     private Account player;
     private LevelData levelData;
+    private Enemy inFocus;
 
-    private static final int PLAYER_X = 400;
-    private static final int PLAYER_Y = 300;
-    private static final int SAFE_RADIUS = 50;
+    private static final int PLAYER_X = NavigationControl.screenW;
+    private static final int PLAYER_Y = NavigationControl.screenH;
+    private static final int SAFE_RADIUS = 10;
     
+    /**
+     * Constructor for Gameplay
+     * 
+     * @param player The player account
+     * @param levelData The level data
+     * @param difficulty The difficulty of the game
+     */
     public Gameplay(Account player, LevelData levelData, Difficulty difficulty) {
         this.player = player;
         this.levelData = levelData;
@@ -66,15 +78,18 @@ public class Gameplay {
         switch (difficulty) {
             case EASY:  {
                 this.maxWeight = 10; 
-                this.spawnDelay = 3.0f;
+                //this.spawnDelay = 3.0f; old spawn delay
+                this.spawnDelay = 100.0f;
             }
             case MEDIUM:  {
                 this.maxWeight = 15; 
-                this.spawnDelay = 2.5f;
+                //this.spawnDelay = 2.5f; old
+                this.spawnDelay = 50.0f;
             }
             case HARD:  {
                 this.maxWeight = 20;
-                this.spawnDelay = 1.0f;
+                //this.spawnDelay = 1.0f; old
+                this.spawnDelay = 20.0f;
             }
         }
         
@@ -88,12 +103,15 @@ public class Gameplay {
         this.inputLockTimer = 0;
         this.currWeight = 0;
         
+        int screenWidthBounds = NavigationControl.screenW * 2;
+        int screenHeightBounds = NavigationControl.screenH * 2;
+
         // Setup 16 target corners for spawn
         int[][] corners = {
-            {50, 50}, {100, 50}, {50, 100}, {100, 100}, // Top Left
-            {700, 50}, {750, 50}, {700, 100}, {750, 100}, // Top Right
-            {50, 500}, {100, 500}, {50, 550}, {100, 550}, // Bottom Left
-            {700, 500}, {750, 500}, {700, 550}, {750, 550} // Bottom Right
+            {50, 50}, {400, 50}, {50, 400}, {400, 400}, // Top Left
+            {screenWidthBounds - 400, 50}, {screenWidthBounds - 50, 50}, {screenWidthBounds - 400, 400}, {screenWidthBounds - 50, 400}, // Top Right
+            {50, screenHeightBounds - 400}, {100, screenHeightBounds - 400}, {200, screenHeightBounds - 200}, {400, screenHeightBounds - 200}, // Bottom Left
+            {screenWidthBounds - 400, screenHeightBounds - 400}, {screenWidthBounds - 50, screenHeightBounds - 400}, {screenWidthBounds - 400, screenHeightBounds - 200}, {screenWidthBounds - 200, screenHeightBounds - 200} // Bottom Right
         };
         for (int i = 0; i < 16; i++) {
             SPAWN_POINTS[i] = new Point(corners[i][0], corners[i][1]);
@@ -101,27 +119,56 @@ public class Gameplay {
     }
 
     // Getters
-
+    /**
+     * Gets the number of lives the player has.
+     * 
+     * @return The number of lives the player has.
+     */
     public int getLives() {
         return this.lives;
     }
 
+    /**
+     * Gets the score of the player.
+     * 
+     * @return The score of the player.
+     */
     public int getScore() {
         return this.score;
     }
 
+    /**
+     * Gets the words per minute of the player.
+     * 
+     * @return The words per minute of the player.
+     */
     public int getWPM() {
         return this.calculateWPM();
     }
 
+    /**
+     * Gets the time elapsed since the start of the game.
+     * 
+     * @return The time elapsed since the start of the game.
+     */
     public float getTime() {
         return this.time;
     }
 
+    /**
+     * Gets the list of active enemies.
+     * 
+     * @return The list of active enemies.
+     */
     public List<Enemy> getActiveEnemies() {
         return this.activeEnemies;
     }
 
+    /**
+     * Updates the game state.
+     * 
+     * @param deltaTime The time elapsed since last frame.
+     */
     public void update(float deltaTime) {
         if (isGameOver() || isLevelCleared()) {
             return;
@@ -142,12 +189,16 @@ public class Gameplay {
                     Enemy spawned = pendingEnemies.poll();
                     
                     // Assign random spawn point representation
-                    Point spawnPt = SPAWN_POINTS[random.nextInt(16)];
+                    /*int rand = random.nextInt(16);
+                    Point spawnPt = SPAWN_POINTS[rand];*/
+                    Point spawnPt = getValidSpawn();
+
                     spawned.setPosition(spawnPt.x, spawnPt.y);
                     
                     activeEnemies.add(spawned);
                     currWeight += spawned.getWeight();
                     timeSinceLastSpawn = 0;
+                    if (inFocus == null) setInFocus(); // sets an enemy into focus
                 }
             }
         }
@@ -158,19 +209,21 @@ public class Gameplay {
             Enemy enemy = iterator.next();
             enemy.move(deltaTime, PLAYER_X, PLAYER_Y);
             
+            
             if (enemy.contact(PLAYER_X, PLAYER_Y, SAFE_RADIUS)) {
                 AudioManager.playPlayerHit();
                 this.changeLives(-enemy.getDamage());
                 this.updateScore(-100, this.difficulty);
                 this.currWeight -= enemy.getWeight();
                 // Remove the Sprite from UI parent 
+                /* 
                 if (enemy.getSprite() != null && enemy.getSprite().getImage() != null) {
                     java.awt.Container parent = enemy.getSprite().getImage().getParent();
                     if (parent != null) {
                         parent.remove(enemy.getSprite().getImage());
                         parent.repaint();
                     }
-                }
+                }*/
                 iterator.remove();
             }
         }
@@ -181,7 +234,12 @@ public class Gameplay {
         }
     }
 
-    public void processInput(String input) {
+    /**
+     * Processes the input from the player.
+     * 
+     * @param input The input from the player which will be a letter.
+     */
+    public void processInput(char input) {
         if (isGameOver() || isLevelCleared()) {
             return;
         }
@@ -190,13 +248,26 @@ public class Gameplay {
             return; // Player is stunned
         }
 
-        for (Enemy enemy : activeEnemies) {
+        if (inFocus.wordContainsChar(input)) {
+            inFocus.unlockNextCharacter();
+            inFocus.updateWords();
+            updateScore(inFocus.getScore(), difficulty);
+
+            if (inFocus.isDefeated()) {
+                updateScore(inFocus.getScore() * 5, difficulty);
+                currWeight -= inFocus.getWeight();
+                activeEnemies.remove(inFocus);
+                setInFocus(); // sets a new enemy into focus
+            }
+        }
+
+        /*for (Enemy enemy : activeEnemies) {
             String currentWord = enemy.getCurrentWord();
-            if (currentWord != null && currentWord.equals(input)) {
-                // Match found
+            if (enemy.wordContainsChar(input)) {
+                enemy.unlockNextCharacter();
                 enemy.updateWords();
                 updateScore(enemy.getScore(), difficulty);
-                
+
                 if (enemy.isDefeated()) {
                     AudioManager.playEnemyHit();
                     updateScore(enemy.getScore() * 5, difficulty);
@@ -204,7 +275,7 @@ public class Gameplay {
                     activeEnemies.remove(enemy);
                 }
             }
-        }
+        }*/
 
         // No match found
         AudioManager.playPlayerError();
@@ -212,8 +283,13 @@ public class Gameplay {
         inputLockTimer = 1.0f;
     }
     
+    /**
+     * Updates the score of the player.
+     * 
+     * @param amount The amount to add to the score.
+     * @param difficulty The difficulty of the game.
+     */
     public void updateScore(int amount, Difficulty difficulty) {
-        // Add score based on difficulty
         switch (difficulty) {
             case EASY: this.score += amount;
             case MEDIUM: this.score += amount * 1.5;
@@ -221,6 +297,10 @@ public class Gameplay {
         }
     }
 
+    /**
+     * Ends the current level and updates the player's statistics.
+     * Updates the player's level status and score.
+     */
     public void endLevel() {
         if (player != null && levelData != null) {
             LevelStatistic stats = this.player.getLevelStat(levelData.getNumber());
@@ -232,9 +312,17 @@ public class Gameplay {
             int totalWords = corrects + mistakes;
             double accuracy = totalWords == 0 ? 0.0 : ((double) corrects / totalWords) * 100.0;
             
+            if (isLevelCleared()) {
+                int currentLevel = this.player.getProgress().getCurrentLevel();
+                this.player.getProgress().completeLevel(currentLevel);
+                if (currentLevel < 3) {
+                    this.player.getProgress().setCurrentLevel(currentLevel + 1);
+                }
+            }
+            
             Level_status status = isLevelCleared() ? Level_status.COMPLETED : Level_status.UNLOCKED;
             
-            int newHighscore = Math.max(score, stats.getHighScore());
+            int newHighscore = Math.max(score, stats.getHighscore());
             int newAttempts = stats.getAttempts() + 1;
             stats.updateStats(calculateWPM(), calculateWPM(), mistakes, newHighscore, newAttempts, accuracy, status);
             this.player.setStats(stats);
@@ -242,20 +330,127 @@ public class Gameplay {
         }
     }
 
+    /**
+     * Checks if the game is over.
+     * 
+     * @return True if the game is over, false otherwise.
+     */
     public boolean isGameOver() {
         return this.lives <= 0;
     }
     
+    /**
+     * Checks if the level is cleared.
+     * 
+     * @return True if the level is cleared, false otherwise.
+     */
     public boolean isLevelCleared() {
         return this.levelCleared;
     }
 
+    /**
+     * Calculates the words per minute of the player.
+     * 
+     * @return The words per minute of the player.
+     */
     public int calculateWPM() {
         if (time == 0) return 0;
         return (int) (corrects / (time / 60.0f));
     }
 
+    /**
+     * Changes the number of lives the player has.
+     * 
+     * @param change The amount to change the number of lives by.
+     */
     public void changeLives(int change) {
         this.lives += change;
     }
+
+    /**
+     * gets a random X value to spawn the enemy
+     * @return
+     */
+    public int getRandomSpawnX() {
+        int result;
+
+        if (Math.random() < 0.5) {
+            result = (int)(Math.random() * SPAWN_BORDER_RADIUS) + 1;
+        } else {
+            result = (int)(Math.random() * SPAWN_BORDER_RADIUS) + (NavigationControl.screenW * 2 - SPAWN_BORDER_RADIUS);
+        }
+
+        return result;
+    }
+
+    public int getRandomSpawnY() {
+        int result;
+
+        if (Math.random() < 0.5) {
+            result = (int)(Math.random() * SPAWN_BORDER_RADIUS) + 1;
+        } else {
+            result = (int)(Math.random() * SPAWN_BORDER_RADIUS) + (NavigationControl.screenH * 2 - SPAWN_BORDER_RADIUS);
+        }
+
+        return result;
+    }
+
+
+    private Point getValidSpawn() {
+        Point p;
+        boolean valid;
+        int attempts = 0;
+
+        do {
+            attempts++;
+            int x = getRandomSpawnX();
+            int y = getRandomSpawnY();
+            p = new Point(x, y);
+
+            valid = true;
+
+            for (Enemy enemy : activeEnemies) {
+                double dx = enemy.getPositionX() - x;
+                double dy = enemy.getPositionY() - y;
+                double dist = Math.sqrt(dx * dx + dy * dy);
+
+                if (dist < MIN_DISTANCE) {
+                    valid = false;
+                    break;
+                }
+            }
+        } while (!valid && attempts < MAX_SPAWN_ATTEMPTS);
+
+        return p;
+    }
+
+    /**
+     * Sets into focus the enemy that's closest to the player.
+     * This method is used to focus on an enemy so that its word can be typed
+     * before typing the characters to words that belong to other enemies.
+     */
+    public void setInFocus() {
+        Enemy closest = null;
+        float closestDistance = Float.MAX_VALUE;
+
+        // Find the closest enemy
+        for (Enemy enemy : activeEnemies) {
+            float dist = enemy.getDistanceFrom(new Point(PLAYER_X, PLAYER_Y)); // or however you do it
+            if (dist < closestDistance) {
+                closestDistance = dist;
+                closest = enemy;
+            }
+        }
+
+        inFocus = closest;
+    }
+
+    /**
+     * Getter to return the enemy that's currently being focused on
+     * @return The enemy that the player is focused on.
+     */
+    public Enemy getInFocus() { return inFocus; }
+
+    public static int getPlayerX() { return PLAYER_X; }
+    public static int getPlayerY() { return PLAYER_Y; }
 }

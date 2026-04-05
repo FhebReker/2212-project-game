@@ -1,11 +1,40 @@
 package ca.uwo.cs2212.group54.stayingalive.ui;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BasicStroke;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.GridBagLayout;
+import java.awt.Image;
+import java.awt.RenderingHints;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.net.URL;
 
-import javax.swing.*;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.ActionMap;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.InputMap;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.KeyStroke;
+
+import ca.uwo.cs2212.group54.stayingalive.accounts.Account;
+import ca.uwo.cs2212.group54.stayingalive.accounts.AccountManagement;
 
 /**
  * PlayerScreen – the hub screen shown after a player logs in.
@@ -33,13 +62,14 @@ public class PlayerScreen implements Screen {
     private Image avatarImage;
     private JFrame playerFrame;
     private String avatarPath;
+    private Account user;
 
     // ── Constructor ───────────────────────────────────────────────────────
     /**
      * Constructor for the class.
      * 
      * <p>
-     * Sets the avatar iamge path to whatever is specified, or defaults to the placeholder image.
+     * Sets the avatar image path to whatever is specified, or defaults to the placeholder image.
      * @param avatarPath resource path to the avatar image (e.g. "/assets/kitten.png"),
      *                   or {@code null} to use the built-in placeholder
      */
@@ -50,6 +80,10 @@ public class PlayerScreen implements Screen {
     public PlayerScreen() {
         this.avatarPath = "global/download.png";
     }
+
+    // ──── User Setter and Getter ─────────────────────────────────────────────
+    public void setUser(Account user) {this.user = user;}
+    public Account getUser() {return user;}
 
     // ── UI construction ───────────────────────────────────────────────────
     /**
@@ -320,7 +354,7 @@ public class PlayerScreen implements Screen {
     }
     
     
-// SCREEN INTERGACE METHODS -----------------------------------------------
+// SCREEN INTERFACE METHODS -----------------------------------------------
     /**
      * Add key press functionality to a given key.
      * 
@@ -359,6 +393,7 @@ public class PlayerScreen implements Screen {
             playerFrame = new JFrame("Staying Alive - Player Menu");
             WindowUtils.addSaveOnClose(playerFrame); // data is saved when window is closed
         }
+        setUser(AccountManagement.getCurrentAccount());
         playerFrame.setSize(NavigationControl.screenW, NavigationControl.screenH);
         playerFrame.getContentPane().removeAll();
         
@@ -366,6 +401,7 @@ public class PlayerScreen implements Screen {
         buildUI();
         playerFrame.setLocationRelativeTo(null);
         playerFrame.setVisible(true);
+        WindowUtils.setAppIcon(playerFrame);
 
         // Add key press navigation
         addKeyShortcuts((JPanel) playerFrame.getContentPane());
@@ -379,14 +415,16 @@ public class PlayerScreen implements Screen {
      */
     @Override
     public void moveToNextScreen(String screenToMoveTo) {
-        // when integrating, move from this class to player menu when the back button is clicked
+        // TODO: when integrating, move from this class to player menu when the back button is clicked; ensure that player data is kept when continuing a game
         if (screenToMoveTo.equals("New Game")) {
             System.out.println("to new game");
-//            NavigationControl.setCurrentScreen(7); // Make sure to reset data when starting a new game
+            String username = AccountManagement.getCurrentAccount().getUsername();
+            NavigationControl.getAccountManager().getParental().resetPlayerStats(username);
+            NavigationControl.setCurrentScreen(7); // Make sure to reset data when starting a new game
         }
         if (screenToMoveTo.equals("Continue Game")) {
             System.out.println("to continue game");
-//            NavigationControl.setCurrentScreen(7); // Make sure to load saved data when continuing the game
+            NavigationControl.setCurrentScreen(7); // Make sure to load saved data when continuing the game
         }
         if (screenToMoveTo.equals("Game Store")) {
             System.out.println("to game store");
@@ -402,7 +440,7 @@ public class PlayerScreen implements Screen {
         }
         if (screenToMoveTo.equals("Logout")) {
             WindowUtils.activateSaveSequence(); // save data before logging out.
-            NavigationControl.goBack();
+            NavigationControl.setCurrentScreen(0);;
         }
     }
     // TODO: public getFrame

@@ -1,11 +1,3 @@
-/**
- * Login screen for the application.
- * 
- * <p>
- * Takes a username and password entered in its fields and checks using the {@link AccountManagement.java} class if it's in the {@link players.json} file.
- * Supports button clicking and pressing the enter key from any field to login.
- * @author Fardin Abbassi
- */
 package ca.uwo.cs2212.group54.stayingalive.ui;
 
 import java.awt.*;
@@ -14,6 +6,15 @@ import javax.swing.*;
 import javax.swing.event.*;
 
 import ca.uwo.cs2212.group54.stayingalive.accounts.AccountManagement;
+
+/**
+ * Login screen for the application.
+ * 
+ * <p>
+ * Takes a username and password entered in its fields and checks using the {@link AccountManagement.java} class if it's in the {@link players.json} file.
+ * Supports button clicking and pressing the enter key from any field to login.
+ * @author Fardin Abbassi
+ */
 
 public class LoginScreen implements Screen{
     // Login Frame
@@ -179,12 +180,13 @@ public class LoginScreen implements Screen{
 		loginFrame.setSize(NavigationControl.screenW / 2, NavigationControl.screenH / 2 + 100);
 		loginFrame.getContentPane().setLayout(null);
 		loginFrame.getContentPane().setBackground(backgroundDeepPurple);
-		//loginFrame.setIconImage(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/logo.png"))); // TODO: Try to figure out why logo isn't comming
+		//loginFrame.setIconImage(Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/logo.png"))); // TODO: Try to figure out why logo isn't coming
 		loginFrame.setVisible(true);
+        WindowUtils.setAppIcon(loginFrame);
     }
 
     /**
-     * Moves to the next screem.
+     * Moves to the next screen.
      * 
      * <p>
      * Disposes of the main menu, then moves to the player screen on successful login.

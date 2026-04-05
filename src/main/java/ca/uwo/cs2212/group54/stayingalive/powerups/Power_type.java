@@ -42,9 +42,9 @@ public enum Power_type {
     }
 
     /**
-     * Returns a short description of the power-up effect for display in the store or inventory.
+     * returns a short description of the power-up effect for display in the store or inventory.
      * <p>
-     * This description is intended to give players a quick understanding of what the power-up does without needing
+     * This part isto give players a quick understanding of what the power-up does without needing
      * does when viewed in the store or inventory.
      *
      * @return a brief description of the power-up's effect
@@ -52,7 +52,7 @@ public enum Power_type {
     public String getEffectDescription() {
         return switch (this) {
             case TIME_STOP       -> "Freezes all enemies for a short duration";
-            case AREA_OF_EFFECT  -> "Deals damage to all nearby enemies";
+            case AREA_OF_EFFECT  -> " Eliminates all nearby enemies";
             case SHIELD          -> "Blocks incoming damage for a limited time";
         };
     }

@@ -29,7 +29,6 @@ public class TutorialScreen implements Screen {
     private final static Color TEXT_WHITE          = Color.WHITE;
     private final static Color DOT_ACTIVE          = Color.WHITE;
     private final static Color DOT_INACTIVE        = new Color(120, 100, 150);
-    private final static Color ARROW_COLOR         = new Color(40, 40, 40);         // TODO: Should we remove this?
 
     // Tutorial pages: each entry is { title, body }
     private final static String[][] PAGES = {
@@ -62,12 +61,12 @@ public class TutorialScreen implements Screen {
             + "</div></html>"
         },
         {
-            "Health, Points & Powerups",
+            "Health, Points & Power-Ups",
             "<html><div style='text-align:center;'>"
             + "You start each run with a fixed amount of <b>health</b>.<br>"
             + "Every mistake chips away at it, so play smart.<br><br>"
             + "Nailing words earns you <b>points</b> and builds your score.<br><br>"
-            + "<b>Powerups</b> show up mid-game. Type them fast to grab<br>"
+            + "<b>Power-Ups</b> show up mid-game. Type them fast to grab<br>"
             + "bonuses like extra time or health restored."
             + "</div></html>"
         },
@@ -78,7 +77,8 @@ public class TutorialScreen implements Screen {
             + "<b>T</b> &nbsp;&mdash;&nbsp; Open the <b>Tutorial</b><br><br>"
             + "<b>P</b> &nbsp;&mdash;&nbsp; Open <b>Parental Controls</b><br><br>"
             + "<b>L</b> &nbsp;&mdash;&nbsp; Go to the <b>Login</b> screen<br><br>"
-            + "Use these from the main menu to jump straight where you need to go."
+            + "Use these from the main menu to jump straight where you need to go.<br><br>"
+            + "Usually, these shortcuts will be available through the menus using the first letter of the button."
             + "</div></html>"
         }
     };
@@ -96,17 +96,18 @@ public class TutorialScreen implements Screen {
     private JButton backToPreviousButton;
 
     /**
-     * Handle button clicks on the tutorial screen.
+     * General navigation for both keyboard and button presses.
+     * 
+     * <p>
      * Left arrow moves to the previous page, right arrow moves to the next page,
      * and the back button returns to the previous menu.
      *
-     * @param e the ActionEvent triggered by a button click
-     * @author Fardin Abbassi
+     * @param command The name of the command used
      * @author Omar Soliman
+     * @author Fardin Abbassi
      */
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        switch (e.getActionCommand()) {
+    private void navigateTo(String command) {
+        switch (command) {
             case "Move Left":
                 if (currentPage > 0) {
                     currentPage--;
@@ -119,10 +120,21 @@ public class TutorialScreen implements Screen {
                     refreshPage();
                 }
                 break;
-            case "Return":
+            case "Back":
                 this.moveToNextScreen("Back");
                 break;
         }
+    }
+    /**
+     * Handle button clicks on the tutorial screen.
+     *
+     * @param e the ActionEvent triggered by a button click
+     * @author Fardin Abbassi
+     * @author Omar Soliman
+     */
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if(e.getActionCommand() != null) navigateTo(e.getActionCommand());
     }
 
     /**
@@ -187,7 +199,7 @@ public class TutorialScreen implements Screen {
         backToPreviousButton.setContentAreaFilled(false);
         backToPreviousButton.setBorderPainted(false);
         backToPreviousButton.setFocusPainted(false);
-        backToPreviousButton.setActionCommand("Return");
+        backToPreviousButton.setActionCommand("Back");
         backToPreviousButton.addActionListener(this);
 
         JPanel topBar = new JPanel(new FlowLayout(FlowLayout.RIGHT, 12, 8));
@@ -230,7 +242,7 @@ public class TutorialScreen implements Screen {
         displayBox.add(pageTitle, BorderLayout.NORTH);
         displayBox.add(pageBody,  BorderLayout.CENTER);
 
-        displayBox.setPreferredSize(new Dimension(470, 260));
+        displayBox.setPreferredSize(new Dimension(470, 300));
 
         JPanel centerRow = new JPanel(new BorderLayout());
         centerRow.setOpaque(false);
@@ -259,11 +271,20 @@ public class TutorialScreen implements Screen {
         tutorialFrame.setContentPane(root);
         tutorialFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         tutorialFrame.setBackground(BACKGROUND_PURPLE);
+        WindowUtils.setAppIcon(tutorialFrame);
         tutorialFrame.setVisible(true);
         tutorialFrame.setLocationRelativeTo(null);
+        addKeyShortcut((JPanel)tutorialFrame.getContentPane(),KeyEvent.VK_LEFT, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) { navigateTo("Move Left"); }
+        });
+        addKeyShortcut((JPanel)tutorialFrame.getContentPane(),KeyEvent.VK_RIGHT, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) { navigateTo("Move Right"); }
+        });
         addKeyShortcut((JPanel)tutorialFrame.getContentPane(),KeyEvent.VK_ESCAPE, new AbstractAction() {
             @Override
-            public void actionPerformed(ActionEvent e) { moveToNextScreen("Back"); }
+            public void actionPerformed(ActionEvent e) { navigateTo("Back"); }
         });
     }
 
