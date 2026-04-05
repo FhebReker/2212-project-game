@@ -43,68 +43,6 @@ public class GameplayScreen implements Screen {
         Gameplay gameplay = new Gameplay(player,LevelSelector.getLevel(1, currentPlayerLevel, difficulty),difficulty);
         gamePanel = new GamePanel(gameplay);
     }
-
-   /**
- * Displays the result dialog when the player completes or fails a level.
- *
- * @param win true if the player wins the level, false if the player loses
- * @author Mohamed Ahmed
- */
-public void showLevelResult(boolean win) {
-
-    int currentLevel = 3; 
-
-    String message;
-    Object[] options;
-
-    if (win) {
-        if (currentLevel == 3) {
-            message = "congratulations you have completed the game";
-            options = new Object[]{"Restart Game", "Menu"};
-        } else {
-            message = "Congratulations you may proceed to the next level!";
-            options = new Object[]{"Next Level", "Restart", "Menu"};
-        }
-    } else {
-        message = "Game Over! Don't give up, try again!";
-        options = new Object[]{"Restart", "Menu"};
-    }
-
-    int choice = JOptionPane.showOptionDialog(
-            GameplayFrame,
-            message,
-            win ? "Level Complete" : "Game Over",
-            JOptionPane.DEFAULT_OPTION,
-            JOptionPane.INFORMATION_MESSAGE,
-            null,
-            options,
-            options[0]
-    );
-
-    if (win) {
-        if (currentLevel == 3) {
-            if (choice == 0) {
-                System.out.println("Restart whole game");
-            } else {
-                moveToNextScreen("Player");
-            }
-        } else {
-            if (choice == 0) {
-                System.out.println("Go to next level");
-            } else if (choice == 1) {
-                System.out.println("Restart level");
-            } else {
-                moveToNextScreen("Player");
-            }
-        }
-    } else {
-        if (choice == 0) {
-            System.out.println("Please restart level");
-        } else {
-            moveToNextScreen("Player");
-        }
-    }
-}
     
     /**
      * 
@@ -164,9 +102,4 @@ public void showLevelResult(boolean win) {
     public static Color getBackgroundClr1() { return backgroundClr1; }
 
     public static Color getBackgroundClr2() { return backgroundClr2; }
-
-    @Override
-    public void addKeyShortcut(JComponent target, int keyCode, Action action) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
 }
