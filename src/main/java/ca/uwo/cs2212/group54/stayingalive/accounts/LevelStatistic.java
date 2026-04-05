@@ -3,6 +3,8 @@ package ca.uwo.cs2212.group54.stayingalive.accounts;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import ca.uwo.cs2212.group54.stayingalive.game.Levels.LevelData;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class LevelStatistic {
     @JsonProperty("level_data")
@@ -38,13 +40,13 @@ public class LevelStatistic {
         mistakes = avgWPM = peakWPM = highscore = attempts = 0;
         accuracy = 0.0;
         // only for first level
-        if (levelData.getLevelNum() == 1) status = Level_status.UNLOCKED;
+        if (levelData.getNumber() == 1) status = Level_status.UNLOCKED;
         else status = Level_status.LOCKED;
     }
 
     // default constructor will always make level data equal to 1
     public LevelStatistic() {
-        this.levelData = new LevelData(1,1);
+        this.levelData = new LevelData(1,null,null);
         mistakes = avgWPM = peakWPM = highscore = attempts = 0;
         accuracy = 0.0;
         status = Level_status.LOCKED;

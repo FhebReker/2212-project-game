@@ -48,7 +48,6 @@ public class GameplayScreen implements Screen {
     // Other
     private GamePanel gamePanel;
     private int level;
-    static Account player = new Account("random1","test"); // test
 
     public GameplayScreen() {
         //buildPanel(AccountManagement.getCurrentAccount());
@@ -75,7 +74,7 @@ public class GameplayScreen implements Screen {
 
         String message;
         Object[] options;
-        System.out.println(player.getProgress().getCurrentLevel());
+
         if (win) {
             if (currentLevel == 3) {
                 message = "congratulations you have completed the game";

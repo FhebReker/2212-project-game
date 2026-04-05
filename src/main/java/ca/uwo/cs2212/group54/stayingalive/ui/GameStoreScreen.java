@@ -2,15 +2,50 @@ package ca.uwo.cs2212.group54.stayingalive.ui;
 
 // TODO: Integrate account classes for saving purchases
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BasicStroke;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.RenderingHints;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.*;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.ActionMap;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.InputMap;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.KeyStroke;
+import javax.swing.SwingConstants;
 
-import ca.uwo.cs2212.group54.stayingalive.accounts.*;
+import ca.uwo.cs2212.group54.stayingalive.accounts.Account;
+import ca.uwo.cs2212.group54.stayingalive.accounts.AccountManagement;
+import ca.uwo.cs2212.group54.stayingalive.accounts.Parental;
 
 /**
  * GameStoreScreen – lets the player spend accumulated score on power-ups and cosmetics.
@@ -452,7 +487,6 @@ public class GameStoreScreen implements Screen {
     }
 
 
-    // TODO: ADD KEYBOARD NAV FUNCTIONALITY
     // ── General Navigation ────────────────────────────────────────────────
     /**
      * General navigation for both keyboard and button presses.
@@ -482,7 +516,6 @@ public class GameStoreScreen implements Screen {
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand() != null) navigateTo(e.getActionCommand());
     }
-    //TODO: public showScreen
     @Override
     public void showScreen() {
         if (gameStoreFrame == null) {
@@ -504,7 +537,7 @@ public class GameStoreScreen implements Screen {
             public void actionPerformed(ActionEvent e) { navigateTo("Back"); }
         });
     }
-    // TODO: public moveToNextScreen
+
     @Override
     public void moveToNextScreen(String screenToMoveTo) {
         // when integrating, move from this class to player menu when the back button is clicked
@@ -513,7 +546,6 @@ public class GameStoreScreen implements Screen {
             NavigationControl.setCurrentScreen(3);
         }
     }
-    // TODO: public getFrame
     @Override
     public JFrame getFrame() {return this.gameStoreFrame;}
 }

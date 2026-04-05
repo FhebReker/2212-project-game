@@ -301,9 +301,7 @@ public class Gameplay {
         if (player != null && levelData != null) {
             LevelStatistic stats = this.player.getLevelStat(levelData.getNumber());
             if (stats == null) {
-                ca.uwo.cs2212.group54.stayingalive.accounts.LevelData accLevelData =
-                    new ca.uwo.cs2212.group54.stayingalive.accounts.LevelData(levelData.getNumber(), 1);
-                stats = new LevelStatistic(accLevelData);
+                stats = new LevelStatistic(levelData);
             }
             int totalWords = corrects + mistakes;
             double accuracy = totalWords == 0 ? 0.0 : ((double) corrects / totalWords) * 100.0;
@@ -350,7 +348,9 @@ public class Gameplay {
      * @return The words per minute of the player.
      */
     public int calculateWPM() {
-        if (time == 0) return 0;
+        if (time == 0) {
+            return 0;
+        }
         return (int) (corrects / (time / 60.0f));
     }
 

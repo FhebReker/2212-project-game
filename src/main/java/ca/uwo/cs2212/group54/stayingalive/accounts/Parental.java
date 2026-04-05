@@ -95,6 +95,7 @@ public class Parental {
             if (account.getUsername().equals(username)) {
                 account.clearStats();
                 account.getProgress().clearProgress();
+                account.setProgress(new PlayerProgress());
                 break;
             }
         }

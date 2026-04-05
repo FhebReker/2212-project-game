@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import ca.uwo.cs2212.group54.stayingalive.game.Gameplay;
+import ca.uwo.cs2212.group54.stayingalive.game.Levels.LevelData;
 import ca.uwo.cs2212.group54.stayingalive.sprites.Sprite;
 
 public class Account {
@@ -56,7 +57,7 @@ public class Account {
         this.pass = pass;
         this.levelStatistics = new LevelStatistic[PlayerProgress.MAX_LEVELS];
         for (int i =0; i < levelStatistics.length;i++) {
-            levelStatistics[i] = new LevelStatistic(new LevelData(1, i + 1));
+            levelStatistics[i] = new LevelStatistic(new LevelData(1,null,null));
         }
         this.playerProgress = new PlayerProgress();
         coins = 0;
@@ -101,7 +102,7 @@ public class Account {
 
     @JsonIgnore
     public void setStats(LevelStatistic levelStats) {
-        int levelNum = levelStats.getLevelData().getLevelNum();
+        int levelNum = levelStats.getLevelData().getNumber();
         levelStatistics[levelNum-1] = levelStats;
     }
 
@@ -113,6 +114,10 @@ public class Account {
 
     public PlayerProgress getProgress() {
         return playerProgress;
+    }
+
+    public void setProgress(PlayerProgress progress) {
+        this.playerProgress = progress;
     }
 
     @Override

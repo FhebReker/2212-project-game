@@ -1,5 +1,8 @@
 package ca.uwo.cs2212.group54.stayingalive.game.Levels;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import ca.uwo.cs2212.group54.stayingalive.game.Enemies.Enemy;
 import ca.uwo.cs2212.group54.stayingalive.sprites.Sprite;
 
@@ -10,8 +13,11 @@ import ca.uwo.cs2212.group54.stayingalive.sprites.Sprite;
  */
 
 public class LevelData {
+    @JsonProperty("number")
     private final int number;
+    @JsonIgnore
     private final Enemy enemies[];
+    @JsonIgnore
     private final Sprite background;
 
 
@@ -28,11 +34,18 @@ public class LevelData {
         this.background = background;
     }
 
+    public LevelData(@JsonProperty("number") int number) {
+        this.number = number;
+        this.enemies = null;
+        this.background = null;
+    }
+
     /**
      * Get the level number
      * 
      * @return The level number
      */
+    @JsonProperty("number")
     public int getNumber() {
         return this.number;
     }
