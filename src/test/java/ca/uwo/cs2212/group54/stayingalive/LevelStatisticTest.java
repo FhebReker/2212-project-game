@@ -1,9 +1,10 @@
 package ca.uwo.cs2212.group54.stayingalive;
-import static org.junit.jupiter.api.Assertions.*;
-
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 
-import ca.uwo.cs2212.group54.stayingalive.accounts.*;
+import ca.uwo.cs2212.group54.stayingalive.accounts.LevelStatistic;
+import ca.uwo.cs2212.group54.stayingalive.accounts.Level_status;
+import ca.uwo.cs2212.group54.stayingalive.game.Levels.LevelData;
 
 public class LevelStatisticTest {
     // Validation Test 11
@@ -11,7 +12,7 @@ public class LevelStatisticTest {
     @Test
     void testStatisticFields() {
         // Step 0: Make a LevelStatistic for level 1
-        LevelData levelData = new LevelData(1, 1);
+        LevelData levelData = new LevelData(1, null, null);
         LevelStatistic stats = new LevelStatistic(levelData);
 
         // Step 1: Call updateStats with test values

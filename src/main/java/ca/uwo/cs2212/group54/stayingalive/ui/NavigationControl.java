@@ -1,5 +1,6 @@
 package ca.uwo.cs2212.group54.stayingalive.ui;
 
+import javax.swing.SwingUtilities;
 import ca.uwo.cs2212.group54.stayingalive.accounts.AccountManagement;
 import ca.uwo.cs2212.group54.stayingalive.accounts.Parental;
 import ca.uwo.cs2212.group54.stayingalive.audio.AudioManager;
@@ -83,6 +84,12 @@ public class NavigationControl {
      * @author Fardin Abbassi
      */
     public NavigationControl() {
+        // Add account manager and start at main menu
+        accountManager = new AccountManagement(new Parental());
+
+        AudioManager.init();
+        Runtime.getRuntime().addShutdownHook(new Thread(AudioManager::shutdown));
+
         // Initialize screens (add as screens are implemented)
         MainMenuScreen mainMenu = new MainMenuScreen();
         LoginScreen loginScreen = new LoginScreen();
@@ -103,13 +110,6 @@ public class NavigationControl {
         listOfScreens[6] = parentalControls;    // parental control
         listOfScreens[7] = gameplayScreen;                // gameplay
         
-
-        // Add account manager and start at main menu
-        accountManager = new AccountManagement(new Parental());
-
-        AudioManager.init();
-        Runtime.getRuntime().addShutdownHook(new Thread(AudioManager::shutdown));
-
         setCurrentScreen(0);
     }
 
@@ -135,6 +135,6 @@ public class NavigationControl {
 
     // Use as driver for application
     public static void main(String[] args) {
-        new NavigationControl();
+        SwingUtilities.invokeLater(() -> new NavigationControl());
     }
 }

@@ -5,8 +5,7 @@
   "stats" : [ {
     "highScore" : 0,
     "level_data" : {
-      "section" : 1,
-      "level_num" : 1
+      "number" : 1
     },
     "avg_wpm" : 0,
     "peak_wpm" : 0,
@@ -18,8 +17,7 @@
   }, {
     "highScore" : 0,
     "level_data" : {
-      "section" : 1,
-      "level_num" : 1
+      "number" : 1
     },
     "avg_wpm" : 0,
     "peak_wpm" : 0,
@@ -31,8 +29,7 @@
   }, {
     "highScore" : 0,
     "level_data" : {
-      "section" : 1,
-      "level_num" : 1
+      "number" : 1
     },
     "avg_wpm" : 0,
     "peak_wpm" : 0,
@@ -45,6 +42,6 @@
   "progress" : {
     "current_level" : 1,
     "completed_levels" : [ false, false, false ],
-    "playtime" : 13.139999999999999
+    "playtime" : 13.2
   }
 } ]

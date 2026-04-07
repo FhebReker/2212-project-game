@@ -2,6 +2,8 @@ package ca.uwo.cs2212.group54.stayingalive.game.Levels;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import ca.uwo.cs2212.group54.stayingalive.game.Enemies.Enemy;
 import ca.uwo.cs2212.group54.stayingalive.sprites.Sprite;
@@ -12,8 +14,10 @@ import ca.uwo.cs2212.group54.stayingalive.sprites.Sprite;
  * @author Malik Alghneimin
  */
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class LevelData {
     @JsonProperty("number")
+    @JsonAlias("level_num")
     private final int number;
     @JsonIgnore
     private final Enemy enemies[];
@@ -34,7 +38,7 @@ public class LevelData {
         this.background = background;
     }
 
-    public LevelData(@JsonProperty("number") int number) {
+    public LevelData(@JsonProperty("number") @JsonAlias("level_num") int number) {
         this.number = number;
         this.enemies = null;
         this.background = null;
