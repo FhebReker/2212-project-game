@@ -1,13 +1,24 @@
 package ca.uwo.cs2212.group54.stayingalive.ui;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.io.File;
 
-import javax.swing.*;
-import javax.swing.*;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.ActionMap;
+import javax.swing.ImageIcon;
+import javax.swing.InputMap;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.KeyStroke;
 
 import ca.uwo.cs2212.group54.stayingalive.accounts.Account;
 import ca.uwo.cs2212.group54.stayingalive.accounts.AccountManagement;
@@ -46,12 +57,25 @@ public class GameplayScreen implements Screen {
     private int level;
 
     private void buildPanel(Account player) {
+        if (player == null || player.playerProgress == null) {
+            System.err.println("Player or progress is null");
+            return;
+        }
         int currentPlayerLevel = player.playerProgress.getCurrentLevel();
-        //int currentPlayerLevel = 1;
-        Difficulty difficulty = Difficulty.values()[currentPlayerLevel-1];
+        // Ensure level is between 1 and 3
+        if (currentPlayerLevel < 1) currentPlayerLevel = 1;
+        if (currentPlayerLevel > 3) currentPlayerLevel = 3;
+
+        Difficulty difficulty = Difficulty.values()[currentPlayerLevel - 1];
         LevelData ld = LevelSelector.getLevel(1, currentPlayerLevel, difficulty);
+        
+        if (ld == null) {
+            System.err.println("Failed to load LevelData for level " + currentPlayerLevel);
+            return;
+        }
+        
         level = ld.getNumber();
-        Gameplay gameplay = new Gameplay(player,ld,difficulty);
+        Gameplay gameplay = new Gameplay(player, ld, difficulty);
         gamePanel = new GamePanel(gameplay);
         buildUI();
     }

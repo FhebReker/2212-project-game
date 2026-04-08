@@ -1,12 +1,18 @@
 package ca.uwo.cs2212.group54.stayingalive;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import org.junit.jupiter.api.AfterEach;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import ca.uwo.cs2212.group54.stayingalive.accounts.*;
+import ca.uwo.cs2212.group54.stayingalive.accounts.Account;
+import ca.uwo.cs2212.group54.stayingalive.accounts.LevelStatistic;
+import ca.uwo.cs2212.group54.stayingalive.accounts.Level_status;
+import ca.uwo.cs2212.group54.stayingalive.accounts.Parental;
+import ca.uwo.cs2212.group54.stayingalive.accounts.PlayerProgress;
+import ca.uwo.cs2212.group54.stayingalive.game.Levels.LevelData;
 
 public class AccountTest {
     private Parental parental;
@@ -27,7 +33,7 @@ public class AccountTest {
     @Test
     void testSetStats() {
         // Step 0: Construct the level statistic and update it
-        LevelData levelData = new LevelData(1, 2);
+        LevelData levelData = new LevelData(1, null, null);
         LevelStatistic newStat = new LevelStatistic(levelData);
         newStat.updateStats(50, 70, 3, 200, 1, 0.90, Level_status.UNLOCKED);
 
@@ -51,7 +57,7 @@ public class AccountTest {
     @Test
     void testClearStats() {
         // Step 0: Level 1 stat is updated with WPM = 40
-        LevelData levelData = new LevelData(1, 1);
+        LevelData levelData = new LevelData(1, null, null);
         LevelStatistic originalStat = new LevelStatistic(levelData);
         originalStat.updateStats(40, 60, 2, 150, 1, 0.85, Level_status.UNLOCKED);
         account.setStats(originalStat);

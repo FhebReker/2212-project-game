@@ -169,9 +169,9 @@ public class LevelSelector {
 
         // these are the 3 bird images that can be used for enemies
         String[] birdImages = {
-            "global/Bird1.png",
-            "global/Bird2.png",
-            "global/Bird3.png"
+            "global/bird1.png",
+            "global/bird2.png",
+            "global/bird3.png"
         };
 
         // this rndomly choose one bird image each time an enemy is created

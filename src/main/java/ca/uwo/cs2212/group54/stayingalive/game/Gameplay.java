@@ -80,16 +80,19 @@ public class Gameplay {
                 this.maxWeight = 10; 
                 //this.spawnDelay = 3.0f; old spawn delay
                 this.spawnDelay = 100.0f;
+                break;
             }
             case MEDIUM:  {
                 this.maxWeight = 15; 
                 //this.spawnDelay = 2.5f; old
                 this.spawnDelay = 50.0f;
+                break;
             }
             case HARD:  {
                 this.maxWeight = 20;
                 //this.spawnDelay = 1.0f; old
                 this.spawnDelay = 20.0f;
+                break;
             }
         }
         
@@ -248,6 +251,10 @@ public class Gameplay {
             return; // Player is stunned
         }
 
+        if (inFocus == null) {
+            return;
+        }
+
         if (inFocus.wordContainsChar(input)) {
             inFocus.unlockNextCharacter();
             inFocus.updateWords();
@@ -291,9 +298,15 @@ public class Gameplay {
      */
     public void updateScore(int amount, Difficulty difficulty) {
         switch (difficulty) {
-            case EASY: this.score += amount;
-            case MEDIUM: this.score += amount * 1.5;
-            case HARD: this.score += amount * 2;
+            case EASY: 
+                this.score += amount;
+                break;
+            case MEDIUM: 
+                this.score += (int)(amount * 1.5);
+                break;
+            case HARD: 
+                this.score += amount * 2;
+                break;
         }
     }
 

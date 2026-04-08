@@ -3,10 +3,21 @@
   "password" : "bob",
   "coins" : 0,
   "stats" : [ {
+    "highScore" : 420,
+    "level_data" : {
+      "number" : 1
+    },
+    "avg_wpm" : 0,
+    "peak_wpm" : 0,
+    "mistakes" : 17,
+    "highscore" : 420,
+    "attempts" : 3,
+    "accuracy" : 0.0,
+    "status" : "UNLOCKED"
+  }, {
     "highScore" : 0,
     "level_data" : {
-      "section" : 1,
-      "level_num" : 1
+      "number" : 1
     },
     "avg_wpm" : 0,
     "peak_wpm" : 0,
@@ -18,21 +29,7 @@
   }, {
     "highScore" : 0,
     "level_data" : {
-      "section" : 1,
-      "level_num" : 1
-    },
-    "avg_wpm" : 0,
-    "peak_wpm" : 0,
-    "mistakes" : 0,
-    "highscore" : 0,
-    "attempts" : 0,
-    "accuracy" : 0.0,
-    "status" : "LOCKED"
-  }, {
-    "highScore" : 0,
-    "level_data" : {
-      "section" : 1,
-      "level_num" : 1
+      "number" : 1
     },
     "avg_wpm" : 0,
     "peak_wpm" : 0,
@@ -45,6 +42,6 @@
   "progress" : {
     "current_level" : 1,
     "completed_levels" : [ false, false, false ],
-    "playtime" : 13.139999999999999
+    "playtime" : 1.0
   }
 } ]

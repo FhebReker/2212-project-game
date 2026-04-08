@@ -16,26 +16,35 @@ public class Parental {
     private static ArrayList<Account> accounts;
 
     public Parental() {
-        //initialize masterPass and accounts by getting them from the storage
-        ObjectMapper objectmapper = new ObjectMapper();
+        // initialize accounts to ensure it's never null
+        accounts = new ArrayList<Account>();
+        ObjectMapper objectMapper = new ObjectMapper();
 
+        // loading player accounts
         try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            // loading player accounts
             File file = new File("data/players.json");
             if (file.exists() && file.length() > 0) {
                 accounts = objectMapper.readValue(file, new TypeReference<ArrayList<Account>>() {});
+                System.out.println("Loaded " + accounts.size() + " accounts.");
             } else {
-                System.out.println("new array");
-                accounts = new ArrayList<Account>();
+                System.out.println("No accounts found in storage, starting fresh.");
             }
-            // loading master password:
+        } catch (Exception e) {
+            System.err.println("Error loading player accounts: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        // loading master password
+        try {
             File masterPassFile = new File("data/master.json");
             if (masterPassFile.exists() && masterPassFile.length() > 0) {
-                Map<String,String> data1 = objectMapper.readValue(masterPassFile,Map.class);
+                Map<String, String> data1 = objectMapper.readValue(masterPassFile, Map.class);
                 masterPass = data1.get("master_pass");
-            } else {System.out.println("No data in " + masterPassFile.getName());}
+            } else {
+                System.out.println("No master password found in " + masterPassFile.getName());
+            }
         } catch (Exception e) {
+            System.err.println("Error loading master password: " + e.getMessage());
             e.printStackTrace();
         }
     }

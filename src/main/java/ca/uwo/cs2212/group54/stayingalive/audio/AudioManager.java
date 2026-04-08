@@ -2,6 +2,7 @@ package ca.uwo.cs2212.group54.stayingalive.audio;
 
 import kuusisto.tinysound.Sound;
 import kuusisto.tinysound.TinySound;
+import java.io.File;
 
 /**
  * Audio manager class
@@ -30,14 +31,14 @@ public class AudioManager {
             
             // Files would be placed in global/sfx
 
-            buttonClick = TinySound.loadSound("global/sfx/press_button.wav");
-            playerHit = TinySound.loadSound("global/sfx/player_damaged.wav");
-            enemyHit = TinySound.loadSound("global/sfx/enemy_hit.wav");
-            playerError = TinySound.loadSound("global/sfx/player_error.wav");
-            playerHeal = TinySound.loadSound("global/sfx/player_heal.wav");
-            pouwerup = TinySound.loadSound("global/sfx/pouwerup_used.wav");
-            gameover = TinySound.loadSound("global/sfx/game_lost.wav");
-            levelComplete = TinySound.loadSound("global/sfx/completion.wav");
+            buttonClick = TinySound.loadSound(new File("global/sfx/press_button.wav"));
+            playerHit = TinySound.loadSound(new File("global/sfx/player_damaged.wav"));
+            enemyHit = TinySound.loadSound(new File("global/sfx/enemy_hit.wav"));
+            playerError = TinySound.loadSound(new File("global/sfx/player_error.wav"));
+            playerHeal = TinySound.loadSound(new File("global/sfx/player_heal.wav"));
+            pouwerup = TinySound.loadSound(new File("global/sfx/powerup_used.wav"));
+            gameover = TinySound.loadSound(new File("global/sfx/game_lost.wav"));
+            levelComplete = TinySound.loadSound(new File("global/sfx/completion.wav"));
             
 
             initialized = true;
